@@ -170,6 +170,25 @@
   }
 }
 
+
+/* MortgageFit professional case-analysis additions */
+.mf-pro-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px;margin:12px 0}
+.mf-pro-card{border:1px solid var(--mf-border);border-radius:13px;padding:14px;background:#fff}
+.mf-pro-label{font-size:10px;font-weight:900;text-transform:uppercase;color:var(--mf-muted)}
+.mf-pro-value{font-size:23px;font-weight:900;color:var(--mf-navy);margin-top:5px}
+.mf-pro-note{font-size:10px;color:var(--mf-muted);margin-top:4px}
+.mf-driver{border-left:4px solid var(--mf-teal);background:#f0fdfa;border-radius:10px;padding:12px 14px;margin:12px 0;font-size:11px}
+.mf-driver strong{color:var(--mf-navy);font-size:13px}
+.mf-scenario-controls{display:grid;grid-template-columns:repeat(4,minmax(180px,260px));gap:10px;justify-content:start;margin:12px 0}
+.mf-scenario-table{width:100%;border-collapse:collapse;margin-top:12px;font-size:10.5px}
+.mf-scenario-table th,.mf-scenario-table td{padding:8px 9px;border-bottom:1px solid #edf2f7;text-align:right}
+.mf-scenario-table th:first-child,.mf-scenario-table td:first-child{text-align:left}
+.mf-result-section{margin-top:15px;padding-top:13px;border-top:1px solid #edf2f7}
+.mf-result-section h3{font-size:14px;color:var(--mf-navy);margin:0 0 5px}
+.mf-result-section>p{font-size:10.5px;color:var(--mf-muted);margin:0}
+@media(max-width:1000px){.mf-scenario-controls{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){.mf-pro-grid,.mf-scenario-controls{grid-template-columns:1fr}}
+
   </style>
 </head>
 <body>
@@ -259,6 +278,17 @@
                     <label>Down-payment source<select id="downPaymentSource"><option>Savings</option><option>TFSA</option><option>FHSA</option><option>RRSP Home Buyers’ Plan</option><option>Gift</option><option>Property sale</option><option>Multiple sources</option><option>Other</option></select></label>
                   </div></div>
                 </div>
+                <div class="mf-subcard" style="margin-top:12px">
+                  <h3>Cash to Close &amp; Savings Plan</h3>
+                  <div class="mf-fields mf-fields-3">
+                    <label>Legal / title estimate<div class="mf-money"><span>$</span><input id="legalCosts" type="number" min="0" step="100" value="2500"></div></label>
+                    <label>Inspection / appraisal<div class="mf-money"><span>$</span><input id="inspectionCosts" type="number" min="0" step="100" value="1000"></div></label>
+                    <label>Land transfer / transfer tax<div class="mf-money"><span>$</span><input id="transferTax" type="number" min="0" step="100" value="0"></div></label>
+                    <label>Other closing costs<div class="mf-money"><span>$</span><input id="otherClosingCosts" type="number" min="0" step="100" value="0"></div></label>
+                    <label>Additional reserve target<div class="mf-money"><span>$</span><input id="closingReserve" type="number" min="0" step="100" value="0"></div></label>
+                    <label>Planned monthly savings<div class="mf-money"><span>$</span><input id="plannedMonthlySavings" type="number" min="0" step="50" value="0"></div><small>Used only to estimate time to close a funding gap.</small></label>
+                  </div>
+                </div>
               </section>
 
               <section class="mf-panel" data-panel="3">
@@ -331,6 +361,42 @@
                   </div>
                   <div class="mf-narrative" id="mf-narrative"></div>
                   <div class="mf-warnings" id="mf-warnings"></div>
+
+                  <div class="mf-result-section">
+                    <h3>Professional Case Analysis</h3>
+                    <div class="mf-driver" id="qualification-driver"><strong>Qualification Driver:</strong> Calculate the case to identify the controlling factor.</div>
+                    <div class="mf-pro-grid">
+                      <div class="mf-pro-card"><div class="mf-pro-label">Cash to Close</div><div class="mf-pro-value" id="cash-to-close-result">—</div><div class="mf-pro-note">Down payment, closing costs and reserve target.</div></div>
+                      <div class="mf-pro-card"><div class="mf-pro-label">Funding Gap</div><div class="mf-pro-value" id="funding-gap-result">—</div><div class="mf-pro-note">Additional funds required beyond funds entered.</div></div>
+                      <div class="mf-pro-card"><div class="mf-pro-label">Time to Savings Goal</div><div class="mf-pro-value" id="savings-time-result">—</div><div class="mf-pro-note">Based on the planned monthly savings amount.</div></div>
+                    </div>
+                  </div>
+
+                  <div class="mf-result-section">
+                    <h3>Scenario Analysis</h3>
+                    <p>Test common case-structuring changes without changing the base case.</p>
+                    <div class="mf-scenario-controls">
+                      <label>Monthly debt payment to remove<div class="mf-money"><span>$</span><input id="scenarioDebtRemove" type="number" min="0" step="25" value="0"></div></label>
+                      <label>Additional down payment<div class="mf-money"><span>$</span><input id="scenarioDownAdd" type="number" min="0" step="1000" value="0"></div></label>
+                      <label>Scenario contract rate<div class="mf-percent"><input id="scenarioRate" type="number" min="0" max="25" step="0.01" placeholder="Current rate"><span>%</span></div></label>
+                      <label>Scenario amortization<select id="scenarioAmortization"><option value="">Current</option><option value="20">20 years</option><option value="25">25 years</option><option value="30">30 years</option></select></label>
+                    </div>
+                    <div class="mf-results-actions">
+                      <button type="button" class="mf-btn mf-btn-primary" id="runScenario">Run Scenario</button>
+                      <button type="button" class="mf-btn mf-btn-outline" id="clearScenario">Clear</button>
+                    </div>
+                    <div style="overflow-x:auto">
+                      <table class="mf-scenario-table">
+                        <thead><tr><th>Metric</th><th>Current Case</th><th>Scenario</th><th>Difference</th></tr></thead>
+                        <tbody>
+                          <tr><td>Mortgage qualification</td><td id="scBaseMortgage">—</td><td id="scNewMortgage">—</td><td id="scDiffMortgage">—</td></tr>
+                          <tr><td>Maximum purchase price</td><td id="scBasePrice">—</td><td id="scNewPrice">—</td><td id="scDiffPrice">—</td></tr>
+                          <tr><td>Qualifying monthly payment</td><td id="scBasePayment">—</td><td id="scNewPayment">—</td><td id="scDiffPayment">—</td></tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+
                   <div class="mf-results-actions"><button type="button" class="mf-btn mf-btn-primary" id="mf-download-results">Download Client Estimate</button><button type="button" class="mf-btn mf-btn-outline" onclick="window.print()">Print Summary</button></div>
                   <p class="mf-disclaimer">This calculator provides an estimate for general planning purposes only. It does not constitute mortgage approval, a commitment to lend, financial advice, or a guarantee of financing. Final qualification depends on document verification, credit history, lender and insurer requirements, property review, applicable laws, and underwriting policies.</p>
                 </div>
@@ -506,9 +572,17 @@
     const tds= grossMonthly>0 ? (qualPaymentAtMax+housingExtras+debtsMonthly)/grossMonthly*100 : 0;
     const totalMonthlyExpenses=debtsMonthly+living+monthlyPropertyBudget()+actualPayment;
     const cashRemaining=netMonthly>0?netMonthly-(debtsMonthly+living+monthlyPropertyBudget()+actualPayment+num('cashCushion')):null;
-    const closingCost=maxPurchase*pct('closingCostPct');
+    const percentageClosingCost=maxPurchase*pct('closingCostPct');
+    const detailedClosingCost=num('legalCosts')+num('inspectionCosts')+num('transferTax')+num('otherClosingCosts');
+    const closingCost=detailedClosingCost>0?detailedClosingCost:percentageClosingCost;
     const closingAvailable=num('closingFunds');
-    return {annualIncome,grossMonthly,debtsMonthly,living,qualRate,years,housingExtras,gdsPayment,tdsPayment,qualifyingPayment,lenderMortgage,netMonthly,budgetExMortgage,comfortablePayment,cashMortgage,comfortableMortgage,down,maxPurchase,mortgageAtMax,actualPayment,qualPaymentAtMax,gds,tds,totalMonthlyExpenses,cashRemaining,closingCost,closingAvailable};
+    const cashToClose=down+closingCost+num('closingReserve');
+    const totalAvailableFunds=down+closingAvailable+num('reserveFunds');
+    const fundingGap=Math.max(0,cashToClose-totalAvailableFunds);
+    const plannedSavings=num('plannedMonthlySavings');
+    const savingsMonths=fundingGap<=0?0:(plannedSavings>0?Math.ceil(fundingGap/plannedSavings):null);
+    const qualificationDriver=tdsPayment<gdsPayment?'TDS':'GDS';
+    return {annualIncome,grossMonthly,debtsMonthly,living,qualRate,years,housingExtras,gdsPayment,tdsPayment,qualifyingPayment,lenderMortgage,netMonthly,budgetExMortgage,comfortablePayment,cashMortgage,comfortableMortgage,down,maxPurchase,mortgageAtMax,actualPayment,qualPaymentAtMax,gds,tds,totalMonthlyExpenses,cashRemaining,closingCost,closingAvailable,cashToClose,totalAvailableFunds,fundingGap,plannedSavings,savingsMonths,qualificationDriver};
   }
 
   function liveUpdate(){
@@ -576,7 +650,40 @@
     $('mf-narrative').textContent = r.comfortableMortgage===null ? `Based on the information entered, the client may qualify for an estimated mortgage of ${money(r.lenderMortgage)} and an estimated maximum purchase price of ${money(r.maxPurchase)}. Enter after-tax household income to calculate the comfortable mortgage estimate.` : `Based on the information entered, the client may qualify for an estimated mortgage of ${money(r.lenderMortgage)}. With the available down payment, the estimated maximum purchase price is ${money(r.maxPurchase)}. After considering selected household expenses and the desired cash cushion, a mortgage around ${money(r.comfortableMortgage)} may provide a more comfortable monthly budget.`;
     const warnings=[]; if(!r.annualIncome) warnings.push('Qualifying income has not been entered.'); if(r.gds>num('gdsLimit')+.05) warnings.push('The calculated GDS is above the selected guideline.'); if(r.tds>num('tdsLimit')+.05) warnings.push('The calculated TDS is above the selected guideline.'); if(r.down<minDownPayment(r.maxPurchase)) warnings.push('The available down payment may not satisfy the minimum down-payment requirement.'); if(r.closingAvailable<r.closingCost) warnings.push('Additional closing funds are below the estimated closing-cost amount.'); if(r.cashRemaining!==null && r.cashRemaining<0) warnings.push('The selected household budget produces negative monthly cash flow at the estimated maximum purchase price.'); if(num('amortization')===30) warnings.push('Review whether the selected 30-year amortization is permitted for this borrower and mortgage type.');
     $('mf-warnings').innerHTML=warnings.map(w=>`<div class="mf-warning-item">${w}</div>`).join('');
+    $('qualification-driver').innerHTML=`<strong>Qualification Driver: ${r.qualificationDriver}</strong><br>${r.qualificationDriver==='TDS'?'Total debt obligations are currently the controlling qualification factor.':'Housing costs are currently the controlling qualification factor.'}<br><span style="color:var(--mf-muted)">GDS-supported payment: ${money(r.gdsPayment)} / month · TDS-supported payment: ${money(r.tdsPayment)} / month</span>`;
+    $('cash-to-close-result').textContent=money(r.cashToClose);
+    $('funding-gap-result').textContent=money(r.fundingGap);
+    $('savings-time-result').textContent=r.fundingGap<=0?'Ready':(r.savingsMonths===null?'Add savings':`${r.savingsMonths} month${r.savingsMonths===1?'':'s'}`);
     liveUpdate(); return r;
+  }
+
+  function signedMoney(v){ return `${v>=0?'+':''}${money(v)}`; }
+  function runScenario(){
+    const r=compute();
+    const removed=Math.min(Math.max(0,num('scenarioDebtRemove')),r.debtsMonthly);
+    const scenarioDebts=Math.max(0,r.debtsMonthly-removed);
+    const scenarioRate=num('scenarioRate')||num('contractRate');
+    const scenarioYears=num('scenarioAmortization')||r.years;
+    const scenarioQualRate=Math.max(num('stressFloor'),scenarioRate+num('stressIncrease'));
+    const scenarioTdsPayment=Math.max(0,r.grossMonthly*pct('tdsLimit')-r.housingExtras-scenarioDebts);
+    const scenarioPayment=Math.min(r.gdsPayment,scenarioTdsPayment);
+    const scenarioMortgage=r.annualIncome>0?principalFromPayment(scenarioPayment,scenarioQualRate,scenarioYears):0;
+    const scenarioDown=r.down+Math.max(0,num('scenarioDownAdd'));
+    const scenarioPrice=maxPurchaseFromMortgage(scenarioMortgage,scenarioDown);
+    $('scBaseMortgage').textContent=money(r.lenderMortgage);
+    $('scNewMortgage').textContent=money(scenarioMortgage);
+    $('scDiffMortgage').textContent=signedMoney(scenarioMortgage-r.lenderMortgage);
+    $('scBasePrice').textContent=money(r.maxPurchase);
+    $('scNewPrice').textContent=money(scenarioPrice);
+    $('scDiffPrice').textContent=signedMoney(scenarioPrice-r.maxPurchase);
+    $('scBasePayment').textContent=money(r.qualifyingPayment);
+    $('scNewPayment').textContent=money(scenarioPayment);
+    $('scDiffPayment').textContent=signedMoney(scenarioPayment-r.qualifyingPayment);
+  }
+  function clearScenario(){
+    ['scenarioDebtRemove','scenarioDownAdd','scenarioRate'].forEach(id=>$(id).value='');
+    $('scenarioAmortization').value='';
+    ['scBaseMortgage','scNewMortgage','scDiffMortgage','scBasePrice','scNewPrice','scDiffPrice','scBasePayment','scNewPayment','scDiffPayment'].forEach(id=>$(id).textContent='—');
   }
 
   function collectForm(){ const data={}; $$('#mortgagefit-app input,#mortgagefit-app select').forEach(el=>{ if(el.type==='checkbox') data[el.id]=el.checked; else data[el.id]=el.value; }); data.applicants=$$('.mf-applicant').map(a=>({label:a.querySelector('.a-label').value,employment:a.querySelector('.a-employment').value,base:a.querySelector('.a-base').value,variable:a.querySelector('.a-variable').value,variablePct:a.querySelector('.a-variable-pct').value,other:a.querySelector('.a-other').value,rental:a.querySelector('.a-rental').value,rentalPct:a.querySelector('.a-rental-pct').value,extra:a.querySelector('.a-extra').value})); return data; }
@@ -587,7 +694,7 @@
 
   function pdf(){ if(!lastResult) calculate(); const r=lastResult; if(!window.jspdf) return toast('PDF library could not be loaded.'); const {jsPDF}=window.jspdf, doc=new jsPDF({unit:'pt',format:'letter'}), ref=$('clientRef').value.trim()||'Client-Estimate'; let y=48;
     doc.setTextColor(16,42,67); doc.setFontSize(22); doc.setFont('helvetica','bold'); doc.text('MortgageFit Client Estimate',42,y); y+=22; doc.setFontSize(9); doc.setFont('helvetica','normal'); doc.setTextColor(107,124,147); doc.text(`Client reference: ${ref}   |   Date: ${new Date().toLocaleDateString('en-CA')}`,42,y); y+=28;
-    const rows=[['Estimated lender qualification',money(r.lenderMortgage)],['Comfortable mortgage',r.comfortableMortgage===null?'Not calculated':money(r.comfortableMortgage)],['Estimated maximum purchase price',money(r.maxPurchase)],['Estimated monthly payment',money(r.actualPayment)],['Annual qualifying income',money(r.annualIncome)],['Down payment',money(r.down)],['Qualifying rate',`${r.qualRate.toFixed(2)}%`],['GDS / TDS',`${r.gds.toFixed(2)}% / ${r.tds.toFixed(2)}%`],['Monthly debts',money(r.debtsMonthly)],['Selected living expenses',money(r.living)]];
+    const rows=[['Estimated lender qualification',money(r.lenderMortgage)],['Comfortable mortgage',r.comfortableMortgage===null?'Not calculated':money(r.comfortableMortgage)],['Estimated maximum purchase price',money(r.maxPurchase)],['Estimated monthly payment',money(r.actualPayment)],['Annual qualifying income',money(r.annualIncome)],['Down payment',money(r.down)],['Qualifying rate',`${r.qualRate.toFixed(2)}%`],['GDS / TDS',`${r.gds.toFixed(2)}% / ${r.tds.toFixed(2)}%`],['Monthly debts',money(r.debtsMonthly)],['Selected living expenses',money(r.living)],['Qualification driver',r.qualificationDriver],['Cash to close',money(r.cashToClose)],['Funding gap',money(r.fundingGap)],['Savings timeline',r.fundingGap<=0?'Ready':(r.savingsMonths===null?'Not calculated':`${r.savingsMonths} months`)]];
     rows.forEach(([k,v],i)=>{ if(i%2===0){doc.setFillColor(247,250,252);doc.rect(42,y-13,528,24,'F');} doc.setTextColor(51,78,104); doc.setFont('helvetica','normal'); doc.text(k,50,y); doc.setTextColor(16,42,67); doc.setFont('helvetica','bold'); doc.text(v,560,y,{align:'right'}); y+=24; });
     y+=18; doc.setFontSize(9); doc.setFont('helvetica','normal'); doc.setTextColor(51,78,104); doc.text(doc.splitTextToSize($('mf-narrative').textContent,520),42,y); y+=62; doc.setFontSize(7.5); doc.setTextColor(107,124,147); const disclaimer='This report provides an estimate for general planning purposes only. It does not constitute mortgage approval, a commitment to lend, financial advice, or a guarantee of financing. Final qualification depends on verification, credit history, property review, lender and insurer requirements, and underwriting policies.'; doc.text(doc.splitTextToSize(disclaimer,520),42,y); doc.save(`MortgageFit-${ref.replace(/[^a-z0-9-_]/gi,'-')}-${new Date().toISOString().slice(0,10)}.pdf`); }
 
@@ -612,7 +719,7 @@
     });
     $$('.mf-step').forEach(s=>s.addEventListener('click',()=>showStep(parseInt(s.dataset.step,10))));
     $('mf-next').onclick=()=>showStep(currentStep+1); $('mf-prev').onclick=()=>showStep(currentStep-1); $('add-applicant').onclick=addApplicant; $('add-custom-expense').onclick=()=>addCustomExpense();
-    $('mf-reset').onclick=reset; $('mf-download').onclick=pdf; $('mf-download-results').onclick=pdf; $('mf-save-case').onclick=saveCase; $('mf-cases').onclick=loadCases; $('mf-cases-close').onclick=()=>{$('mf-cases-modal').hidden=true;};
+    $('mf-reset').onclick=reset; $('mf-download').onclick=pdf; $('mf-download-results').onclick=pdf; $('mf-calculate').onclick=calculate; $('runScenario').onclick=runScenario; $('clearScenario').onclick=clearScenario; $('mf-save-case').onclick=saveCase; $('mf-cases').onclick=loadCases; $('mf-cases-close').onclick=()=>{$('mf-cases-modal').hidden=true;};
     liveUpdate(); showStep(0); initFirebase();
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',bind); else bind();
