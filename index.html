@@ -1339,6 +1339,89 @@ input:focus,select:focus,textarea:focus{border-color:#777b80!important;box-shado
 }
 </style>
 
+
+<style id="mf-banner-text-safe-zone-v17">
+@media (min-width:901px){
+  /* Keep the left branding area fully on the white side of the banner */
+  .mf-brand-block{
+    position:relative!important;
+    z-index:50!important;
+    width:max-content!important;
+    max-width:66%!important;
+    overflow:visible!important;
+  }
+
+  /* Make the message column slightly narrower so it never reaches the photo fade */
+  .mf-banner-message{
+    position:relative!important;
+    z-index:60!important;
+    width:390px!important;
+    max-width:390px!important;
+    min-width:390px!important;
+    padding:0 18px 0 0!important;
+    overflow:visible!important;
+  }
+
+  .mf-banner-message > div{
+    position:relative!important;
+    z-index:61!important;
+    display:block!important;
+    width:100%!important;
+    max-width:100%!important;
+    font-size:20px!important;
+    line-height:1.05!important;
+    font-weight:800!important;
+    white-space:nowrap!important;
+    color:#17191d!important;
+    opacity:1!important;
+  }
+
+  .mf-banner-message small{
+    position:relative!important;
+    z-index:61!important;
+    color:#5c626b!important;
+    opacity:1!important;
+  }
+
+  /* Solid white backing behind the complete message block.
+     This prevents the banner image/fade from washing out any letters. */
+  .mf-banner-message::before{
+    content:""!important;
+    position:absolute!important;
+    z-index:0!important;
+    top:-24px!important;
+    right:-14px!important;
+    bottom:-24px!important;
+    left:-18px!important;
+    background:rgba(250,250,248,.98)!important;
+    pointer-events:none!important;
+  }
+
+  /* Disable the earlier fading overlay on this text block */
+  .mf-banner-message::after{
+    content:none!important;
+    display:none!important;
+  }
+
+  /* Keep the divider visible and above all banner blending layers */
+  .mf-banner-divider{
+    position:relative!important;
+    z-index:60!important;
+    background:#8f8f8b!important;
+    opacity:1!important;
+  }
+
+  /* Keep header background effects behind the actual content */
+  .mf-header::before{
+    z-index:1!important;
+  }
+  .mf-header .mf-brand-block,
+  .mf-header .mf-header-actions{
+    z-index:50!important;
+  }
+}
+</style>
+
 </head>
 <body>
 
