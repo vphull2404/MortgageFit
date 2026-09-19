@@ -528,6 +528,147 @@ input:focus,select:focus,textarea:focus{border-color:#777b80!important;box-shado
 }
 </style>
 
+
+<style id="mf-kpi-glass-compact-v5">
+/* Narrower KPI row */
+.mf-kpi-grid{
+  grid-template-columns:repeat(4,minmax(0,255px))!important;
+  justify-content:start!important;
+  gap:10px!important;
+  width:100%!important;
+}
+
+/* Stronger glassmorphism + narrower cards */
+.mf-kpi,.mf-kpi-hero{
+  width:100%!important;
+  max-width:255px!important;
+  height:82px!important;
+  min-height:82px!important;
+  padding:10px 25px 9px 63px!important;
+  border-radius:15px!important;
+
+  background:
+    linear-gradient(135deg,
+      rgba(255,255,255,.72) 0%,
+      rgba(255,255,255,.43) 48%,
+      rgba(226,226,224,.35) 100%)!important;
+
+  border:1px solid rgba(255,255,255,.88)!important;
+
+  box-shadow:
+    0 12px 28px rgba(20,20,20,.09),
+    inset 0 1px 0 rgba(255,255,255,.95),
+    inset 0 -1px 0 rgba(255,255,255,.30)!important;
+
+  backdrop-filter:blur(24px) saturate(135%)!important;
+  -webkit-backdrop-filter:blur(24px) saturate(135%)!important;
+
+  position:relative!important;
+  overflow:hidden!important;
+}
+
+/* Glass highlight */
+.mf-kpi::before,.mf-kpi-hero::before{
+  content:""!important;
+  display:block!important;
+  position:absolute!important;
+  left:0!important;
+  top:0!important;
+  width:100%!important;
+  height:42%!important;
+  background:linear-gradient(180deg,rgba(255,255,255,.50),rgba(255,255,255,0))!important;
+  pointer-events:none!important;
+  border-radius:15px 15px 50% 50%!important;
+}
+
+/* Soft reflective glow */
+.mf-kpi::after,.mf-kpi-hero::after{
+  content:""!important;
+  display:block!important;
+  position:absolute!important;
+  width:70px!important;
+  height:70px!important;
+  right:-25px!important;
+  top:-30px!important;
+  border-radius:50%!important;
+  background:rgba(255,255,255,.38)!important;
+  filter:blur(12px)!important;
+  pointer-events:none!important;
+}
+
+/* Keep the single icon above glass overlays */
+.mf-kpi-icon{
+  z-index:3!important;
+  left:12px!important;
+  width:39px!important;
+  height:39px!important;
+  background:rgba(245,245,243,.58)!important;
+  border:1px solid rgba(255,255,255,.90)!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.95),
+    0 4px 12px rgba(0,0,0,.055)!important;
+  backdrop-filter:blur(12px)!important;
+  -webkit-backdrop-filter:blur(12px)!important;
+}
+
+/* Text above glass layers */
+.mf-kpi span,.mf-kpi strong,.mf-kpi small,
+.mf-kpi-hero span,.mf-kpi-hero strong,.mf-kpi-hero small{
+  position:relative!important;
+  z-index:3!important;
+}
+
+/* Restore reference chevron since card pseudo-elements are now glass layers */
+.mf-kpi small::after,.mf-kpi-hero small::after{
+  content:"›"!important;
+  position:absolute!important;
+  right:-16px!important;
+  top:-22px!important;
+  font-size:20px!important;
+  line-height:1!important;
+  font-weight:400!important;
+  color:#33373b!important;
+}
+
+/* Responsive sizing */
+@media(max-width:1200px){
+  .mf-kpi-grid{
+    grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  }
+  .mf-kpi,.mf-kpi-hero{max-width:none!important}
+}
+@media(max-width:900px){
+  .mf-kpi-grid{grid-template-columns:repeat(2,minmax(0,255px))!important}
+}
+@media(max-width:600px){
+  .mf-kpi-grid{grid-template-columns:1fr!important}
+  .mf-kpi,.mf-kpi-hero{max-width:255px!important}
+}
+</style>
+
+
+<style id="mf-user-house-banner">
+.mf-header{
+  background:
+    linear-gradient(90deg,
+      rgba(250,250,248,.99) 0%,
+      rgba(250,250,248,.97) 36%,
+      rgba(250,250,248,.88) 49%,
+      rgba(250,250,248,.48) 65%,
+      rgba(250,250,248,.12) 100%),
+    url("beautiful-modern-suburban-home-with-manicured-lawn-landscaping.jpg")
+    right center / 54% 100% no-repeat!important;
+}
+@media(max-width:900px){
+  .mf-header{
+    background:
+      linear-gradient(90deg,rgba(250,250,248,.98),rgba(250,250,248,.78)),
+      url("beautiful-modern-suburban-home-with-manicured-lawn-landscaping.jpg")
+      center / cover no-repeat!important;
+  }
+}
+</style>
+
 </head>
 <body>
 
