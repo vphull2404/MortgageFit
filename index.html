@@ -1296,6 +1296,49 @@ input:focus,select:focus,textarea:focus{border-color:#777b80!important;box-shado
 }
 </style>
 
+
+<style id="mf-banner-copy-front-v16">
+@media (min-width:901px){
+  /* Keep the complete brand/message block above the banner image blend */
+  .mf-brand-block{
+    position:relative!important;
+    z-index:10!important;
+  }
+
+  .mf-banner-message{
+    position:relative!important;
+    z-index:11!important;
+    padding-right:22px!important;
+  }
+
+  /* Keep the headline fully inside the white side of the banner */
+  .mf-banner-message > div{
+    font-size:21px!important;
+    letter-spacing:-0.01em!important;
+  }
+
+  /* Add a subtle white fade behind only the message area so no letters
+     are washed out where the house image begins */
+  .mf-banner-message::after{
+    content:""!important;
+    position:absolute!important;
+    z-index:-1!important;
+    top:-20px!important;
+    right:-28px!important;
+    bottom:-20px!important;
+    left:-16px!important;
+    background:linear-gradient(
+      90deg,
+      rgba(250,250,248,.98) 0%,
+      rgba(250,250,248,.96) 72%,
+      rgba(250,250,248,.82) 88%,
+      rgba(250,250,248,0) 100%
+    )!important;
+    pointer-events:none!important;
+  }
+}
+</style>
+
 </head>
 <body>
 
