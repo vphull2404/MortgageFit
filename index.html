@@ -763,6 +763,53 @@ input:focus,select:focus,textarea:focus{border-color:#777b80!important;box-shado
 }
 </style>
 
+
+<style id="mf-align-sidebar-with-kpis-v7">
+/*
+ Desktop alignment:
+ - KPI row begins at the same left edge as the sidebar.
+ - Four cards stay centered within the full available width.
+ - Removes the large blank area before the first scorecard.
+*/
+@media (min-width:1151px){
+  .mf-kpi-grid{
+    grid-template-columns:repeat(4,255px)!important;
+    justify-content:space-between!important;
+    width:calc(100% - 24px)!important;
+    max-width:none!important;
+    margin:12px 12px 15px!important;
+    padding:0!important;
+    box-sizing:border-box!important;
+  }
+
+  .mf-kpi,.mf-kpi-hero{
+    width:255px!important;
+    max-width:255px!important;
+  }
+
+  /* Pull the left navigation/content area up visually under the KPI row
+     and keep its outer edge aligned with the first KPI. */
+  .mf-main,
+  .mf-workspace,
+  .mf-content-grid{
+    margin-left:0!important;
+  }
+
+  .mf-sidebar{
+    margin-left:0!important;
+  }
+}
+
+/* On medium screens keep the cards centered cleanly. */
+@media (min-width:901px) and (max-width:1150px){
+  .mf-kpi-grid{
+    grid-template-columns:repeat(2,255px)!important;
+    justify-content:center!important;
+    gap:12px!important;
+  }
+}
+</style>
+
 </head>
 <body>
 
