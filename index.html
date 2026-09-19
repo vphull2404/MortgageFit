@@ -1148,25 +1148,170 @@ input:focus,select:focus,textarea:focus{border-color:#777b80!important;box-shado
 }
 </style>
 
+
+<style id="mf-banner-exact-3-columns-v14">
+/* Exact banner structure requested:
+   Column 1 = MortgageFit + PLAN/QUALIFY/COMPARE/CLOSE
+   Column 2 = divider
+   Column 3 = Smarter tools / Stronger conversations / For Mortgage Professionals
+*/
+@media (min-width:901px){
+  .mf-header{
+    display:flex!important;
+    align-items:center!important;
+    justify-content:space-between!important;
+  }
+
+  .mf-brand-block{
+    display:grid!important;
+    grid-template-columns:max-content 1px max-content!important;
+    grid-template-rows:auto!important;
+    align-items:center!important;
+    justify-content:start!important;
+    column-gap:26px!important;
+    width:max-content!important;
+    max-width:none!important;
+    margin:0!important;
+    padding:0!important;
+  }
+
+  .mf-banner-brand{
+    grid-column:1!important;
+    grid-row:1!important;
+    display:flex!important;
+    flex-direction:column!important;
+    justify-content:center!important;
+    align-items:flex-start!important;
+    width:max-content!important;
+    margin:0!important;
+    padding:0!important;
+  }
+
+  .mf-banner-brand .mf-wordmark{
+    margin:0 0 9px 0!important;
+    padding:0!important;
+  }
+
+  .mf-banner-brand .mf-brand-line{
+    margin:0!important;
+    padding:0!important;
+    white-space:nowrap!important;
+  }
+
+  .mf-banner-divider{
+    grid-column:2!important;
+    grid-row:1!important;
+    width:1px!important;
+    height:92px!important;
+    margin:0!important;
+    padding:0!important;
+    background:rgba(86,91,98,.38)!important;
+    align-self:center!important;
+  }
+
+  .mf-banner-message{
+    grid-column:3!important;
+    grid-row:1!important;
+    display:flex!important;
+    flex-direction:column!important;
+    justify-content:center!important;
+    align-items:flex-start!important;
+    width:max-content!important;
+    margin:0!important;
+    padding:0!important;
+    white-space:nowrap!important;
+  }
+
+  .mf-banner-message > div{
+    margin:0!important;
+    padding:0!important;
+    font-family:Georgia,"Times New Roman",serif!important;
+    font-size:22px!important;
+    line-height:1.02!important;
+    font-weight:700!important;
+    color:#17191d!important;
+  }
+
+  .mf-banner-message small{
+    display:block!important;
+    margin:11px 0 0 0!important;
+    padding:0!important;
+    font-family:Arial,Helvetica,sans-serif!important;
+    font-size:8px!important;
+    line-height:1!important;
+    font-weight:700!important;
+    letter-spacing:.28em!important;
+    color:#5c626b!important;
+    white-space:nowrap!important;
+  }
+
+  /* Disable all old branding/message layout rules */
+  .mf-brand-message,
+  .mf-brand-divider,
+  .mf-brand-copy,
+  .mf-badge,
+  .mf-intro{
+    display:none!important;
+  }
+
+  .mf-header .mf-brand::after,
+  .mf-header .mf-brand-block::after{
+    content:none!important;
+    display:none!important;
+  }
+}
+
+@media (max-width:900px){
+  .mf-brand-block{
+    display:flex!important;
+    flex-wrap:wrap!important;
+    align-items:center!important;
+    gap:16px!important;
+  }
+  .mf-banner-divider{display:none!important}
+  .mf-banner-message{width:100%!important}
+}
+</style>
+
+
+<style id="mf-divider-visibility-bold-v15">
+@media (min-width:901px){
+  /* Make the center divider clearly visible */
+  .mf-banner-divider{
+    display:block!important;
+    width:2px!important;
+    min-width:2px!important;
+    height:96px!important;
+    background:#9b9b97!important;
+    opacity:1!important;
+    align-self:center!important;
+    justify-self:center!important;
+    box-shadow:none!important;
+  }
+
+  /* Make the two main positioning lines distinctly bold */
+  .mf-banner-message > div{
+    font-weight:800!important;
+  }
+}
+</style>
+
 </head>
 <body>
 
         <div class="mf-app" id="mortgagefit-app">
           <header class="mf-header">
             <div class="mf-brand-block">
-              <span class="mf-badge">Canadian Mortgage Estimation Tool</span>
-              <h1 class="mf-wordmark"><span>Mortgage</span><em>Fit</em></h1>
-<div class="mf-brand-line">PLAN &nbsp;·&nbsp; QUALIFY &nbsp;·&nbsp; COMPARE &nbsp;·&nbsp; CLOSE</div>
-<div class="mf-brand-message">
-  <div class="mf-brand-divider"></div>
-  <div class="mf-brand-copy">
-    <div>Smarter tools.</div>
-    <div>Stronger conversations.</div>
-    <small>FOR MORTGAGE PROFESSIONALS</small>
-  </div>
-</div>
-              
-              <p class="mf-intro">Estimate lender qualification and real-life affordability in one guided workflow.</p>
+              <div class="mf-banner-brand">
+                <h1 class="mf-wordmark"><span>Mortgage</span><em>Fit</em></h1>
+                <div class="mf-brand-line">PLAN &nbsp;·&nbsp; QUALIFY &nbsp;·&nbsp; COMPARE &nbsp;·&nbsp; CLOSE</div>
+              </div>
+              <div class="mf-banner-divider" aria-hidden="true"></div>
+              <div class="mf-banner-message">
+                <div>Smarter tools.</div>
+                <div>Stronger conversations.</div>
+                <small>FOR MORTGAGE PROFESSIONALS</small>
+              </div>
             </div>
             <div class="mf-header-actions">
               <button type="button" class="mf-btn mf-btn-secondary" id="mf-reset">Reset</button>
