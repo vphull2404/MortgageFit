@@ -371,6 +371,98 @@ input:focus,select:focus,textarea:focus{border-color:#777b80!important;box-shado
 @media(max-width:600px){.mf-kpi-grid{grid-template-columns:1fr!important}.mf-kpi,.mf-kpi-hero{height:118px!important}}
 </style>
 
+
+<style id="mf-kpi-reference-match-v3">
+/* Brand */
+.mf-header h1.mf-wordmark{
+  font-family:Georgia,"Times New Roman",serif!important;
+  font-size:38px!important;line-height:1!important;font-weight:700!important;
+  letter-spacing:-1.5px!important;margin:14px 0 8px!important;
+}
+.mf-wordmark span{color:#15181c!important}
+.mf-wordmark em{color:#caa66b!important;font-style:normal!important}
+
+/* Compact KPI row matching the supplied reference */
+.mf-kpi-grid{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:12px!important;
+  margin:13px 0 15px!important;
+}
+.mf-kpi,.mf-kpi-hero{
+  height:96px!important;min-height:96px!important;
+  padding:13px 30px 12px 78px!important;
+  box-sizing:border-box!important;
+  display:flex!important;flex-direction:column!important;justify-content:center!important;
+  position:relative!important;overflow:hidden!important;
+  border-radius:15px!important;
+  background:linear-gradient(135deg,rgba(255,255,255,.82),rgba(239,239,237,.63))!important;
+  border:1px solid rgba(255,255,255,.98)!important;
+  box-shadow:0 10px 25px rgba(20,20,20,.065),inset 0 1px 0 rgba(255,255,255,.98)!important;
+  backdrop-filter:blur(20px) saturate(105%)!important;
+  -webkit-backdrop-filter:blur(20px) saturate(105%)!important;
+  color:#15181c!important;
+}
+/* Remove every old pseudo icon/colour decoration */
+.mf-kpi:before,.mf-kpi:after{content:none!important;display:none!important}
+
+/* One icon only */
+.mf-kpi-icon{
+  display:flex!important;
+  position:absolute!important;left:15px!important;top:50%!important;
+  transform:translateY(-50%)!important;
+  width:48px!important;height:48px!important;margin:0!important;
+  align-items:center!important;justify-content:center!important;
+  border-radius:50%!important;
+  background:linear-gradient(145deg,rgba(246,246,245,.98),rgba(221,221,219,.90))!important;
+  border:1px solid rgba(255,255,255,.98)!important;
+  box-shadow:inset 0 1px 0 #fff,0 4px 12px rgba(0,0,0,.035)!important;
+}
+.mf-kpi-icon svg{width:27px!important;height:27px!important;fill:#171a1e!important;stroke:#171a1e!important;stroke-width:1.45!important;stroke-linecap:round!important;stroke-linejoin:round!important}
+.mf-kpi:nth-child(2) .mf-kpi-icon svg path,
+.mf-kpi:nth-child(4) .mf-kpi-icon svg path{fill:none!important}
+.mf-kpi:nth-child(3) .mf-kpi-icon svg path{fill:#171a1e!important}
+
+/* Typography and spacing */
+.mf-kpi span,.mf-kpi-hero span{
+  display:block!important;margin:0 0 3px!important;
+  font-size:10.5px!important;line-height:1.1!important;font-weight:600!important;
+  color:#343940!important;text-transform:none!important;letter-spacing:0!important;
+  white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;
+}
+.mf-kpi strong,.mf-kpi-hero strong{
+  display:block!important;margin:0 0 3px!important;
+  font-size:25px!important;line-height:1!important;font-weight:900!important;
+  color:#101319!important;white-space:nowrap!important;overflow:visible!important;
+}
+.mf-kpi small,.mf-kpi-hero small{
+  display:block!important;margin:0!important;
+  font-size:9.5px!important;line-height:1.1!important;font-weight:500!important;
+  color:#60666e!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;
+}
+/* Reference-style chevron */
+.mf-kpi small:after{
+  content:"›"!important;display:block!important;position:absolute!important;
+  right:13px!important;top:50%!important;transform:translateY(-50%)!important;
+  font-size:25px!important;line-height:1!important;font-weight:500!important;color:#171a1e!important;
+}
+
+/* Softer banner image treatment */
+.mf-header{
+  background:
+    linear-gradient(90deg,rgba(250,250,248,.99) 0%,rgba(250,250,248,.96) 44%,rgba(247,244,239,.73) 65%,rgba(239,234,226,.48) 100%),
+    url("banner-living-room.png") right center/auto 100% no-repeat!important;
+}
+
+@media(max-width:1100px){
+  .mf-kpi-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:600px){
+  .mf-kpi-grid{grid-template-columns:1fr!important}
+  .mf-kpi,.mf-kpi-hero{height:92px!important;min-height:92px!important}
+}
+</style>
+
 </head>
 <body>
 
@@ -378,7 +470,7 @@ input:focus,select:focus,textarea:focus{border-color:#777b80!important;box-shado
           <header class="mf-header">
             <div class="mf-brand-block">
               <span class="mf-badge">Canadian Mortgage Estimation Tool</span>
-              <h1>MortgageFit</h1>
+              <h1 class="mf-wordmark"><span>Mortgage</span><em>Fit</em></h1>
               <p class="mf-subtitle">Mortgage Eligibility &amp; Affordability Calculator</p>
               <p class="mf-intro">Estimate lender qualification and real-life affordability in one guided workflow.</p>
             </div>
@@ -392,13 +484,13 @@ input:focus,select:focus,textarea:focus{border-color:#777b80!important;box-shado
 
           <section class="mf-kpi-grid" aria-live="polite">
             <article class="mf-kpi mf-kpi-hero">
-              <div class="mf-kpi-icon">🏦</div><span>Estimated Lender Eligibility</span>
+              <div class="mf-kpi-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 11.2 12 4l9 7.2v8.3a.5.5 0 0 1-.5.5H15v-6H9v6H3.5a.5.5 0 0 1-.5-.5z"/><path d="M7 8V5h3"/></svg></div><span>Estimated Lender Eligibility</span>
               <strong id="score-eligibility">Not calculated</strong>
               <small id="score-eligibility-note">Complete income, debt and mortgage assumptions</small>
             </article>
-            <article class="mf-kpi"><div class="mf-kpi-icon">💰</div><span>Comfortable Mortgage</span><strong id="score-comfortable">Not calculated</strong><small id="score-comfortable-note">Uses after-tax income and household costs</small></article>
-            <article class="mf-kpi"><div class="mf-kpi-icon">📈</div><span>Annual Qualifying Income</span><strong id="score-income">Waiting for input</strong><small id="score-income-note">Accepted income from all applicants</small></article>
-            <article class="mf-kpi"><div class="mf-kpi-icon">🧾</div><span>Monthly Expenses</span><strong id="score-expenses">Waiting for input</strong><small id="score-expenses-note">Debt, property and selected living costs</small></article>
+            <article class="mf-kpi"><div class="mf-kpi-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v4c0 1.7 3.1 3 7 3s7-1.3 7-3V6"/><path d="M5 10v4c0 1.7 3.1 3 7 3s7-1.3 7-3v-4"/><path d="M5 14v4c0 1.7 3.1 3 7 3s7-1.3 7-3v-4"/></svg></div><span>Comfortable Mortgage</span><strong id="score-comfortable">Not calculated</strong><small id="score-comfortable-note">Uses after-tax income and household costs</small></article>
+            <article class="mf-kpi"><div class="mf-kpi-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="8.5" cy="8" r="3.2"/><circle cx="16.2" cy="8.7" r="2.7"/><path d="M2.8 20c.3-4.2 2.2-6.5 5.7-6.5s5.4 2.3 5.7 6.5z"/><path d="M13.2 14.2c.9-.7 1.9-1 3.1-1 3 0 4.6 2.1 4.9 6.8h-5.8"/></svg></div><span>Annual Qualifying Income</span><strong id="score-income">Waiting for input</strong><small id="score-income-note">Accepted income from all applicants</small></article>
+            <article class="mf-kpi"><div class="mf-kpi-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 11h8M8 15h5"/><circle cx="16.5" cy="17.5" r="1.5"/></svg></div><span>Monthly Expenses</span><strong id="score-expenses">Waiting for input</strong><small id="score-expenses-note">Debt, property and selected living costs</small></article>
           </section>
 
           <div class="mf-workspace">
