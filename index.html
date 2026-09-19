@@ -316,6 +316,61 @@ input:focus,select:focus,textarea:focus{border-color:#777b80!important;box-shado
 }
 </style>
 
+
+<style id="mf-scorecard-fix">
+/* Scorecard fix: one monochrome icon, compact glass card, no clipping */
+.mf-kpi-grid{
+  display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:14px!important;margin:14px 0 16px!important;
+}
+.mf-kpi,.mf-kpi-hero{
+  min-height:0!important;height:122px!important;box-sizing:border-box!important;
+  padding:18px 38px 16px 96px!important;border-radius:16px!important;overflow:hidden!important;
+  background:linear-gradient(135deg,rgba(255,255,255,.78),rgba(239,239,237,.60))!important;
+  border:1px solid rgba(255,255,255,.96)!important;color:#17191d!important;
+  box-shadow:0 12px 28px rgba(20,20,20,.075),inset 0 1px 0 rgba(255,255,255,.98)!important;
+  backdrop-filter:blur(20px) saturate(105%)!important;-webkit-backdrop-filter:blur(20px) saturate(105%)!important;
+  display:flex!important;flex-direction:column!important;justify-content:center!important;
+}
+/* Remove the old coloured emoji icon completely */
+.mf-kpi-icon{display:none!important}
+/* Remove the old top colour strip */
+.mf-kpi:before{
+  content:""!important;position:absolute!important;left:20px!important;top:50%!important;right:auto!important;
+  width:58px!important;height:58px!important;transform:translateY(-50%)!important;border-radius:50%!important;
+  background:linear-gradient(145deg,rgba(245,245,244,.96),rgba(222,222,220,.84))!important;
+  border:1px solid rgba(255,255,255,.98)!important;box-shadow:inset 0 1px 0 #fff!important;
+}
+/* One monochrome icon per card */
+.mf-kpi:after{
+  position:absolute!important;left:37px!important;top:50%!important;transform:translateY(-50%)!important;
+  width:24px!important;text-align:center!important;color:#202327!important;font-size:25px!important;
+  line-height:1!important;font-weight:900!important;letter-spacing:0!important;z-index:2!important;
+}
+.mf-kpi:nth-child(1):after{content:"⌂"!important}
+.mf-kpi:nth-child(2):after{content:"●"!important}
+.mf-kpi:nth-child(3):after{content:"♟"!important}
+.mf-kpi:nth-child(4):after{content:"▤"!important}
+.mf-kpi span,.mf-kpi-hero span{
+  display:block!important;margin:0 0 5px!important;color:#42474d!important;
+  font-size:11px!important;line-height:1.15!important;font-weight:700!important;
+  text-transform:none!important;letter-spacing:0!important;white-space:normal!important;
+}
+.mf-kpi strong,.mf-kpi-hero strong{
+  display:block!important;margin:0 0 5px!important;color:#111317!important;
+  font-size:28px!important;line-height:1.02!important;font-weight:900!important;
+  white-space:nowrap!important;overflow:visible!important;
+}
+.mf-kpi small,.mf-kpi-hero small{
+  display:block!important;margin:0!important;color:#626870!important;
+  font-size:10.5px!important;line-height:1.2!important;white-space:normal!important;
+}
+/* subtle chevron like the reference */
+.mf-kpi > small:after{content:"  ›";float:right;color:#25282b;font-size:22px;line-height:10px;font-weight:700}
+@media(max-width:1100px){.mf-kpi-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:600px){.mf-kpi-grid{grid-template-columns:1fr!important}.mf-kpi,.mf-kpi-hero{height:118px!important}}
+</style>
+
 </head>
 <body>
 
