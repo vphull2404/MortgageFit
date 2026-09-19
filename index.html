@@ -810,6 +810,27 @@ input:focus,select:focus,textarea:focus{border-color:#777b80!important;box-shado
 }
 </style>
 
+
+<style id="mf-kpi-close-group-v8">
+/* Keep the four compact scorecards together instead of spreading them across the page */
+@media (min-width:1151px){
+  .mf-kpi-grid{
+    grid-template-columns:repeat(4,255px)!important;
+    justify-content:start!important;
+    gap:14px!important;
+    width:max-content!important;
+    max-width:100%!important;
+    margin:12px auto 15px!important;
+    padding:0!important;
+  }
+
+  .mf-kpi,.mf-kpi-hero{
+    width:255px!important;
+    max-width:255px!important;
+  }
+}
+</style>
+
 </head>
 <body>
 
