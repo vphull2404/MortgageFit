@@ -1310,6 +1310,13 @@ body.mf-admin-authorized .mf-mode-tabs{display:flex!important}
 .mf-agent-password-wrap input{padding-right:68px!important;width:100%}
 .mf-password-eye{position:absolute;right:7px;top:50%;transform:translateY(-50%);border:1px solid var(--mf-field-edge);border-radius:7px;background:var(--mf-fill-2);color:var(--mf-head);padding:6px 9px;font:700 11px var(--mf-sans);cursor:pointer}
 .mf-password-eye:focus-visible{outline:2px solid var(--mf-acc);outline-offset:2px}
+.mf-agent-list-controls{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+.mf-agent-list-controls .mf-admin-note{flex:1 1 160px;margin:0}
+.mf-agent-collapse-btn{white-space:nowrap;display:inline-flex;align-items:center;gap:7px}
+#mf-agent-list-container[hidden]{display:none!important}
+.mf-password-eye{width:36px;height:34px;display:flex;align-items:center;justify-content:center;padding:6px}
+.mf-password-eye svg{width:19px;height:19px;display:block}
+.mf-password-eye svg[hidden]{display:none!important}
 /* Agent PDF configuration is managed from the Admin Panel. */
 .mf-admin-pdf-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:16px}
 .mf-admin-pdf-card .mf-admin-pdf-hint{margin-top:11px;font-size:10.5px}
@@ -1365,8 +1372,11 @@ body.mf-admin-authorized .mf-mode-tabs{display:flex!important}
 
               <article class="mf-admin-card is-wide" id="mf-agent-management">
                 <div class="mf-agent-toolbar"><div><h3>Agent Management</h3><p>Add agents, set Free or Premium access, suspend accounts, and assign brokerage branding.</p></div><button type="button" class="mf-btn mf-btn-primary" id="mf-add-agent-open">+ Add Agent</button></div>
-                <div id="mf-agent-list-status" class="mf-admin-note">Loading agents…</div>
-                <div class="mf-agent-table-wrap"><table class="mf-agent-table"><thead><tr><th>Agent</th><th>Company</th><th>Plan</th><th>Status</th><th>Actions</th></tr></thead><tbody id="mf-agent-list"></tbody></table></div>
+                <div class="mf-agent-list-controls">
+                  <div id="mf-agent-list-status" class="mf-admin-note" aria-live="polite">Loading agents…</div>
+                  <button type="button" id="mf-agent-list-toggle" class="mf-btn mf-btn-outline mf-agent-collapse-btn" aria-expanded="true" aria-controls="mf-agent-list-container"><span id="mf-agent-list-toggle-icon" aria-hidden="true">▴</span> <span id="mf-agent-list-toggle-label">Collapse list</span></button>
+                </div>
+                <div id="mf-agent-list-container" class="mf-agent-table-wrap"><table class="mf-agent-table"><thead><tr><th>Agent</th><th>Company</th><th>Plan</th><th>Status</th><th>Actions</th></tr></thead><tbody id="mf-agent-list"></tbody></table></div>
               </article>
 
               <article class="mf-admin-card">
@@ -1669,7 +1679,7 @@ body.mf-admin-authorized .mf-mode-tabs{display:flex!important}
                   <label>Brokerage / company <input name="company" required maxlength="100" placeholder="Company name"></label>
                   <label>Phone number (Canada/US) <input name="phone" type="tel" inputmode="numeric" autocomplete="tel-national" maxlength="17" placeholder="(416) 555-0123" pattern="(?:\+1 )?\([2-9][0-9]{2}\) [2-9][0-9]{2}-[0-9]{4}" title="Enter a valid 10-digit Canada/US phone number, e.g. (416) 555-0123, optionally starting with 1"></label>
                   <label>License number <input name="license" maxlength="55" placeholder="License / registration"></label>
-                  <label>Temporary password <span class="mf-agent-password-wrap"><input name="password" type="password" required minlength="12" maxlength="128" autocomplete="new-password" placeholder="At least 12 characters" id="mf-new-agent-password"><button type="button" class="mf-password-eye" id="mf-new-agent-eye" aria-label="Show password" aria-pressed="false" title="Show password">Show</button></span></label>
+                  <label>Temporary password <span class="mf-agent-password-wrap"><input name="password" type="password" required minlength="12" maxlength="128" autocomplete="new-password" placeholder="At least 12 characters" id="mf-new-agent-password"><button type="button" class="mf-password-eye" id="mf-new-agent-eye" aria-label="Show password" aria-pressed="false" title="Show password"><svg class="mf-agent-eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg><svg class="mf-agent-eye-closed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" hidden><path d="M3 3l18 18M10.6 5.1A11 11 0 0 1 12 5c6.5 0 10 7 10 7a15 15 0 0 1-3.2 4.2M6.2 6.2C3.5 8.2 2 12 2 12s3.5 7 10 7a10.5 10.5 0 0 0 4.1-.8"/><path d="M10 10a3 3 0 0 0 4 4"/></svg></button></span></label>
                   <label>Access level <select name="plan"><option value="free">Free: Calculator only</option><option value="premium">Premium: Calculator + PDF</option></select></label>
                   <label>Agent colour theme <select name="theme"><option value="pearl-gold">Pearl & Gold</option><option value="ocean-mist">Ocean Mist</option><option value="sage-stone">Sage & Stone</option><option value="professional-navy">Professional Navy</option><option value="emerald-ledger">Emerald Ledger</option><option value="royal-burgundy">Royal Burgundy</option><option value="midnight-black">Midnight Black</option></select></label><label>Account status <select name="status"><option value="active">Active</option><option value="suspended">Suspended</option></select></label>
                 </div>
@@ -2360,7 +2370,9 @@ body.mf-admin-authorized .mf-mode-tabs{display:flex!important}
     agentUnsubscribe=db.collection('mortgagefit_agents').onSnapshot(snapshot=>{
       agentDirectory=snapshot.docs.map(d=>({uid:d.id,...d.data()})).sort((a,b)=>(a.name||a.email||'').localeCompare(b.name||b.email||''));
       const status=$('mf-agent-list-status');
-      status.textContent=`${agentDirectory.length} registered account${agentDirectory.length===1?'':'s'}`;
+      const agentCount=agentDirectory.filter(a=>a.role==='agent').length;
+      const adminCount=agentDirectory.filter(a=>a.role==='admin').length;
+      status.textContent=`${agentCount} agent${agentCount===1?'':'s'}${adminCount?' · '+adminCount+' administrator'+(adminCount===1?'':'s'):''}`;
       $('mf-agent-list').innerHTML=agentDirectory.map(a=>`<tr><td><strong>${escapeHtml(a.name||'Unnamed agent')}</strong><br><small>${escapeHtml(a.email||'')}</small></td><td>${escapeHtml(a.company||'—')}</td><td><span class="mf-agent-pill">${a.role==='admin'?'Administrator':a.plan==='premium'?'Premium':'Free'}</span></td><td>${escapeHtml(a.status||'—')}</td><td><button type="button" class="mf-btn mf-btn-outline" data-mf-edit-agent="${escapeHtml(a.uid)}">Edit</button><button type="button" class="mf-btn mf-btn-outline" data-mf-brand-agent="${escapeHtml(a.uid)}">Branding</button></td></tr>`).join('');
     },err=>{$('mf-agent-list-status').textContent='Could not load agents. Check Firestore rules.';console.error(err);});
   }
@@ -2409,7 +2421,8 @@ body.mf-admin-authorized .mf-mode-tabs{display:flex!important}
     modal.style.display='none';
     $('mf-add-agent-form').reset();
     $('mf-new-agent-password').type='password';
-    $('mf-new-agent-eye').textContent='Show';
+    $('mf-new-agent-eye').querySelector('.mf-agent-eye-open').hidden=false;
+    $('mf-new-agent-eye').querySelector('.mf-agent-eye-closed').hidden=true;
     $('mf-new-agent-eye').setAttribute('aria-pressed','false');
     $('mf-agent-feedback').textContent='';
   }
@@ -2606,13 +2619,24 @@ body.mf-admin-authorized .mf-mode-tabs{display:flex!important}
     $('mf-auth-signin').onclick=signInAgent;
     $('mf-auth-create').onclick=()=>setAuthStatus('Ask your administrator to create an account.','error');
     $('mf-auth-unapproved-signout').onclick=signOutAgent;
+    $('mf-agent-list-toggle').onclick=()=>{
+      const list=$('mf-agent-list-container'),button=$('mf-agent-list-toggle');
+      const collapse=!list.hidden;
+      list.hidden=collapse;
+      button.setAttribute('aria-expanded',String(!collapse));
+      $('mf-agent-list-toggle-label').textContent=collapse?'Expand list':'Collapse list';
+      $('mf-agent-list-toggle-icon').textContent=collapse?'▾':'▴';
+    };
     $('mf-add-agent-open').onclick=openAddAgent;
     $('mf-add-agent-close').onclick=$('mf-agent-cancel').onclick=closeAddAgent;
     $('mf-add-agent-form').onsubmit=submitAddAgent;
     wireAgentPhone('mf-add-agent-form');wireAgentPhone('mf-edit-agent-form');
     $('mf-new-agent-eye').onclick=()=>{
       const input=$('mf-new-agent-password'),btn=$('mf-new-agent-eye'),visible=input.type==='password';
-      input.type=visible?'text':'password';btn.textContent=visible?'Hide':'Show';
+      input.type=visible?'text':'password';
+      btn.querySelector('.mf-agent-eye-open').hidden=visible;
+      btn.querySelector('.mf-agent-eye-closed').hidden=!visible;
+      btn.title=visible?'Hide password':'Show password';
       btn.setAttribute('aria-label',visible?'Hide password':'Show password');
       btn.setAttribute('aria-pressed',String(visible));
     };
