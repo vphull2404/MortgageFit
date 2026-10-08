@@ -901,9 +901,25 @@ html.mf-custom-photo .mf-header:before{left:auto;width:auto;max-width:60%;aspect
 .mf-mode-tab:hover{background:var(--mf-fill);color:var(--mf-head)}
 .mf-mode-tab.is-active{background:linear-gradient(135deg,var(--mf-btn-1),var(--mf-btn-2));color:var(--mf-btn-ink);box-shadow:0 8px 18px rgba(var(--mf-acc-rgb),.18)}
 
+/* Agent management, branding and access controls */
+#mf-admin-tab[hidden],#mf-auth-create[hidden]{display:none!important}
+.mf-agent-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:14px 0;flex-wrap:wrap}
+.mf-agent-table{width:100%;border-collapse:collapse;font-size:12px;text-align:left}
+.mf-agent-table th,.mf-agent-table td{padding:12px 9px;border-bottom:1px solid var(--mf-line);vertical-align:middle;color:var(--mf-text)}
+.mf-agent-table th{font-size:10px;color:var(--mf-muted);text-transform:uppercase;letter-spacing:.05em}
+.mf-agent-table .mf-btn{font-size:10px;padding:7px 10px;margin:2px}
+.mf-agent-table-wrap{overflow-x:auto}
+.mf-agent-pill{border:1px solid var(--mf-line);border-radius:99px;padding:4px 8px;font-size:10px;display:inline-block}
+.mf-agent-fields{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-top:15px}
+.mf-agent-fields label{display:flex;flex-direction:column;gap:5px;font-size:11px;font-weight:700;color:var(--mf-head)}
+.mf-agent-fields input,.mf-agent-fields select{width:100%;min-width:0;box-sizing:border-box;border:1px solid var(--mf-field-edge);background:var(--mf-fill);color:var(--mf-text);border-radius:9px;padding:11px;font-size:12px}
+.mf-agent-modal-card{width:min(600px,calc(100vw - 28px));max-height:90vh;overflow:auto}
+.mf-agent-actions{display:flex;justify-content:flex-end;gap:9px;flex-wrap:wrap;margin-top:20px}
+#mf-agent-feedback{font-size:11px;color:var(--mf-muted);margin-top:10px}
+@media(max-width:650px){.mf-agent-fields{grid-template-columns:1fr}.mf-agent-table{min-width:600px}}
 /* Agent workspace is the normal calculator. Admin mode hides its normal direct children. */
 .mf-admin-panel{display:none;margin:0 0 24px;padding:24px;border-radius:24px;background:var(--mf-glass);border:1px solid var(--mf-edge);box-shadow:var(--mf-shadow),inset 0 1px 0 var(--mf-hl);-webkit-backdrop-filter:var(--mf-blur);backdrop-filter:var(--mf-blur)}
-.mf-app.mf-admin-mode > :not(.mf-mode-tabs):not(.mf-admin-panel):not(#mf-branding-modal){display:none!important}
+.mf-app.mf-admin-mode > :not(.mf-mode-tabs):not(.mf-admin-panel):not(#mf-branding-modal):not(#mf-add-agent-modal):not(#mf-edit-agent-modal):not(#mf-premium-modal){display:none!important}
 .mf-app.mf-admin-mode > .mf-admin-panel{display:block!important}
 .mf-admin-head{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;padding-bottom:18px;border-bottom:1px solid var(--mf-line)}
 .mf-admin-head h2{margin:0 0 5px;font-size:24px;color:var(--mf-head);letter-spacing:-.4px}
@@ -1297,7 +1313,7 @@ body.mf-auth-locked .mf-login-gate{
         <div class="mf-app" id="mortgagefit-app">
           <nav class="mf-mode-tabs" aria-label="MortgageFit workspace">
             <button type="button" class="mf-mode-tab is-active" id="mf-agent-tab" aria-selected="true">Agent Workspace</button>
-            <button type="button" class="mf-mode-tab" id="mf-admin-tab" aria-selected="false">Admin Panel</button>
+            <button type="button" class="mf-mode-tab" id="mf-admin-tab" aria-selected="false" hidden>Admin Panel</button>
           </nav>
 
           <section class="mf-admin-panel" id="mf-admin-panel" aria-labelledby="mf-admin-title">
@@ -1318,9 +1334,9 @@ body.mf-auth-locked .mf-login-gate{
 
               <article class="mf-admin-card is-wide mf-admin-pdf-card">
                 <h3>Agent Branding &amp; PDF</h3>
-                <p>Personalize your client estimates with your brokerage logo, agent contact details and license number. Saved branding is linked to your signed-in account.</p>
+                <p>Upload a different logo and brokerage identity for each agent. Agents can use their assigned branding but cannot edit it.</p>
                 <div class="mf-admin-pdf-actions">
-                  <button type="button" class="mf-btn mf-btn-primary" id="mf-branding-open">Configure Agent Branding</button>
+                  <button type="button" class="mf-btn mf-btn-primary" id="mf-branding-open">Manage Agent Branding</button>
                   <button type="button" class="mf-btn mf-btn-outline" id="mf-admin-pdf-preview">Preview PDF</button>
                   <button type="button" class="mf-btn mf-btn-outline" id="mf-admin-pdf-download">Download Client Estimate</button>
                 </div>
@@ -1329,8 +1345,8 @@ body.mf-auth-locked .mf-login-gate{
 
               <article class="mf-admin-card">
                 <h3>Agent Feature Access</h3>
-                <p>This area will control which MortgageFit features agents can see and use once you define the agent package.</p>
-                <span class="mf-admin-status">Ready for configuration</span>
+                <p>Free: calculator and saved cases. Premium: calculator, saved cases, PDF preview and download. Only the administrator can assign plans.</p>
+                <span class="mf-admin-status">Free / Premium</span><div id="mf-upgrade-requests" style="margin-top:14px;font-size:12px">Upgrade requests will appear here.</div>
               </article>
 
               <article class="mf-admin-card">
@@ -1339,10 +1355,10 @@ body.mf-auth-locked .mf-login-gate{
                 <span class="mf-admin-status">Planned</span>
               </article>
 
-              <article class="mf-admin-card">
-                <h3>Agents & Access</h3>
-                <p>Reserved for agent accounts, roles, status and future plan-level permissions.</p>
-                <span class="mf-admin-status">Planned</span>
+              <article class="mf-admin-card is-wide" id="mf-agent-management">
+                <div class="mf-agent-toolbar"><div><h3>Agent Management</h3><p>Add agents, set Free or Premium access, suspend accounts, and assign brokerage branding.</p></div><button type="button" class="mf-btn mf-btn-primary" id="mf-add-agent-open">+ Add Agent</button></div>
+                <div id="mf-agent-list-status" class="mf-admin-note">Loading agents…</div>
+                <div class="mf-agent-table-wrap"><table class="mf-agent-table"><thead><tr><th>Agent</th><th>Company</th><th>Plan</th><th>Status</th><th>Actions</th></tr></thead><tbody id="mf-agent-list"></tbody></table></div>
               </article>
 
               <article class="mf-admin-card">
@@ -1352,7 +1368,7 @@ body.mf-auth-locked .mf-login-gate{
               </article>
             </div>
 
-            <div class="mf-admin-note"><strong>Current stage:</strong> this separates the Admin Panel visually from the Agent Workspace. Firebase role-based authorization will be added when the limited agent feature set is finalized.</div>
+            <div class="mf-admin-note"><strong>Setup required:</strong> register your administrator UID in <code>mortgagefit_agents</code>, publish the new Firestore rules, and deploy the secure create-agent Cloud Function before adding accounts. PDF plan restrictions are interface-level until PDF generation is moved to a protected server.</div>
           </section>
           <header class="mf-header">
             <div class="mf-brand-block">
@@ -1612,7 +1628,8 @@ body.mf-auth-locked .mf-login-gate{
 
           <div class="mf-modal" id="mf-branding-modal" hidden>
             <div class="mf-modal-card mf-branding-modal-card" role="dialog" aria-modal="true" aria-labelledby="mf-branding-title">
-              <div class="mf-modal-head"><div><h2 id="mf-branding-title">Agent Branding &amp; PDF</h2><p>Personalize the mortgage estimate shared with your clients.</p></div><button type="button" id="mf-branding-close" aria-label="Close agent branding">×</button></div>
+              <div class="mf-modal-head"><div><h2 id="mf-branding-title">Manage Agent Branding</h2><p>Only the administrator can change this information.</p></div><button type="button" id="mf-branding-close" aria-label="Close agent branding">×</button></div>
+              <label class="mf-branding-agent-select">Select agent <select id="mf-branding-agent-select" aria-label="Select agent to brand"></select></label>
               <div class="mf-branding-layout">
                 <div class="mf-branding-logo-panel">
                   <div class="mf-branding-logo-box" id="mf-branding-logo-box"><span id="mf-branding-logo-placeholder">YOUR LOGO</span><img id="mf-branding-logo-image" alt="Your brokerage logo preview" hidden></div>
@@ -1630,10 +1647,51 @@ body.mf-auth-locked .mf-login-gate{
                 </div>
               </div>
               <div class="mf-branding-actions"><span id="mf-branding-status" role="status"></span><button type="button" class="mf-btn mf-btn-outline" id="mf-branding-preview">Preview PDF</button><button type="button" class="mf-btn mf-btn-primary" id="mf-branding-save">Save Branding</button></div>
-              <p class="mf-branding-footnote">Your saved branding belongs to your signed-in agent account. It is stored in Firestore and used only when generating your PDFs.</p>
+              <p class="mf-branding-footnote">This branding is assigned to the selected agent. Only administrators can save or remove it.</p>
             </div>
           </div>
 
+          <div class="mf-modal" id="mf-add-agent-modal" hidden>
+            <div class="mf-modal-card mf-agent-modal-card" role="dialog" aria-modal="true" aria-labelledby="mf-agent-modal-title">
+              <div class="mf-modal-head"><div><h2 id="mf-agent-modal-title">Add New Agent</h2><p>Create an account with a temporary password and assign access.</p></div><button type="button" id="mf-add-agent-close" aria-label="Close">×</button></div>
+              <form id="mf-add-agent-form">
+                <div class="mf-agent-fields">
+                  <label>Full name <input name="name" required maxlength="90" autocomplete="off" placeholder="Agent name"></label>
+                  <label>Email address <input name="email" type="email" required maxlength="120" autocomplete="off" placeholder="agent@example.com"></label>
+                  <label>Brokerage / company <input name="company" required maxlength="100" placeholder="Company name"></label>
+                  <label>Phone number <input name="phone" type="tel" maxlength="45" placeholder="Business phone"></label>
+                  <label>License number <input name="license" maxlength="55" placeholder="License / registration"></label>
+                  <label>Temporary password <input name="password" type="password" required minlength="12" maxlength="128" autocomplete="new-password" placeholder="At least 12 characters"></label>
+                  <label>Access level <select name="plan"><option value="free">Free: Calculator only</option><option value="premium">Premium: Calculator + PDF</option></select></label>
+                  <label>Account status <select name="status"><option value="active">Active</option><option value="suspended">Suspended</option></select></label>
+                </div>
+                <p class="mf-branding-footnote">The temporary password is used only to create the Firebase Authentication account. It is not saved in Firestore. Ask the agent to reset it after first login.</p>
+                <div id="mf-agent-feedback" role="status"></div>
+                <div class="mf-agent-actions"><button type="button" class="mf-btn mf-btn-outline" id="mf-agent-cancel">Cancel</button><button type="submit" class="mf-btn mf-btn-primary" id="mf-agent-create">Create Agent</button></div>
+              </form>
+            </div>
+          </div>
+          <div class="mf-modal" id="mf-edit-agent-modal" hidden>
+            <div class="mf-modal-card mf-agent-modal-card" role="dialog" aria-modal="true" aria-labelledby="mf-edit-agent-title">
+              <div class="mf-modal-head"><div><h2 id="mf-edit-agent-title">Edit Agent</h2><p>Manage this agent's plan, status and contact information.</p></div><button type="button" id="mf-edit-agent-close" aria-label="Close">×</button></div>
+              <form id="mf-edit-agent-form"><div class="mf-agent-fields">
+                <label>Full name <input name="name" required maxlength="90"></label>
+                <label>Email (read-only) <input name="email" readonly></label>
+                <label>Company <input name="company" required maxlength="100"></label>
+                <label>Phone <input name="phone" maxlength="45"></label>
+                <label>License <input name="license" maxlength="55"></label>
+                <label>Plan <select name="plan"><option value="free">Free</option><option value="premium">Premium</option></select></label>
+                <label>Status <select name="status"><option value="active">Active</option><option value="suspended">Suspended</option></select></label>
+              </div><div id="mf-edit-agent-feedback" role="status"></div><div class="mf-agent-actions"><button type="button" class="mf-btn mf-btn-outline" id="mf-edit-agent-cancel">Cancel</button><button type="submit" class="mf-btn mf-btn-primary" id="mf-edit-agent-save">Save Changes</button></div></form>
+            </div>
+          </div>
+          <div class="mf-modal" id="mf-premium-modal" hidden>
+            <div class="mf-modal-card mf-agent-modal-card" role="dialog" aria-modal="true" aria-labelledby="mf-premium-title">
+              <div class="mf-modal-head"><div><h2 id="mf-premium-title">Unlock Premium PDF Reports</h2><p>PDF preview and downloads are a Premium feature.</p></div><button type="button" id="mf-premium-close" aria-label="Close">×</button></div>
+              <p>Continue using the calculator and saved cases for free. Request an upgrade from your administrator to generate branded PDF reports.</p>
+              <div id="mf-premium-feedback" role="status"></div><div class="mf-agent-actions"><button type="button" class="mf-btn mf-btn-outline" id="mf-premium-later">Not Now</button><button type="button" class="mf-btn mf-btn-primary" id="mf-premium-request">Request Premium Access</button></div>
+            </div>
+          </div>
           <div class="mf-modal" id="mf-cases-modal" hidden>
             <div class="mf-modal-card"><div class="mf-modal-head"><div><h2>Saved Cases</h2><p>Cases saved to your signed-in MortgageFit account.</p></div><button type="button" id="mf-cases-close">×</button></div><div id="mf-case-status" class="mf-case-status"></div><div id="mf-case-list"></div></div>
           </div>
@@ -1685,10 +1743,11 @@ body.mf-auth-locked .mf-login-gate{
 
               <div class="mf-auth-actions">
                 <button type="button" class="mf-btn mf-btn-primary" id="mf-auth-signin">Sign In</button>
-                <button type="button" class="mf-btn mf-btn-outline" id="mf-auth-create">Create Account</button>
+                <button type="button" class="mf-btn mf-btn-outline" id="mf-auth-create" hidden>Create Account</button>
                 <button type="button" class="mf-link-btn" id="mf-auth-reset">Forgot password?</button>
               </div>
-              <p class="mf-login-security">Your MortgageFit workspace and saved cases are available only after successful authentication.</p>
+              <button type="button" class="mf-link-btn" id="mf-auth-unapproved-signout" hidden>Sign out and use another account</button>
+              <p class="mf-login-security">Accounts are created by the MortgageFit administrator. Sign in with your assigned credentials.</p>
             </div>
           </div>
 
@@ -1737,6 +1796,7 @@ body.mf-auth-locked .mf-login-gate{
   <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-functions-compat.js"></script>
 
   <script>
 (() => {
@@ -1750,6 +1810,7 @@ body.mf-auth-locked .mf-login-gate{
   let currentStep = 0, applicantSeq = 0, lastResult = null, db = null, auth = null, uid = null;
   const emptyBranding = () => ({name:'',company:'',license:'',phone:'',email:'',logoDataUrl:''});
   let agentBranding = emptyBranding(), brandingLogoDraft = '', brandingLoadSeq = 0;
+  let accessProfile=null, isMortgageAdmin=false, agentDirectory=[], editAgentUid='', brandingTargetUid='', brandingTargetData=emptyBranding(), agentUnsubscribe=null, requestUnsubscribe=null, authCheckSeq=0;
 
 
   const stepNames = ['Income','Funds','Debt','Property','Living Costs','Results'];
@@ -1968,9 +2029,9 @@ body.mf-auth-locked .mf-login-gate{
     ['scBaseMortgage','scNewMortgage','scDiffMortgage','scBasePrice','scNewPrice','scDiffPrice','scBasePayment','scNewPayment','scDiffPayment'].forEach(id=>$(id).textContent='—');
   }
 
-  function collectForm(){ const data={}; $$('#mortgagefit-app input,#mortgagefit-app select').forEach(el=>{ if(el.type==='checkbox') data[el.id]=el.checked; else data[el.id]=el.value; }); data.applicants=$$('.mf-applicant').map(a=>({label:a.querySelector('.a-label').value,employment:a.querySelector('.a-employment').value,base:a.querySelector('.a-base').value,variable:a.querySelector('.a-variable').value,variablePct:a.querySelector('.a-variable-pct').value,other:a.querySelector('.a-other').value,rental:a.querySelector('.a-rental').value,rentalPct:a.querySelector('.a-rental-pct').value,extra:a.querySelector('.a-extra').value})); return data; }
+  function collectForm(){ const data={}; $$('#mortgagefit-app input,#mortgagefit-app select').filter(el=>!el.closest('.mf-admin-panel,.mf-modal,.mf-account-menu')).forEach(el=>{ if(el.type==='checkbox') data[el.id]=el.checked; else data[el.id]=el.value; }); data.applicants=$$('.mf-applicant').map(a=>({label:a.querySelector('.a-label').value,employment:a.querySelector('.a-employment').value,base:a.querySelector('.a-base').value,variable:a.querySelector('.a-variable').value,variablePct:a.querySelector('.a-variable-pct').value,other:a.querySelector('.a-other').value,rental:a.querySelector('.a-rental').value,rentalPct:a.querySelector('.a-rental-pct').value,extra:a.querySelector('.a-extra').value})); return data; }
   function applyForm(data){ if(!data) return; if(Array.isArray(data.applicants)){ $('applicant-list').innerHTML=''; data.applicants.forEach((a,i)=>{addApplicant(); const el=$$('.mf-applicant')[i]; el.querySelector('.a-label').value=a.label||''; el.querySelector('.a-employment').value=a.employment||''; el.querySelector('.a-base').value=a.base||''; el.querySelector('.a-variable').value=a.variable||''; el.querySelector('.a-variable-pct').value=a.variablePct||''; el.querySelector('.a-other').value=a.other||''; el.querySelector('.a-rental').value=a.rental||''; el.querySelector('.a-rental-pct').value=a.rentalPct||''; el.querySelector('.a-extra').value=a.extra||''; }); }
-    Object.entries(data).forEach(([id,val])=>{ const el=$(id); if(!el || id==='applicants') return; if(el.type==='checkbox'){el.checked=!!val; const target=$(el.dataset.toggle||''); if(target){target.disabled=!el.checked; el.closest('.mf-toggle-row')?.classList.toggle('is-off',!el.checked);}} else el.value=val; }); renumberApplicants(); liveUpdate(); calculate(); }
+    Object.entries(data).forEach(([id,val])=>{ const el=$(id); if(!el || id==='applicants' || el.closest('.mf-admin-panel,.mf-modal,.mf-account-menu')) return; if(el.type==='checkbox'){el.checked=!!val; const target=$(el.dataset.toggle||''); if(target){target.disabled=!el.checked; el.closest('.mf-toggle-row')?.classList.toggle('is-off',!el.checked);}} else el.value=val; }); renumberApplicants(); liveUpdate(); calculate(); }
 
   function addCustomExpense(name='',amount=''){ const id='custom-'+Date.now()+'-'+Math.floor(Math.random()*999); $('custom-expenses').insertAdjacentHTML('beforeend',`<div class="mf-custom-row"><input type="text" value="${name}" placeholder="Expense name" aria-label="Custom expense name"><div class="mf-money"><span>$</span><input id="${id}" data-expense type="number" min="0" step="10"></div><input type="checkbox" id="${id}-on" data-toggle="${id}" checked hidden><button type="button" data-remove-custom>Remove</button></div>`); liveUpdate(); }
 
@@ -2056,6 +2117,8 @@ body.mf-auth-locked .mf-login-gate{
     return {doc,ref};
   }
   function pdf(preview=false){
+    if(!accessProfile||accessProfile.status!=='active')return toast('Your account is not active.');
+    if(!isMortgageAdmin&&accessProfile.plan!=='premium'){$('mf-premium-modal').hidden=false;return;}
     const result=buildEstimatePdf();if(!result)return;
     const {doc,ref}=result;
     if(preview){
@@ -2116,12 +2179,32 @@ body.mf-auth-locked .mf-login-gate{
     if(brandingLogoDraft)img.src=brandingLogoDraft;else img.removeAttribute('src');
   }
   function fillBrandingForm(){
-    ['name','company','license','phone','email'].forEach(key=>{$('mf-branding-'+key).value=agentBranding[key]||'';});
-    brandingLogoDraft=agentBranding.logoDataUrl||'';refreshBrandingLogo();
+    ['name','company','license','phone','email'].forEach(key=>{$('mf-branding-'+key).value=brandingTargetData[key]||'';});
+    brandingLogoDraft=brandingTargetData.logoDataUrl||'';refreshBrandingLogo();
   }
-  function openBranding(){
-    if(!uid)return toast('Sign in to edit your branding.');
-    fillBrandingForm();setBrandingStatus('');$('mf-branding-modal').hidden=false;
+  async function selectBrandingAgent(agentUid){
+    if(!isMortgageAdmin||!agentUid)return;
+    brandingTargetUid=agentUid;
+    brandingTargetData=emptyBranding();
+    fillBrandingForm();setBrandingStatus('Loading branding…');
+    try{
+      const snap=await db.collection('mortgagefit_agent_profiles').doc(agentUid).get();
+      if(brandingTargetUid!==agentUid)return;
+      brandingTargetData=snap.exists?{...emptyBranding(),...snap.data()}:emptyBranding();
+      const agent=agentDirectory.find(a=>a.uid===agentUid);
+      if(agent){brandingTargetData.name ||= agent.name||'';brandingTargetData.company ||= agent.company||'';brandingTargetData.email ||= agent.email||'';brandingTargetData.phone ||= agent.phone||'';brandingTargetData.license ||= agent.license||'';}
+      fillBrandingForm();setBrandingStatus('');
+    }catch(e){console.error(e);setBrandingStatus('Could not load branding.',true);}
+  }
+  function openBranding(agentUid){
+    if(!isMortgageAdmin)return toast('Administrator access required.');
+    const select=$('mf-branding-agent-select');
+    select.innerHTML=agentDirectory.map(a=>`<option value="${escapeHtml(a.uid)}">${escapeHtml(a.name||a.email||a.uid)} (${escapeHtml(a.email||'')})</option>`).join('');
+    if(!agentDirectory.length)return toast('Add an agent first.');
+    const target=typeof agentUid==='string'&&agentDirectory.some(a=>a.uid===agentUid)?agentUid:(agentDirectory.find(a=>a.uid===uid)?.uid||agentDirectory[0].uid);
+    select.value=target;
+    $('mf-branding-modal').hidden=false;
+    selectBrandingAgent(target);
     $('mf-account-menu').classList.remove('is-open');
     $('mf-account-trigger').setAttribute('aria-expanded','false');
   }
@@ -2141,20 +2224,20 @@ body.mf-auth-locked .mf-login-gate{
     }
   }
   async function saveAgentBranding(){
-    if(!db||!uid)return setBrandingStatus('Please sign in first.',true);
+    if(!db||!isMortgageAdmin||!brandingTargetUid)return setBrandingStatus('Administrator access required.',true);
     const candidate={};
     ['name','company','license','phone','email'].forEach(key=>candidate[key]=$('mf-branding-'+key).value.trim());
     if(candidate.email&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(candidate.email))return setBrandingStatus('Enter a valid business email.',true);
     candidate.logoDataUrl=brandingLogoDraft;
     const button=$('mf-branding-save');button.disabled=true;setBrandingStatus('Saving branding…');
     try{
-      await db.collection('mortgagefit_agent_profiles').doc(uid).set({
-        ...candidate,ownerUid:uid,updatedAt:firebase.firestore.FieldValue.serverTimestamp()
+      await db.collection('mortgagefit_agent_profiles').doc(brandingTargetUid).set({
+        ...candidate,ownerUid:brandingTargetUid,updatedAt:firebase.firestore.FieldValue.serverTimestamp()
       },{merge:true});
-      agentBranding={...emptyBranding(),...candidate};
-      setBrandingStatus('Branding saved to your account.');
-      if(auth?.currentUser)renderAgentProfile(auth.currentUser);
-    }catch(err){console.error(err);setBrandingStatus('Could not save. Allow owner-only access in Firestore rules.',true);}
+      brandingTargetData={...emptyBranding(),...candidate};
+      if(brandingTargetUid===uid){agentBranding={...emptyBranding(),...candidate};if(auth?.currentUser)renderAgentProfile(auth.currentUser);}
+      setBrandingStatus('Branding saved for selected agent.');
+    }catch(err){console.error(err);setBrandingStatus('Could not save. Check administrator Firestore permissions.',true);}
     finally{button.disabled=false;}
   }
   function handleLogoFile(file){
@@ -2195,28 +2278,50 @@ body.mf-auth-locked .mf-login-gate{
     $('mf-account-avatar-lg').textContent=initials;
   }
 
-  function updateAuthUI(user){
+  function resetAdminMode(){
+    $('mf-admin-tab').hidden=true;
+    document.getElementById('mortgagefit-app').classList.remove('mf-admin-mode');
+    $('mf-agent-tab').classList.add('is-active');$('mf-admin-tab').classList.remove('is-active');
+    try{sessionStorage.setItem('mf-workspace-mode','agent');}catch(e){}
+    if(agentUnsubscribe){agentUnsubscribe();agentUnsubscribe=null;}
+    if(requestUnsubscribe){requestUnsubscribe();requestUnsubscribe=null;}
+    agentDirectory=[];
+  }
+  async function updateAuthUI(user){
+    const seq=++authCheckSeq;
     uid=user?.uid||null;
-    const signedIn=!!user;
-    document.body.classList.toggle('mf-auth-locked',!signedIn);
-    $('mf-auth-modal').hidden=signedIn;
-    $('mf-signout').hidden=!signedIn;
-    $('mf-account-menu').hidden=!signedIn;
-    $('mf-save-case').hidden=!signedIn;
-    $('mf-cases').hidden=!signedIn;
-    $('mf-login').hidden=true;
-    if(signedIn){
-      renderAgentProfile(user);
-      loadAgentBranding(user).then(()=>{if(auth?.currentUser?.uid===user.uid)renderAgentProfile(user);});
-      setAuthStatus('');
-      $('mf-auth-password').value='';
-    }else{
+    accessProfile=null;isMortgageAdmin=false;resetAdminMode();
+    document.body.classList.add('mf-auth-locked');
+    $('mf-auth-modal').hidden=false;
+    $('mf-auth-unapproved-signout').hidden=!user;
+    if(!user){
       brandingLoadSeq++;agentBranding=emptyBranding();closeBranding();
       $('mf-account-menu').classList.remove('is-open');
       $('mf-cases-modal').hidden=true;
-      setAuthStatus('');
-      window.scrollTo(0,0);
+      $('mf-auth-unapproved-signout').hidden=true;
+      setAuthStatus('');return;
     }
+    setAuthStatus('Checking account access…');
+    try{
+      const snap=await db.collection('mortgagefit_agents').doc(user.uid).get();
+      if(seq!==authCheckSeq)return;
+      const profile=snap.exists?snap.data():null;
+      if(!profile||profile.status!=='active'||!['admin','agent'].includes(profile.role)){
+        setAuthStatus('This account is not active or has not been approved by the administrator.','error');return;
+      }
+      accessProfile=profile;
+      isMortgageAdmin=profile.role==='admin';
+      $('mf-admin-tab').hidden=!isMortgageAdmin;
+      $('mf-auth-modal').hidden=true;
+      $('mf-auth-unapproved-signout').hidden=true;
+      document.body.classList.remove('mf-auth-locked');
+      $('mf-signout').hidden=false;$('mf-account-menu').hidden=false;
+      $('mf-save-case').hidden=false;$('mf-cases').hidden=false;$('mf-login').hidden=true;
+      renderAgentProfile(user);
+      loadAgentBranding(user).then(()=>{if(auth?.currentUser?.uid===user.uid)renderAgentProfile(user);});
+      if(isMortgageAdmin){listenAgents();listenUpgradeRequests();}
+      setAuthStatus('');$('mf-auth-password').value='';
+    }catch(e){console.error(e);if(seq===authCheckSeq)setAuthStatus('Could not verify account permissions. Check Firestore rules.','error');}
   }
 
   function friendlyAuthError(err){
@@ -2235,6 +2340,83 @@ body.mf-auth-locked .mf-login-gate{
     return messages[code]||err?.message||'Authentication could not be completed.';
   }
 
+  function listenAgents(){
+    if(!isMortgageAdmin||!db)return;
+    if(agentUnsubscribe)agentUnsubscribe();
+    agentUnsubscribe=db.collection('mortgagefit_agents').onSnapshot(snapshot=>{
+      agentDirectory=snapshot.docs.map(d=>({uid:d.id,...d.data()})).sort((a,b)=>(a.name||a.email||'').localeCompare(b.name||b.email||''));
+      const status=$('mf-agent-list-status');
+      status.textContent=`${agentDirectory.length} registered account${agentDirectory.length===1?'':'s'}`;
+      $('mf-agent-list').innerHTML=agentDirectory.map(a=>`<tr><td><strong>${escapeHtml(a.name||'Unnamed agent')}</strong><br><small>${escapeHtml(a.email||'')}</small></td><td>${escapeHtml(a.company||'—')}</td><td><span class="mf-agent-pill">${a.role==='admin'?'Administrator':a.plan==='premium'?'Premium':'Free'}</span></td><td>${escapeHtml(a.status||'—')}</td><td><button type="button" class="mf-btn mf-btn-outline" data-mf-edit-agent="${escapeHtml(a.uid)}">Edit</button><button type="button" class="mf-btn mf-btn-outline" data-mf-brand-agent="${escapeHtml(a.uid)}">Branding</button></td></tr>`).join('');
+    },err=>{$('mf-agent-list-status').textContent='Could not load agents. Check Firestore rules.';console.error(err);});
+  }
+  function listenUpgradeRequests(){
+    if(requestUnsubscribe)requestUnsubscribe();
+    requestUnsubscribe=db.collection('mortgagefit_upgrade_requests').onSnapshot(snap=>{
+      const requests=snap.docs.map(d=>({uid:d.id,...d.data()})).filter(r=>r.status==='pending');
+      $('mf-upgrade-requests').innerHTML=requests.length?requests.map(r=>`<div class="mf-agent-toolbar"><span>${escapeHtml(r.email||r.uid)} requested Premium</span><button type="button" class="mf-btn mf-btn-outline" data-mf-approve-upgrade="${escapeHtml(r.uid)}">Approve Premium</button></div>`).join(''):'No pending upgrade requests.';
+    },e=>{console.error(e);$('mf-upgrade-requests').textContent='Could not load upgrade requests.';});
+  }
+  async function approveUpgrade(agentUid){
+    if(!isMortgageAdmin)return;
+    const agent=agentDirectory.find(a=>a.uid===agentUid);
+    if(!agent||agent.role!=='agent')return toast('Agent not found.');
+    try{
+      await db.collection('mortgagefit_agents').doc(agentUid).update({plan:'premium',updatedAt:firebase.firestore.FieldValue.serverTimestamp()});
+      await db.collection('mortgagefit_upgrade_requests').doc(agentUid).update({status:'approved',approvedAt:firebase.firestore.FieldValue.serverTimestamp()});
+      toast('Premium access approved. Agent can sign in again to refresh access.');
+    }catch(e){console.error(e);toast('Could not approve upgrade.');}
+  }
+  function openAddAgent(){
+    if(!isMortgageAdmin)return toast('Administrator access required.');
+    $('mf-add-agent-form').reset();$('mf-agent-feedback').textContent='';$('mf-add-agent-modal').hidden=false;
+  }
+  async function submitAddAgent(event){
+    event.preventDefault();
+    if(!isMortgageAdmin)return;
+    const form=event.currentTarget, data=Object.fromEntries(new FormData(form));
+    if(data.password.length<12)return $('mf-agent-feedback').textContent='Use a temporary password with at least 12 characters.';
+    const button=$('mf-agent-create');button.disabled=true;$('mf-agent-feedback').textContent='Creating account securely…';
+    try{
+      if(!firebase.functions)throw new Error('Firebase Functions library is unavailable.');
+      const callable=firebase.functions().httpsCallable('mortgagefitCreateAgent');
+      await callable({name:data.name.trim(),email:data.email.trim().toLowerCase(),company:data.company.trim(),phone:data.phone.trim(),license:data.license.trim(),password:data.password,plan:data.plan,status:data.status});
+      form.reset();$('mf-add-agent-modal').hidden=true;toast('Agent account created. Share the temporary password securely.');
+    }catch(err){console.error(err);$('mf-agent-feedback').textContent='Account was not created: '+(err.message||'Check Cloud Function deployment.');}
+    finally{button.disabled=false;}
+  }
+  function openEditAgent(agentUid){
+    if(!isMortgageAdmin)return;
+    const a=agentDirectory.find(x=>x.uid===agentUid);if(!a)return;
+    editAgentUid=agentUid;
+    const f=$('mf-edit-agent-form');
+    for(const key of ['name','email','company','phone','license','plan','status'])if(f.elements[key])f.elements[key].value=a[key]||(key==='plan'?'free':key==='status'?'active':'');
+    f.elements.plan.disabled=a.role==='admin';f.elements.status.disabled=a.role==='admin';
+    $('mf-edit-agent-feedback').textContent='';$('mf-edit-agent-modal').hidden=false;
+  }
+  async function submitEditAgent(event){
+    event.preventDefault();if(!isMortgageAdmin||!editAgentUid)return;
+    const a=agentDirectory.find(x=>x.uid===editAgentUid);if(!a)return;
+    const f=event.currentTarget,data=Object.fromEntries(new FormData(f));
+    const button=$('mf-edit-agent-save');button.disabled=true;$('mf-edit-agent-feedback').textContent='Saving changes…';
+    try{
+      const changes={name:data.name.trim(),company:data.company.trim(),phone:data.phone.trim(),license:data.license.trim(),updatedAt:firebase.firestore.FieldValue.serverTimestamp()};
+      if(a.role!=='admin'){changes.plan=data.plan;changes.status=data.status;}
+      await db.collection('mortgagefit_agents').doc(editAgentUid).update(changes);
+      $('mf-edit-agent-modal').hidden=true;toast('Agent details updated.');
+    }catch(e){console.error(e);$('mf-edit-agent-feedback').textContent='Could not save changes. Check administrator permissions.';}
+    finally{button.disabled=false;}
+  }
+  async function requestPremium(){
+    if(!uid||!db)return;
+    const button=$('mf-premium-request');button.disabled=true;
+    $('mf-premium-feedback').textContent='Sending your request…';
+    try{
+      await db.collection('mortgagefit_upgrade_requests').doc(uid).set({ownerUid:uid,email:auth.currentUser.email||'',status:'pending',requestedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});
+      $('mf-premium-feedback').textContent='Request submitted. Your administrator can upgrade your plan.';
+    }catch(e){console.error(e);$('mf-premium-feedback').textContent='Could not submit request. Check Firestore permissions.';}
+    finally{button.disabled=false;}
+  }
   async function initFirebase(){
     if(!firebaseConfigComplete() || !window.firebase){
       updateAuthUI(null);
@@ -2329,7 +2511,8 @@ body.mf-auth-locked .mf-login-gate{
     $('mf-reset').onclick=reset; $('mf-download').onclick=()=>pdf(false); $('mf-download-results').onclick=()=>pdf(false); $('mf-preview').onclick=()=>pdf(true); $('mf-preview-results').onclick=()=>pdf(true); $('mf-calculate').onclick=calculate; $('runScenario').onclick=runScenario; $('clearScenario').onclick=clearScenario; $('mf-save-case').onclick=saveCase; $('mf-cases').onclick=loadCases; $('mf-cases-close').onclick=()=>{$('mf-cases-modal').hidden=true;};
     $('mf-login').onclick=()=>{};
     $('mf-signout').onclick=signOutAgent;
-    $('mf-branding-open').onclick=openBranding;
+    $('mf-branding-open').onclick=()=>openBranding();
+    $('mf-branding-agent-select').onchange=e=>selectBrandingAgent(e.target.value);
     $('mf-admin-pdf-preview').onclick=()=>pdf(true);
     $('mf-admin-pdf-download').onclick=()=>pdf(false);
     $('mf-branding-close').onclick=closeBranding;
@@ -2339,6 +2522,7 @@ body.mf-auth-locked .mf-login-gate{
     $('mf-branding-remove').onclick=()=>{brandingLogoDraft='';refreshBrandingLogo();setBrandingStatus('Logo removed from preview. Save to apply.');};
     $('mf-branding-save').onclick=saveAgentBranding;
     $('mf-branding-preview').onclick=()=>{
+      if(!isMortgageAdmin)return;
       const temp=agentBranding;
       const draft={};['name','company','license','phone','email'].forEach(k=>draft[k]=$('mf-branding-'+k).value.trim());
       agentBranding={...temp,...draft,logoDataUrl:brandingLogoDraft};
@@ -2360,7 +2544,20 @@ body.mf-auth-locked .mf-login-gate{
       }
     });
     $('mf-auth-signin').onclick=signInAgent;
-    $('mf-auth-create').onclick=createAgentAccount;
+    $('mf-auth-create').onclick=()=>setAuthStatus('Ask your administrator to create an account.','error');
+    $('mf-auth-unapproved-signout').onclick=signOutAgent;
+    $('mf-add-agent-open').onclick=openAddAgent;
+    $('mf-add-agent-close').onclick=$('mf-agent-cancel').onclick=()=>{$('mf-add-agent-modal').hidden=true;};
+    $('mf-add-agent-form').onsubmit=submitAddAgent;
+    $('mf-edit-agent-close').onclick=$('mf-edit-agent-cancel').onclick=()=>{$('mf-edit-agent-modal').hidden=true;};
+    $('mf-edit-agent-form').onsubmit=submitEditAgent;
+    $('mf-premium-close').onclick=$('mf-premium-later').onclick=()=>{$('mf-premium-modal').hidden=true;};
+    $('mf-premium-request').onclick=requestPremium;
+    document.addEventListener('click',e=>{
+      const edit=e.target.closest('[data-mf-edit-agent]');if(edit)openEditAgent(edit.dataset.mfEditAgent);
+      const brand=e.target.closest('[data-mf-brand-agent]');if(brand)openBranding(brand.dataset.mfBrandAgent);
+      const upgrade=e.target.closest('[data-mf-approve-upgrade]');if(upgrade)approveUpgrade(upgrade.dataset.mfApproveUpgrade);
+    });
     $('mf-auth-reset').onclick=resetAgentPassword;
     ['mf-auth-email','mf-auth-password'].forEach(id=>$(id).addEventListener('keydown',e=>{ if(e.key==='Enter') signInAgent(); }));
     $('mf-password-toggle').onclick=()=>{
@@ -2451,7 +2648,7 @@ body.mf-auth-locked .mf-login-gate{
   var admin=document.getElementById('mf-admin-tab');
   if(!app||!agent||!admin) return;
   function setMode(mode){
-    var isAdmin=mode==='admin';
+    var isAdmin=mode==='admin'&&!admin.hidden;
     app.classList.toggle('mf-admin-mode',isAdmin);
     agent.classList.toggle('is-active',!isAdmin);
     admin.classList.toggle('is-active',isAdmin);
