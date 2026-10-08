@@ -8,15 +8,13 @@
 
   <script>
   /* MortgageFit visual preferences: apply saved theme and header photo before first paint. */
-  (function(){var ok=["pearl-gold","ocean-mist","sage-stone","professional-navy"],t="pearl-gold",d=document.documentElement;
-  try{var q=new URLSearchParams(location.search).get("theme");
-  if(q&&ok.indexOf(q)>-1){t=q;try{localStorage.setItem("mf-theme",q)}catch(e){}}
-  else{var s=localStorage.getItem("mf-theme");if(s&&ok.indexOf(s)>-1)t=s}}catch(e){}
+  (function(){var ok=["pearl-gold","ocean-mist","sage-stone","professional-navy","emerald-ledger","royal-burgundy","midnight-black"],t="pearl-gold",d=document.documentElement;
+  try{var s=localStorage.getItem("mf-theme");if(s&&ok.indexOf(s)>-1)t=s}catch(e){}
   d.setAttribute("data-mf-theme",t);
-  try{var p=localStorage.getItem("mf-photo");if(p&&p.indexOf("data:image/")===0){d.style.setProperty("--mf-photo",'url("'+p+'")');d.classList.add("mf-custom-photo")}}catch(e){}})();
+  try{var p=localStorage.getItem("mf-photo");if(p&&p.indexOf("data:image/")===0){d.style.setProperty("--mf-photo",'url("'+p+'")');d.classList.add("mf-custom-photo");var im=new Image();im.onload=function(){if(im.naturalHeight)d.style.setProperty("--mf-photo-ar",im.naturalWidth/im.naturalHeight)};im.src=p}}catch(e){}})();
   </script>
   <style>
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Manrope:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
 /* Theme: Pearl & Gold */
 :root,html[data-mf-theme="pearl-gold"]{
@@ -294,10 +292,216 @@ html[data-mf-theme="professional-navy"]{
   --mf-toast-ink:#fff;
   --mf-arrow:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5l5-5' fill='none' stroke='%231f4fa3' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
 }
+html[data-mf-theme="emerald-ledger"]{
+  --mf-base:#ecf2ef;
+  --mf-page:radial-gradient(900px 620px at 4% -6%,rgba(110,190,160,.30),transparent 62%),radial-gradient(820px 620px at 100% 2%,rgba(170,205,190,.38),transparent 62%),radial-gradient(900px 700px at 70% 106%,rgba(190,220,208,.42),transparent 62%),linear-gradient(180deg,#f2f7f5,#e1ebe7);
+  --mf-head:#0d2620;
+  --mf-text:#1a3a32;
+  --mf-soft:#3d5a52;
+  --mf-muted:#637a72;
+  --mf-acc-rgb:20,110,84;
+  --mf-acc:#146e54;
+  --mf-btn-1:#2fa57f;
+  --mf-btn-2:#12604a;
+  --mf-btn-ink:#ffffff;
+  --mf-fit-1:#2fa57f;
+  --mf-fit-2:#0f5642;
+  --mf-glass:linear-gradient(150deg,rgba(255,255,255,.90),rgba(255,255,255,.66));
+  --mf-edge:rgba(255,255,255,.92);
+  --mf-edge-hi:rgba(14,46,38,.26);
+  --mf-hl:rgba(255,255,255,.95);
+  --mf-shadow:0 22px 50px -22px rgba(14,46,38,.34),0 0 0 1px rgba(14,46,38,.06);
+  --mf-kpi-hl:rgba(255,255,255,.55);
+  --mf-hdr:linear-gradient(135deg,#dbe8e2,#f0f6f3);
+  --mf-hdr-m:linear-gradient(90deg,rgba(243,248,246,.96),rgba(243,248,246,.72)),var(--mf-photo) center/cover no-repeat,linear-gradient(135deg,#dbe8e2,#f0f6f3);
+  --mf-hdr-hl:rgba(255,255,255,.55);
+  --mf-hdr-btn:rgba(255,255,255,.72);
+  --mf-fill:rgba(255,255,255,.7);
+  --mf-fill-2:rgba(255,255,255,.9);
+  --mf-line:rgba(14,46,38,.11);
+  --mf-track:rgba(14,46,38,.13);
+  --mf-field:rgba(255,255,255,.95);
+  --mf-field-focus:#fff;
+  --mf-field-edge:rgba(14,46,38,.2);
+  --mf-inset:rgba(14,46,38,.07);
+  --mf-ph:rgba(14,46,38,.42);
+  --mf-scheme:light;
+  --mf-opt-bg:#fff;
+  --mf-hero:linear-gradient(150deg,rgba(20,110,84,.34),rgba(20,110,84,.08) 62%,rgba(255,255,255,.45));
+  --mf-hero-edge:rgba(20,110,84,.55);
+  --mf-hero-glow:rgba(20,110,84,.38);
+  --mf-step-on:linear-gradient(135deg,rgba(20,110,84,.26),rgba(20,110,84,.08));
+  --mf-on-edge:rgba(20,110,84,.5);
+  --mf-on-bg:rgba(20,110,84,.1);
+  --mf-done:#15803d;
+  --mf-done-bg:rgba(22,163,74,.14);
+  --mf-done-edge:rgba(22,163,74,.42);
+  --mf-bar-1:#4fc09a;
+  --mf-bar-2:#12604a;
+  --mf-nav:linear-gradient(150deg,rgba(255,255,255,.92),rgba(255,255,255,.68));
+  --mf-rh1:linear-gradient(150deg,rgba(20,110,84,.30),rgba(20,110,84,.07));
+  --mf-rh2:linear-gradient(150deg,rgba(71,85,105,.28),rgba(71,85,105,.06));
+  --mf-rh3:linear-gradient(150deg,rgba(14,116,144,.28),rgba(14,116,144,.06));
+  --mf-note:linear-gradient(90deg,rgba(20,110,84,.16),rgba(20,110,84,.03));
+  --mf-ok:#1f9d5c;
+  --mf-warn:#e08e0b;
+  --mf-bad:#e0455f;
+  --mf-ok-text:#15803d;
+  --mf-warn-bg:rgba(245,158,11,.14);
+  --mf-warn-edge:rgba(217,119,6,.42);
+  --mf-warn-text:#8a4f05;
+  --mf-bad-text:#be123c;
+  --mf-bad-bg:rgba(225,29,72,.08);
+  --mf-bad-edge:rgba(225,29,72,.32);
+  --mf-modal:linear-gradient(150deg,rgba(255,255,255,.97),rgba(246,250,248,.95));
+  --mf-modal-shadow:rgba(14,46,38,.4);
+  --mf-scrim:rgba(14,46,38,.38);
+  --mf-toast:linear-gradient(150deg,#12302a,#08181a);
+  --mf-toast-ink:#fff;
+  --mf-arrow:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5l5-5' fill='none' stroke='%23146e54' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+html[data-mf-theme="royal-burgundy"]{
+  --mf-base:#f2ecee;
+  --mf-page:radial-gradient(900px 620px at 4% -6%,rgba(205,130,150,.30),transparent 62%),radial-gradient(820px 620px at 100% 2%,rgba(220,180,190,.38),transparent 62%),radial-gradient(900px 700px at 70% 106%,rgba(225,200,208,.42),transparent 62%),linear-gradient(180deg,#f8f3f4,#ece2e5);
+  --mf-head:#2a0e16;
+  --mf-text:#3b1c25;
+  --mf-soft:#5e3d47;
+  --mf-muted:#84646d;
+  --mf-acc-rgb:128,32,52;
+  --mf-acc:#802034;
+  --mf-btn-1:#b8465f;
+  --mf-btn-2:#7a1f35;
+  --mf-btn-ink:#ffffff;
+  --mf-fit-1:#b8465f;
+  --mf-fit-2:#6e1a2f;
+  --mf-glass:linear-gradient(150deg,rgba(255,255,255,.90),rgba(255,255,255,.66));
+  --mf-edge:rgba(255,255,255,.92);
+  --mf-edge-hi:rgba(70,20,35,.26);
+  --mf-hl:rgba(255,255,255,.95);
+  --mf-shadow:0 22px 50px -22px rgba(70,20,35,.34),0 0 0 1px rgba(70,20,35,.06);
+  --mf-kpi-hl:rgba(255,255,255,.55);
+  --mf-hdr:linear-gradient(135deg,#ecdfe3,#f8f1f3);
+  --mf-hdr-m:linear-gradient(90deg,rgba(249,244,246,.96),rgba(249,244,246,.72)),var(--mf-photo) center/cover no-repeat,linear-gradient(135deg,#ecdfe3,#f8f1f3);
+  --mf-hdr-hl:rgba(255,255,255,.55);
+  --mf-hdr-btn:rgba(255,255,255,.72);
+  --mf-fill:rgba(255,255,255,.7);
+  --mf-fill-2:rgba(255,255,255,.9);
+  --mf-line:rgba(70,20,35,.11);
+  --mf-track:rgba(70,20,35,.13);
+  --mf-field:rgba(255,255,255,.95);
+  --mf-field-focus:#fff;
+  --mf-field-edge:rgba(70,20,35,.2);
+  --mf-inset:rgba(70,20,35,.07);
+  --mf-ph:rgba(70,20,35,.42);
+  --mf-scheme:light;
+  --mf-opt-bg:#fff;
+  --mf-hero:linear-gradient(150deg,rgba(128,32,52,.34),rgba(128,32,52,.08) 62%,rgba(255,255,255,.45));
+  --mf-hero-edge:rgba(128,32,52,.55);
+  --mf-hero-glow:rgba(128,32,52,.38);
+  --mf-step-on:linear-gradient(135deg,rgba(128,32,52,.26),rgba(128,32,52,.08));
+  --mf-on-edge:rgba(128,32,52,.5);
+  --mf-on-bg:rgba(128,32,52,.1);
+  --mf-done:#15803d;
+  --mf-done-bg:rgba(22,163,74,.14);
+  --mf-done-edge:rgba(22,163,74,.42);
+  --mf-bar-1:#d0728a;
+  --mf-bar-2:#7a1f35;
+  --mf-nav:linear-gradient(150deg,rgba(255,255,255,.92),rgba(255,255,255,.68));
+  --mf-rh1:linear-gradient(150deg,rgba(128,32,52,.30),rgba(128,32,52,.07));
+  --mf-rh2:linear-gradient(150deg,rgba(71,85,105,.28),rgba(71,85,105,.06));
+  --mf-rh3:linear-gradient(150deg,rgba(14,116,144,.28),rgba(14,116,144,.06));
+  --mf-note:linear-gradient(90deg,rgba(128,32,52,.16),rgba(128,32,52,.03));
+  --mf-ok:#1f9d5c;
+  --mf-warn:#e08e0b;
+  --mf-bad:#e0455f;
+  --mf-ok-text:#15803d;
+  --mf-warn-bg:rgba(245,158,11,.14);
+  --mf-warn-edge:rgba(217,119,6,.42);
+  --mf-warn-text:#8a4f05;
+  --mf-bad-text:#be123c;
+  --mf-bad-bg:rgba(225,29,72,.08);
+  --mf-bad-edge:rgba(225,29,72,.32);
+  --mf-modal:linear-gradient(150deg,rgba(255,255,255,.97),rgba(250,247,248,.95));
+  --mf-modal-shadow:rgba(70,20,35,.4);
+  --mf-scrim:rgba(70,20,35,.38);
+  --mf-toast:linear-gradient(150deg,#2e1520,#1a0a10);
+  --mf-toast-ink:#fff;
+  --mf-arrow:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5l5-5' fill='none' stroke='%23802034' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
+html[data-mf-theme="midnight-black"]{
+  --mf-base:#0b0c0f;
+  --mf-page:radial-gradient(900px 620px at 4% -6%,rgba(212,176,106,.12),transparent 62%),radial-gradient(820px 620px at 100% 2%,rgba(90,100,135,.18),transparent 62%),radial-gradient(900px 700px at 70% 106%,rgba(60,66,90,.20),transparent 62%),linear-gradient(180deg,#111216,#050506);
+  --mf-head:#f4f1ea;
+  --mf-text:#dcd9d2;
+  --mf-soft:#b4b0a7;
+  --mf-muted:#8d8981;
+  --mf-acc-rgb:212,176,106;
+  --mf-acc:#dcb976;
+  --mf-btn-1:#ecd198;
+  --mf-btn-2:#b8923f;
+  --mf-btn-ink:#1a1305;
+  --mf-fit-1:#ecd198;
+  --mf-fit-2:#b8923f;
+  --mf-glass:linear-gradient(150deg,rgba(32,33,38,.92),rgba(20,21,25,.84));
+  --mf-edge:rgba(255,255,255,.08);
+  --mf-edge-hi:rgba(255,255,255,.16);
+  --mf-hl:rgba(255,255,255,.07);
+  --mf-shadow:0 22px 50px -22px rgba(0,0,0,.85),0 0 0 1px rgba(255,255,255,.04);
+  --mf-kpi-hl:rgba(255,255,255,.05);
+  --mf-hdr:linear-gradient(135deg,#17181c,#0e0f12);
+  --mf-hdr-m:linear-gradient(90deg,rgba(14,15,18,.96),rgba(14,15,18,.72)),var(--mf-photo) center/cover no-repeat,linear-gradient(135deg,#17181c,#0e0f12);
+  --mf-hdr-hl:rgba(255,255,255,.05);
+  --mf-hdr-btn:rgba(255,255,255,.08);
+  --mf-fill:rgba(255,255,255,.05);
+  --mf-fill-2:rgba(255,255,255,.1);
+  --mf-line:rgba(255,255,255,.1);
+  --mf-track:rgba(255,255,255,.12);
+  --mf-field:rgba(255,255,255,.06);
+  --mf-field-focus:rgba(255,255,255,.1);
+  --mf-field-edge:rgba(255,255,255,.18);
+  --mf-inset:rgba(0,0,0,.35);
+  --mf-ph:rgba(255,255,255,.35);
+  --mf-scheme:dark;
+  --mf-opt-bg:#1b1c21;
+  --mf-hero:linear-gradient(150deg,rgba(212,176,106,.28),rgba(212,176,106,.06) 62%,rgba(255,255,255,.04));
+  --mf-hero-edge:rgba(212,176,106,.5);
+  --mf-hero-glow:rgba(212,176,106,.28);
+  --mf-step-on:linear-gradient(135deg,rgba(212,176,106,.22),rgba(212,176,106,.06));
+  --mf-on-edge:rgba(212,176,106,.45);
+  --mf-on-bg:rgba(212,176,106,.08);
+  --mf-done:#4ade80;
+  --mf-done-bg:rgba(74,222,128,.14);
+  --mf-done-edge:rgba(74,222,128,.4);
+  --mf-bar-1:#ecd198;
+  --mf-bar-2:#b8923f;
+  --mf-nav:linear-gradient(150deg,rgba(28,29,34,.96),rgba(18,19,23,.92));
+  --mf-rh1:linear-gradient(150deg,rgba(212,176,106,.24),rgba(212,176,106,.05));
+  --mf-rh2:linear-gradient(150deg,rgba(148,163,184,.22),rgba(148,163,184,.05));
+  --mf-rh3:linear-gradient(150deg,rgba(56,189,248,.2),rgba(56,189,248,.05));
+  --mf-note:linear-gradient(90deg,rgba(212,176,106,.16),rgba(212,176,106,.03));
+  --mf-ok:#34d399;
+  --mf-warn:#fbbf24;
+  --mf-bad:#fb7185;
+  --mf-ok-text:#4ade80;
+  --mf-warn-bg:rgba(251,191,36,.14);
+  --mf-warn-edge:rgba(251,191,36,.4);
+  --mf-warn-text:#fcd34d;
+  --mf-bad-text:#fda4af;
+  --mf-bad-bg:rgba(251,113,133,.12);
+  --mf-bad-edge:rgba(251,113,133,.4);
+  --mf-modal:linear-gradient(150deg,rgba(28,29,34,.98),rgba(16,17,20,.97));
+  --mf-modal-shadow:rgba(0,0,0,.7);
+  --mf-scrim:rgba(0,0,0,.6);
+  --mf-toast:linear-gradient(150deg,#26272d,#15161a);
+  --mf-toast-ink:#fff;
+  --mf-arrow:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5l5-5' fill='none' stroke='%23dcb976' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
 
 :root{
-  --mf-serif:'Cormorant Garamond',Georgia,'Times New Roman',serif;
-  --mf-sans:'Manrope',Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --mf-serif:'Plus Jakarta Sans','Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --mf-sans:'Plus Jakarta Sans','Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
   --mf-blur:blur(22px) saturate(160%);
   --mf-success:var(--mf-ok);--mf-warning:var(--mf-warn);--mf-error:var(--mf-bad);
 }
@@ -334,7 +538,7 @@ body{margin:0;min-height:100vh;color:var(--mf-text);font-family:var(--mf-sans);-
 .mf-remove{font-family:inherit;border:0;background:transparent;color:var(--mf-bad-text);cursor:pointer;font-weight:700;font-size:12px}
 
 /* ---------- Header ---------- */
-.mf-header{border-radius:24px;padding:26px 30px;min-height:264px;display:flex;justify-content:space-between;align-items:flex-start;gap:24px;position:relative;overflow:hidden;background:var(--mf-hdr)}
+.mf-header{border-radius:24px;padding:20px 30px;min-height:190px;display:flex;justify-content:space-between;align-items:flex-start;gap:24px;position:relative;overflow:hidden;background:var(--mf-hdr)}
 .mf-header:after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(180deg,var(--mf-hdr-hl),transparent 38%)}
 .mf-brand-block{display:grid;grid-template-columns:max-content 1px max-content;align-items:center;column-gap:28px;position:relative;z-index:2;align-self:center}
 .mf-banner-brand{display:flex;flex-direction:column}
@@ -368,7 +572,10 @@ body{margin:0;min-height:100vh;color:var(--mf-text);font-family:var(--mf-sans);-
 .mf-stepper{border-radius:20px;padding:10px;align-self:start;position:sticky;top:16px}
 .mf-step{font-family:inherit;width:100%;border:0;background:transparent;display:flex;align-items:center;gap:11px;text-align:left;padding:9px;border-radius:12px;color:var(--mf-muted);font-weight:600;font-size:13.5px;cursor:pointer;transition:background .18s,color .18s}
 .mf-step b{width:28px;height:28px;border-radius:9px;background:var(--mf-fill);border:1px solid var(--mf-line);display:grid;place-items:center;font-size:11.5px;font-weight:700;flex:0 0 28px;transition:.18s}
-.mf-step:hover{background:var(--mf-fill);color:var(--mf-head)}
+.mf-step:hover{background:rgba(var(--mf-acc-rgb),.18);color:var(--mf-head);box-shadow:inset 0 0 0 1px rgba(var(--mf-acc-rgb),.45)}
+.mf-step:hover b{background:rgba(var(--mf-acc-rgb),.22);border-color:rgba(var(--mf-acc-rgb),.55);color:var(--mf-head)}
+.mf-step.active:hover{background:var(--mf-step-on);box-shadow:inset 0 0 0 1px var(--mf-on-edge)}
+.mf-step.active:hover b{background:linear-gradient(135deg,var(--mf-btn-1),var(--mf-btn-2));border-color:transparent;color:var(--mf-btn-ink)}
 .mf-step.done{color:var(--mf-soft)}
 .mf-step.done b{background:var(--mf-done-bg);border-color:var(--mf-done-edge);color:var(--mf-done)}
 .mf-step.active{background:var(--mf-step-on);color:var(--mf-head);box-shadow:inset 0 0 0 1px var(--mf-on-edge)}
@@ -500,6 +707,23 @@ body{margin:0;min-height:100vh;color:var(--mf-text);font-family:var(--mf-sans);-
 .mf-scenario-table th:first-child,.mf-scenario-table td:first-child{text-align:left}
 .mf-scenario-table tbody tr:hover td{background:var(--mf-fill)}
 
+
+
+/* ---------- Maple leaf animation ---------- */
+@keyframes mf-leaf-sway{0%,100%{transform:rotate(-9deg) translateY(0)}25%{transform:rotate(0deg) translateY(-2px)}50%{transform:rotate(9deg) translateY(0)}75%{transform:rotate(0deg) translateY(-2px)}}
+@keyframes mf-leaf-glow{0%,100%{filter:drop-shadow(0 0 0 rgba(213,43,30,0))}50%{filter:drop-shadow(0 2px 6px rgba(213,43,30,.45))}}
+.mf-tagline .mf-leaf-front,.mf-built-ca .mf-leaf{transform-origin:50% 92%;animation:mf-leaf-sway 4.5s ease-in-out infinite,mf-leaf-glow 4.5s ease-in-out infinite;will-change:transform}
+.mf-tagline:hover .mf-leaf-front{animation-duration:1.8s,1.8s}
+@media (prefers-reduced-motion:reduce){.mf-tagline .mf-leaf-front,.mf-built-ca .mf-leaf{animation:none}}
+
+/* ---------- Agent info hover card ---------- */
+.mf-agent-tip{position:fixed;z-index:100001;width:280px;padding:14px 16px;border-radius:16px;background:var(--mf-modal);border:1px solid var(--mf-edge-hi);box-shadow:0 24px 60px var(--mf-modal-shadow),inset 0 1px 0 var(--mf-hl);color:var(--mf-head);opacity:0;visibility:hidden;transform:translateY(-4px);transition:opacity .15s,transform .15s,visibility .15s;pointer-events:none}
+.mf-agent-tip.is-open{opacity:1;visibility:visible;transform:none}
+.mf-agent-tip h4{margin:0 0 10px;font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--mf-acc)}
+.mf-agent-tip dl{margin:0;display:grid;grid-template-columns:78px 1fr;gap:8px 10px;align-items:end}
+.mf-agent-tip dt{font-size:11.5px;font-weight:700;color:var(--mf-muted)}
+.mf-agent-tip dd{margin:0;min-height:18px;font-size:13px;font-weight:600;color:var(--mf-head);border-bottom:1px solid var(--mf-line);overflow-wrap:anywhere}
+
 /* ---------- Modals, auth, toast ---------- */
 .mf-modal{position:fixed;inset:0;background:var(--mf-scrim);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);z-index:99999;display:grid;place-items:center;padding:20px}
 .mf-modal-card{width:min(720px,100%);max-height:82vh;overflow:auto;border-radius:24px;padding:24px;background:var(--mf-modal);box-shadow:0 40px 100px var(--mf-modal-shadow),inset 0 1px 0 var(--mf-hl)}
@@ -588,36 +812,14 @@ body{margin:0;min-height:100vh;color:var(--mf-text);font-family:var(--mf-sans);-
 
 
 /* ---------- Header photo layer: whole house visible, left edge fades into the header ---------- */
-:root{--mf-photo-w:520px}
+:root{--mf-photo-w:390px}
 .mf-header:before{content:"";position:absolute;top:0;right:0;bottom:0;width:var(--mf-photo-w);max-width:46%;z-index:0;pointer-events:none;
-  background:var(--mf-photo) 0 -79px/100% auto no-repeat;
+  background:var(--mf-photo) 0 -58px/100% auto no-repeat;
   -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 16%);mask-image:linear-gradient(90deg,transparent 0,#000 16%)}
 /* Uploaded photos can have any shape, so they fill the layer instead */
 html.mf-custom-photo .mf-header:before{width:min(640px,52%);max-width:none;background-size:cover;background-position:center}
 @media(max-width:1250px){.mf-banner-divider,.mf-banner-message{display:none}}
 @media(max-width:900px){.mf-header:before{display:none}}
-
-
-/* ---------- Menu icons (replace the step numbers) + maple leaf ---------- */
-.mf-step b{font-size:0}
-.mf-step b::before{content:"";width:16px;height:16px;background:currentColor;-webkit-mask:var(--ic) center/contain no-repeat;mask:var(--ic) center/contain no-repeat}
-.mf-step[data-step="0"] b{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='8' r='4'/%3E%3Cpath d='M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7'/%3E%3C/svg%3E")}
-.mf-step[data-step="1"] b{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='2.5' y='6' width='19' height='12' rx='2'/%3E%3Ccircle cx='12' cy='12' r='2.6'/%3E%3Cpath d='M6 9.5v.01M18 14.5v.01'/%3E%3C/svg%3E")}
-.mf-step[data-step="2"] b{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 6.5A2.5 2.5 0 0 1 5.5 4H17v4'/%3E%3Crect x='3' y='7' width='18' height='13' rx='2.5'/%3E%3Ccircle cx='16.5' cy='13.5' r='1.2'/%3E%3C/svg%3E")}
-.mf-step[data-step="3"] b{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='2.5' y='5' width='19' height='14' rx='2.5'/%3E%3Cpath d='M2.5 10h19M6.5 15h4'/%3E%3C/svg%3E")}
-.mf-step[data-step="4"] b{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3.5 11 12 4l8.5 7'/%3E%3Cpath d='M5.5 9.5V19a1 1 0 0 0 1 1h3.5v-5h4v5h3.5a1 1 0 0 0 1-1V9.5'/%3E%3C/svg%3E")}
-.mf-step[data-step="5"] b{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 2.5 3.5 6.5V19a2 2 0 0 0 2 2h13a2 2 0 0 0 2-2V6.5L18 2.5z'/%3E%3Cpath d='M3.5 6.5h17'/%3E%3Cpath d='M16 10.5a4 4 0 0 1-8 0'/%3E%3C/svg%3E")}
-.mf-step[data-step="6"] b{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 20v-6M12 20V5M19 20V10'/%3E%3C/svg%3E")}
-.mf-leaf{display:inline-block;flex:0 0 auto;width:20px;height:20px;background:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><polygon fill='%23D52B1E' points='50,2 56,17 62,13 61,30 80,19 76,38 91,34 86,48 96,57 66,60 64,67 52,67 52,97 48,97 48,67 36,67 34,60 4,57 14,48 9,34 24,38 20,19 39,30 38,13 44,17'/></svg>") center/contain no-repeat;filter:drop-shadow(0 1px 1px rgba(160,20,10,.25))}
-.mf-built{display:flex;align-items:center;gap:10px;margin:10px 4px 2px;padding:12px 8px 8px;border-top:1px solid var(--mf-line);font-size:11px;font-weight:700;line-height:1.35;color:var(--mf-soft)}
-.mf-built .mf-leaf{width:24px;height:24px}
-.mf-section-title p.mf-tagline{display:grid;grid-template-columns:auto auto;justify-content:end;align-items:center;column-gap:8px;row-gap:3px;margin:0;max-width:none;text-align:right}
-.mf-tagline span{font-size:12px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;line-height:1.2}
-.mf-tagline span:first-child{grid-column:1/-1;justify-self:end;color:var(--mf-acc)}
-.mf-tagline span:nth-child(2){color:var(--mf-soft);font-weight:700;letter-spacing:.14em;font-size:11px}
-.mf-tagline .mf-leaf{width:18px;height:18px}
-@media(max-width:1100px){.mf-built{display:none}}
-@media(max-width:760px){.mf-section-title p.mf-tagline{justify-content:start;text-align:left}.mf-tagline span:first-child{justify-self:start}}
 
 /* ---------- Theme + photo bar ---------- */
 .mf-theme-bar{display:flex;align-items:center;flex-wrap:wrap;gap:8px 10px;margin:0 0 14px;padding:8px 10px 8px 18px;border-radius:18px;background:var(--mf-glass);border:1px solid var(--mf-edge);box-shadow:var(--mf-shadow),inset 0 1px 0 var(--mf-hl);-webkit-backdrop-filter:var(--mf-blur);backdrop-filter:var(--mf-blur)}
@@ -630,8 +832,6 @@ html.mf-custom-photo .mf-header:before{width:min(640px,52%);max-width:none;backg
 .mf-theme-btn[data-theme="ocean-mist"] .mf-theme-dot{background:linear-gradient(135deg,#27bfae,#4d7ff0)}
 .mf-theme-btn[data-theme="sage-stone"] .mf-theme-dot{background:linear-gradient(135deg,#62a07c,#c8a35c)}
 .mf-theme-btn[data-theme="professional-navy"] .mf-theme-dot{background:linear-gradient(135deg,#3f74d6,#14306b)}
-.mf-home-link{display:inline-flex;align-items:center;padding:7px 14px;border-radius:999px;border:1px solid var(--mf-field-edge);background:var(--mf-fill);color:var(--mf-head);font-size:12.5px;font-weight:700;text-decoration:none;margin-right:6px;transition:background .18s,transform .18s}
-.mf-home-link:hover{background:var(--mf-fill-2);transform:translateY(-1px)}
 .mf-photo-tools{display:flex;align-items:center;gap:8px;margin-left:auto;flex-wrap:wrap}
 .mf-photo-btn{font-family:inherit;padding:7px 14px;border-radius:999px;border:1px solid var(--mf-field-edge);background:var(--mf-fill);color:var(--mf-head);font-size:12.5px;font-weight:700;cursor:pointer;transition:background .18s,transform .18s}
 .mf-photo-btn:hover{background:var(--mf-fill-2);transform:translateY(-1px)}
@@ -641,12 +841,556 @@ html.mf-custom-photo .mf-header:before{width:min(640px,52%);max-width:none;backg
 @media(max-width:480px){.mf-theme-btn{flex:1 1 calc(50% - 10px);justify-content:flex-start}.mf-photo-tools{margin-left:0;width:100%}}
 @media print{.mf-theme-bar{display:none!important}}
 
-  </style>
+  
+/* ---------- Sidebar icons, Canadian badge & tagline ---------- */
+.mf-step b svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;display:block}
+.mf-built-ca{display:flex;align-items:center;gap:9px;margin:10px 4px 0;padding:10px 8px 0;border-top:1px solid var(--mf-line);color:var(--mf-muted);font-size:10.5px;font-weight:700;letter-spacing:.04em;line-height:1.3;text-transform:uppercase}
+.mf-leaf{width:20px;height:20px;flex:0 0 20px;display:block}
+.mf-section-title p.mf-tagline{display:flex;flex-direction:column;align-items:flex-end;gap:2px;max-width:none;margin:0;text-align:right;text-transform:uppercase;letter-spacing:.14em;font-size:11px;font-weight:800;line-height:1.35;color:var(--mf-acc)}
+.mf-section-title p.mf-tagline span:last-of-type{color:var(--mf-head)}
+.mf-tagline .mf-leaf-br{width:22px;height:22px;flex:0 0 22px;margin-top:6px}
+@media(max-width:1100px){.mf-built-ca{display:none}}
+@media(max-width:900px){.mf-section-title p.mf-tagline{align-items:flex-start;text-align:left}}
 
+/* ---------- Refinements ---------- */
+.mf-wordmark{font-size:42px;letter-spacing:-.8px}
+.mf-banner-message>div{font-size:22px;letter-spacing:-.2px}
+.mf-section-title h2{font-size:23px;letter-spacing:-.2px}
+.mf-section-title p.mf-tagline{flex-direction:row;align-items:center;justify-content:flex-end;gap:10px}
+.mf-tagline .mf-tagtext{display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left}
+.mf-tagline .mf-tagtext span{display:block}
+.mf-tagline .mf-tagtext span:last-child{color:var(--mf-head)}
+.mf-tagline .mf-leaf-front{width:26px;height:26px;flex:0 0 26px;margin:0}
+.mf-theme-btn[data-theme="emerald-ledger"] .mf-theme-dot{background:linear-gradient(135deg,#2fa57f,#0f5642)}
+.mf-theme-btn[data-theme="royal-burgundy"] .mf-theme-dot{background:linear-gradient(135deg,#b8465f,#6e1a2f)}
+/* Uploaded header photos: show the whole picture (never cropped), fading only the left edge */
+html.mf-custom-photo .mf-header:before{width:min(720px,56%);max-width:none;background-size:contain;background-position:right center;
+  -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 7%);mask-image:linear-gradient(90deg,transparent 0,#000 7%)}
+@media(max-width:900px){.mf-section-title p.mf-tagline{justify-content:flex-start}}
+
+/* ---------- Round 3 refinements ---------- */
+.mf-wordmark{font-size:40px;font-weight:800;letter-spacing:-1.4px;margin-bottom:8px}
+.mf-banner-message>div{font-size:21px;font-weight:700;letter-spacing:-.4px;line-height:1.15}
+.mf-section-title h2{font-weight:700;letter-spacing:-.4px}
+.mf-banner-message small{display:flex;align-items:center;gap:10px;margin-top:9px}
+.mf-banner-message small:before{content:"";width:28px;height:2px;border-radius:2px;background:currentColor;flex:0 0 28px}
+.mf-theme-btn[data-theme="midnight-black"] .mf-theme-dot{background:linear-gradient(135deg,#3a3b41,#0a0a0c 55%,#d4b06a)}
+/* Uploaded photo: whole picture, all four edges dissolve into the header background */
+html.mf-custom-photo .mf-header:before{left:auto;width:auto;max-width:60%;aspect-ratio:var(--mf-photo-ar,1.5);
+  background:var(--mf-photo) center/cover no-repeat;
+  -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 24%,#000 92%,transparent 100%),linear-gradient(180deg,transparent 0,#000 20%,#000 80%,transparent 100%);
+  mask-image:linear-gradient(90deg,transparent 0,#000 24%,#000 92%,transparent 100%),linear-gradient(180deg,transparent 0,#000 20%,#000 80%,transparent 100%);
+  -webkit-mask-composite:source-in;mask-composite:intersect}
+</style>
+
+
+<style id="mf-admin-panel-v1">
+/* ---------- Workspace / Admin top tabs ---------- */
+.mf-mode-tabs{
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  width:max-content;max-width:calc(100% - 24px);margin:12px auto 14px;padding:5px;
+  border:1px solid var(--mf-edge);border-radius:16px;background:var(--mf-glass);
+  box-shadow:var(--mf-shadow),inset 0 1px 0 var(--mf-hl);
+  -webkit-backdrop-filter:var(--mf-blur);backdrop-filter:var(--mf-blur);
+}
+.mf-mode-tab{
+  appearance:none;border:1px solid transparent;border-radius:11px;padding:9px 18px;
+  font:700 12.5px/1 var(--mf-sans);letter-spacing:.01em;color:var(--mf-soft);
+  background:transparent;cursor:pointer;transition:.18s ease;
+}
+.mf-mode-tab:hover{background:var(--mf-fill);color:var(--mf-head)}
+.mf-mode-tab.is-active{background:linear-gradient(135deg,var(--mf-btn-1),var(--mf-btn-2));color:var(--mf-btn-ink);box-shadow:0 8px 18px rgba(var(--mf-acc-rgb),.18)}
+
+/* Agent management, branding and access controls */
+#mf-admin-tab[hidden],#mf-auth-create[hidden]{display:none!important}
+.mf-agent-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:14px 0;flex-wrap:wrap}
+.mf-agent-table{width:100%;border-collapse:collapse;font-size:12px;text-align:left}
+.mf-agent-table th,.mf-agent-table td{padding:12px 9px;border-bottom:1px solid var(--mf-line);vertical-align:middle;color:var(--mf-text)}
+.mf-agent-table th{font-size:10px;color:var(--mf-muted);text-transform:uppercase;letter-spacing:.05em}
+.mf-agent-table .mf-btn{font-size:10px;padding:7px 10px;margin:2px}
+.mf-agent-table-wrap{overflow-x:auto}
+.mf-agent-pill{border:1px solid var(--mf-line);border-radius:99px;padding:4px 8px;font-size:10px;display:inline-block}
+.mf-agent-fields{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-top:15px}
+.mf-agent-fields label{display:flex;flex-direction:column;gap:5px;font-size:11px;font-weight:700;color:var(--mf-head)}
+.mf-agent-fields input,.mf-agent-fields select{width:100%;min-width:0;box-sizing:border-box;border:1px solid var(--mf-field-edge);background:var(--mf-fill);color:var(--mf-text);border-radius:9px;padding:11px;font-size:12px}
+.mf-agent-modal-card{width:min(600px,calc(100vw - 28px));max-height:90vh;overflow:auto}
+.mf-agent-actions{display:flex;justify-content:flex-end;gap:9px;flex-wrap:wrap;margin-top:20px}
+#mf-agent-feedback{font-size:11px;color:var(--mf-muted);margin-top:10px}
+@media(max-width:650px){.mf-agent-fields{grid-template-columns:1fr}.mf-agent-table{min-width:600px}}
+/* Agent workspace is the normal calculator. Admin mode hides its normal direct children. */
+.mf-admin-panel{display:none;margin:0 0 24px;padding:24px;border-radius:24px;background:var(--mf-glass);border:1px solid var(--mf-edge);box-shadow:var(--mf-shadow),inset 0 1px 0 var(--mf-hl);-webkit-backdrop-filter:var(--mf-blur);backdrop-filter:var(--mf-blur)}
+.mf-app.mf-admin-mode > :not(.mf-mode-tabs):not(.mf-admin-panel):not(#mf-branding-modal):not(#mf-add-agent-modal):not(#mf-edit-agent-modal):not(#mf-premium-modal){display:none!important}
+.mf-app.mf-admin-mode > .mf-admin-panel{display:block!important}
+.mf-admin-head{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;padding-bottom:18px;border-bottom:1px solid var(--mf-line)}
+.mf-admin-head h2{margin:0 0 5px;font-size:24px;color:var(--mf-head);letter-spacing:-.4px}
+.mf-admin-head p{margin:0;color:var(--mf-muted);font-size:12.5px;line-height:1.55}
+.mf-admin-badge{display:inline-flex;align-items:center;gap:7px;padding:7px 11px;border-radius:999px;border:1px solid var(--mf-on-edge);background:var(--mf-on-bg);color:var(--mf-acc);font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;white-space:nowrap}
+.mf-admin-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:18px}
+.mf-admin-card{padding:18px;border-radius:18px;border:1px solid var(--mf-edge-hi);background:var(--mf-fill);box-shadow:inset 0 1px 0 var(--mf-hl)}
+.mf-admin-card.is-wide{grid-column:1/-1}
+.mf-admin-card h3{margin:0 0 6px;font-size:15px;color:var(--mf-head)}
+.mf-admin-card p{margin:0;color:var(--mf-muted);font-size:11.5px;line-height:1.5}
+.mf-admin-card .mf-admin-status{display:inline-flex;margin-top:12px;padding:5px 9px;border-radius:999px;background:var(--mf-note);color:var(--mf-acc);font-size:10px;font-weight:800;letter-spacing:.04em;text-transform:uppercase}
+.mf-admin-appearance{margin-top:14px}
+.mf-admin-appearance .mf-theme-bar{margin:0;padding:10px 12px;background:transparent;border:0;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none}
+.mf-admin-note{margin-top:15px;padding:11px 13px;border-radius:12px;background:var(--mf-note);border:1px solid var(--mf-line);color:var(--mf-soft);font-size:11px;line-height:1.5}
+@media(max-width:760px){.mf-admin-grid{grid-template-columns:1fr}.mf-admin-card.is-wide{grid-column:auto}.mf-admin-head{flex-direction:column}.mf-mode-tab{padding:9px 13px}}
+@media print{.mf-mode-tabs,.mf-admin-panel{display:none!important}}
+</style>
+
+
+<style id="mf-login-gate-v1">
+body.mf-auth-locked{overflow:hidden!important}
+body.mf-auth-locked #mortgagefit-app{display:none!important}
+body:not(.mf-auth-locked) #mortgagefit-app{display:block}
+.mf-login-gate{
+  position:fixed!important;inset:0!important;z-index:99999!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  padding:24px!important;
+  background:
+    radial-gradient(850px 520px at 12% 0%,rgba(var(--mf-acc-rgb),.18),transparent 68%),
+    radial-gradient(760px 520px at 100% 100%,rgba(var(--mf-acc-rgb),.10),transparent 70%),
+    var(--mf-page)!important;
+  -webkit-backdrop-filter:none!important;backdrop-filter:none!important
+}
+.mf-login-gate[hidden]{display:none!important}
+.mf-login-gate .mf-auth-card{
+  width:min(440px,100%)!important;padding:30px!important;border-radius:24px!important;
+  background:var(--mf-modal)!important;border:1px solid var(--mf-edge)!important;
+  box-shadow:var(--mf-shadow),0 26px 80px -35px var(--mf-modal-shadow)!important;
+  -webkit-backdrop-filter:var(--mf-blur)!important;backdrop-filter:var(--mf-blur)!important
+}
+.mf-login-brand{padding-bottom:21px;margin-bottom:21px;border-bottom:1px solid var(--mf-line)}
+.mf-login-wordmark{font-family:var(--mf-sans);font-size:31px;line-height:1;font-weight:800;letter-spacing:-1.4px}
+.mf-login-wordmark span{color:var(--mf-head)}
+.mf-login-wordmark em{color:var(--mf-acc);font-style:normal}
+.mf-login-tagline{margin-top:9px;color:var(--mf-muted);font-size:8px;line-height:1;font-weight:800;letter-spacing:.24em;white-space:nowrap}
+.mf-login-heading h2{margin:0 0 6px;color:var(--mf-head);font-size:22px;letter-spacing:-.35px}
+.mf-login-heading p{margin:0 0 18px;color:var(--mf-muted);font-size:12px;line-height:1.5}
+.mf-login-gate .mf-auth-fields{margin-top:0!important}
+.mf-login-gate .mf-auth-actions{margin-top:18px!important}
+.mf-login-gate #mf-auth-signin{min-width:110px}
+.mf-login-security{margin:18px 0 0;padding-top:15px;border-top:1px solid var(--mf-line);color:var(--mf-muted);font-size:9.5px;line-height:1.5}
+#mf-login{display:none!important}
+@media(max-width:560px){
+  .mf-login-gate{padding:14px!important}
+  .mf-login-gate .mf-auth-card{padding:22px!important;border-radius:20px!important}
+  .mf-login-wordmark{font-size:27px}
+  .mf-login-tagline{letter-spacing:.16em;font-size:7px}
+}
+</style>
+
+
+<style id="mf-login-gate-fix-v2">
+/* Fix: the login modal lives inside #mortgagefit-app, so the app container itself
+   must remain mounted while signed out. The full-screen login gate covers it. */
+body.mf-auth-locked #mortgagefit-app{
+  display:block!important;
+}
+body.mf-auth-locked{
+  overflow:hidden!important;
+}
+
+/* Keep the login page fully opaque so the workspace is not visible behind it. */
+body.mf-auth-locked .mf-login-gate{
+  display:flex!important;
+  background:
+    radial-gradient(850px 520px at 12% 0%,rgba(var(--mf-acc-rgb),.18),transparent 68%),
+    radial-gradient(760px 520px at 100% 100%,rgba(var(--mf-acc-rgb),.10),transparent 70%),
+    var(--mf-base)!important;
+}
+
+/* Ensure login inputs/buttons are visible and usable above every other layer. */
+.mf-login-gate .mf-auth-card,
+.mf-login-gate .mf-auth-fields,
+.mf-login-gate .mf-auth-actions{
+  position:relative!important;
+  z-index:100001!important;
+}
+.mf-login-gate .mf-auth-fields input{
+  display:block!important;
+  visibility:visible!important;
+  opacity:1!important;
+}
+</style>
+
+
+<style id="mf-password-toggle-v3">
+.mf-password-wrap{
+  position:relative;
+  margin-top:6px;
+}
+.mf-password-wrap input{
+  margin-top:0!important;
+  padding-right:44px!important;
+}
+.mf-password-toggle{
+  position:absolute;
+  top:50%;
+  right:10px;
+  transform:translateY(-50%);
+  width:32px;
+  height:32px;
+  display:grid;
+  place-items:center;
+  border:0;
+  border-radius:8px;
+  background:transparent;
+  color:var(--mf-muted);
+  cursor:pointer;
+  padding:0;
+}
+.mf-password-toggle:hover{
+  background:var(--mf-fill);
+  color:var(--mf-head);
+}
+.mf-password-toggle:focus-visible{
+  outline:2px solid var(--mf-acc);
+  outline-offset:2px;
+}
+.mf-eye-icon{
+  width:18px;
+  height:18px;
+}
+</style>
+
+
+<style id="mf-account-profile-v4">
+.mf-account-menu{
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+}
+.mf-account-menu[hidden]{display:none!important}
+
+.mf-account-trigger{
+  min-height:40px;
+  display:flex;
+  align-items:center;
+  gap:9px;
+  padding:5px 10px 5px 6px;
+  border:1px solid var(--mf-field-edge);
+  border-radius:12px;
+  background:var(--mf-hdr-btn);
+  color:var(--mf-head);
+  cursor:pointer;
+  font-family:var(--mf-sans);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.35);
+}
+.mf-account-trigger:hover{
+  border-color:rgba(var(--mf-acc-rgb),.45);
+  background:var(--mf-fill-2);
+}
+.mf-account-trigger > svg{
+  width:15px;height:15px;color:var(--mf-muted);
+  transition:transform .18s ease;
+}
+.mf-account-menu.is-open .mf-account-trigger > svg{transform:rotate(180deg)}
+
+.mf-account-avatar{
+  width:30px;height:30px;border-radius:50%;
+  display:grid;place-items:center;flex:0 0 auto;
+  background:linear-gradient(135deg,var(--mf-btn-1),var(--mf-btn-2));
+  color:var(--mf-btn-ink);
+  font-size:11px;font-weight:800;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.4);
+}
+.mf-account-avatar-lg{width:42px;height:42px;font-size:14px}
+
+.mf-account-trigger-copy{
+  display:flex;flex-direction:column;align-items:flex-start;
+  min-width:0;
+}
+.mf-account-trigger-copy strong{
+  max-width:130px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  font-size:11px;line-height:1.1;font-weight:800;color:var(--mf-head);
+}
+.mf-account-trigger-copy small{
+  margin-top:2px;
+  font-size:8px;line-height:1;color:var(--mf-muted);font-weight:600;
+}
+
+.mf-account-card{
+  position:absolute;
+  top:calc(100% + 10px);
+  right:0;
+  z-index:9990;
+  width:300px;
+  padding:16px;
+  border:1px solid var(--mf-edge-hi);
+  border-radius:18px;
+  background:var(--mf-modal);
+  box-shadow:0 24px 55px -20px var(--mf-modal-shadow),inset 0 1px 0 var(--mf-hl);
+  -webkit-backdrop-filter:var(--mf-blur);
+  backdrop-filter:var(--mf-blur);
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+  transform:translateY(-5px);
+  transition:opacity .16s ease,transform .16s ease,visibility .16s ease;
+}
+.mf-account-menu:hover .mf-account-card,
+.mf-account-menu:focus-within .mf-account-card,
+.mf-account-menu.is-open .mf-account-card{
+  opacity:1;
+  visibility:visible;
+  pointer-events:auto;
+  transform:translateY(0);
+}
+
+.mf-account-card-head{
+  display:flex;align-items:center;gap:11px;
+  padding-bottom:13px;margin-bottom:11px;
+  border-bottom:1px solid var(--mf-line);
+}
+.mf-account-card-head > div{min-width:0}
+.mf-account-card-head strong{
+  display:block;
+  color:var(--mf-head);
+  font-size:13px;
+  line-height:1.2;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.mf-account-card-head span:not(.mf-account-avatar){
+  display:block;margin-top:3px;
+  color:var(--mf-muted);
+  font-size:9px;
+}
+
+.mf-account-details{
+  display:grid;
+  gap:10px;
+}
+.mf-account-details > div{
+  display:grid;
+  grid-template-columns:82px minmax(0,1fr);
+  gap:10px;
+  align-items:start;
+}
+.mf-account-details span{
+  color:var(--mf-muted);
+  font-size:9px;
+  font-weight:600;
+}
+.mf-account-details strong{
+  color:var(--mf-text);
+  font-size:9px;
+  line-height:1.35;
+  font-weight:700;
+  text-align:right;
+  overflow-wrap:anywhere;
+}
+
+.mf-account-signout{
+  width:100%;
+  margin-top:14px;
+  min-height:38px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  border:1px solid var(--mf-field-edge);
+  border-radius:10px;
+  background:var(--mf-fill);
+  color:var(--mf-text);
+  font:700 10px/1 var(--mf-sans);
+  cursor:pointer;
+}
+.mf-account-signout:hover{
+  border-color:var(--mf-bad-edge);
+  background:var(--mf-bad-bg);
+  color:var(--mf-bad-text);
+}
+.mf-account-signout svg{width:16px;height:16px}
+
+@media(max-width:720px){
+  .mf-account-trigger-copy{display:none}
+  .mf-account-trigger{padding:5px 7px}
+  .mf-account-card{position:fixed;top:74px;right:14px;left:14px;width:auto}
+}
+</style>
+
+
+<style id="mf-account-dropdown-visibility-v5">
+/* Ensure the agent profile flyout is never clipped by the banner/header */
+.mf-header,
+.mf-header-actions,
+.mf-banner-brand,
+.mf-brand-block{
+  overflow:visible!important;
+}
+
+.mf-header{
+  position:relative!important;
+  z-index:5000!important;
+}
+
+.mf-header-actions,
+.mf-account-menu{
+  position:relative!important;
+  z-index:6000!important;
+}
+
+.mf-account-card{
+  z-index:99999!important;
+  top:calc(100% + 8px)!important;
+}
+
+/* Keep following page sections below the open account card */
+.mf-kpi-grid,
+.mf-shell,
+.mf-workspace,
+.mf-main{
+  position:relative!important;
+  z-index:1!important;
+}
+</style>
+
+
+<style id="mf-account-hover-bridge-v6">
+/* Keep the account card open while the mouse moves from the trigger into the card. */
+.mf-account-menu{
+  padding-bottom:10px!important;
+  margin-bottom:-10px!important;
+}
+
+.mf-account-card{
+  top:calc(100% + 2px)!important;
+}
+
+/* Invisible hover bridge across the small space between trigger and flyout. */
+.mf-account-card::before{
+  content:""!important;
+  position:absolute!important;
+  left:0!important;
+  right:0!important;
+  top:-12px!important;
+  height:12px!important;
+  background:transparent!important;
+  pointer-events:auto!important;
+}
+
+/* Keep the card visible while hovering anywhere in the menu, the bridge, or the card. */
+.mf-account-menu:hover .mf-account-card,
+.mf-account-card:hover,
+.mf-account-menu:focus-within .mf-account-card,
+.mf-account-menu.is-open .mf-account-card{
+  opacity:1!important;
+  visibility:visible!important;
+  pointer-events:auto!important;
+  transform:translateY(0)!important;
+}
+</style>
+
+<style id="mf-agent-branding-pdf-v1">
+.mf-branding-entry{display:block;width:100%;text-align:left;margin:12px 0 10px;padding:11px 12px;border:1px solid var(--mf-field-edge);border-radius:10px;background:var(--mf-fill);color:var(--mf-head);font:700 11px var(--mf-sans);cursor:pointer}
+.mf-branding-entry:hover{border-color:var(--mf-acc);background:var(--mf-fill-2)}
+.mf-branding-modal-card{width:min(740px,calc(100vw - 28px));max-height:min(90vh,850px);overflow:auto}
+.mf-branding-layout{display:grid;grid-template-columns:210px minmax(0,1fr);gap:22px;margin-top:18px}
+.mf-branding-logo-panel{display:flex;flex-direction:column;gap:9px;align-items:stretch}
+.mf-branding-logo-box{height:122px;border:1px dashed var(--mf-field-edge);background:var(--mf-fill);border-radius:13px;display:flex;align-items:center;justify-content:center;padding:12px;overflow:hidden}
+.mf-branding-logo-box span{font:800 13px var(--mf-sans);letter-spacing:.06em;color:var(--mf-muted)}
+.mf-branding-logo-box img{width:100%;height:100%;object-fit:contain}
+.mf-branding-logo-panel small,.mf-branding-footnote{font-size:10px;line-height:1.5;color:var(--mf-muted)}
+.mf-branding-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.mf-branding-fields label{display:flex;flex-direction:column;gap:6px;font-size:11px;font-weight:750;color:var(--mf-head)}
+.mf-branding-fields input{min-width:0;width:100%;box-sizing:border-box;border:1px solid var(--mf-field-edge);border-radius:9px;padding:10px 11px;background:var(--mf-fill);color:var(--mf-text);font:12px var(--mf-sans)}
+.mf-branding-fields input:focus{outline:2px solid var(--mf-acc);outline-offset:1px}
+.mf-branding-actions{display:flex;gap:10px;align-items:center;justify-content:flex-end;margin-top:20px;flex-wrap:wrap}
+#mf-branding-status{font-size:11px;color:var(--mf-muted);margin-right:auto;flex:1 1 180px}
+.mf-branding-footnote{margin:14px 0 0}
+@media(max-width:620px){.mf-branding-layout{grid-template-columns:1fr}.mf-branding-logo-panel{max-width:250px}.mf-branding-fields{grid-template-columns:1fr}}
+
+/* Workspace tabs are only relevant to verified administrators. */
+.mf-mode-tabs{display:none!important}
+body.mf-admin-authorized .mf-mode-tabs{display:flex!important}
+
+.mf-agent-password-wrap{position:relative;display:block}
+.mf-agent-password-wrap input{padding-right:68px!important;width:100%}
+.mf-password-eye{position:absolute;right:7px;top:50%;transform:translateY(-50%);border:1px solid var(--mf-field-edge);border-radius:7px;background:var(--mf-fill-2);color:var(--mf-head);padding:6px 9px;font:700 11px var(--mf-sans);cursor:pointer}
+.mf-password-eye:focus-visible{outline:2px solid var(--mf-acc);outline-offset:2px}
+.mf-agent-list-controls{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+.mf-agent-list-controls .mf-admin-note{flex:1 1 160px;margin:0}
+.mf-agent-collapse-btn{white-space:nowrap;display:inline-flex;align-items:center;gap:7px}
+#mf-agent-management{overflow-anchor:none}
+#mf-agent-list-container{overflow-anchor:none}
+#mf-agent-list-container[hidden]{display:none!important}
+.mf-password-eye{width:36px;height:34px;display:flex;align-items:center;justify-content:center;padding:6px}
+.mf-password-eye svg{width:19px;height:19px;display:block}
+.mf-password-eye svg[hidden]{display:none!important}
+#mf-header-signout[hidden]{display:none!important}
+/* Agent PDF configuration is managed from the Admin Panel. */
+.mf-admin-pdf-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:16px}
+.mf-admin-pdf-card .mf-admin-pdf-hint{margin-top:11px;font-size:10.5px}
+@media(max-width:600px){.mf-admin-pdf-actions .mf-btn{width:100%}}
+</style>
 </head>
-<body>
+<body class="mf-auth-locked">
 
         <div class="mf-app" id="mortgagefit-app">
+          <nav class="mf-mode-tabs" aria-label="MortgageFit workspace">
+            <button type="button" class="mf-mode-tab is-active" id="mf-agent-tab" aria-selected="true">Agent Workspace</button>
+            <button type="button" class="mf-mode-tab" id="mf-admin-tab" aria-selected="false" hidden>Admin Panel</button>
+          </nav>
+
+          <section class="mf-admin-panel" id="mf-admin-panel" aria-labelledby="mf-admin-title">
+            <div class="mf-admin-head">
+              <div>
+                <h2 id="mf-admin-title">Admin Panel</h2>
+                <p>Manage MortgageFit appearance and prepare administrative controls separately from the agent workspace.</p>
+              </div>
+              <span class="mf-admin-badge">Owner workspace</span>
+            </div>
+
+            <div class="mf-admin-grid">
+              <article class="mf-admin-card is-wide">
+                <h3>Appearance & Branding</h3>
+                <p>Choose the product colour theme and manage the header image. These controls are no longer shown in the agent workspace.</p>
+                <div class="mf-admin-appearance" id="mf-admin-appearance"></div>
+              </article>
+
+              <article class="mf-admin-card is-wide mf-admin-pdf-card">
+                <h3>Agent Branding &amp; PDF</h3>
+                <p>Upload a different logo and brokerage identity for each agent. Agents can use their assigned branding but cannot edit it.</p>
+                <div class="mf-admin-pdf-actions">
+                  <button type="button" class="mf-btn mf-btn-primary" id="mf-branding-open">Manage Agent Branding</button>
+                  <button type="button" class="mf-btn mf-btn-outline" id="mf-admin-pdf-preview">Preview PDF</button>
+                  <button type="button" class="mf-btn mf-btn-outline" id="mf-admin-pdf-download">Download Client Estimate</button>
+                </div>
+                <p class="mf-admin-pdf-hint">PDF previews and downloads use the current Agent Workspace estimate. Complete or update the calculator there first.</p>
+              </article>
+
+              <article class="mf-admin-card">
+                <h3>Agent Feature Access</h3>
+                <p>Free: calculator and saved cases. Premium: calculator, saved cases, PDF preview and download. Only the administrator can assign plans.</p>
+                <span class="mf-admin-status">Free / Premium</span><div id="mf-upgrade-requests" style="margin-top:14px;font-size:12px">Upgrade requests will appear here.</div>
+              </article>
+
+              <article class="mf-admin-card">
+                <h3>Mortgage Rules & Defaults</h3>
+                <p>Reserved for administrator-controlled qualification assumptions such as ratios, stress-test settings, condo-fee treatment and amortization defaults.</p>
+                <span class="mf-admin-status">Planned</span>
+              </article>
+
+              <article class="mf-admin-card is-wide" id="mf-agent-management">
+                <div class="mf-agent-toolbar"><div><h3>Agent Management</h3><p>Add agents, set Free or Premium access, suspend accounts, and assign brokerage branding.</p></div><button type="button" class="mf-btn mf-btn-primary" id="mf-add-agent-open">+ Add Agent</button></div>
+                <div class="mf-agent-list-controls">
+                  <div id="mf-agent-list-status" class="mf-admin-note" aria-live="polite">Loading agents…</div>
+                  <button type="button" id="mf-agent-list-toggle" class="mf-btn mf-btn-outline mf-agent-collapse-btn" aria-expanded="true" aria-controls="mf-agent-list-container"><span id="mf-agent-list-toggle-icon" aria-hidden="true">▴</span> <span id="mf-agent-list-toggle-label">Collapse list</span></button>
+                </div>
+                <div id="mf-agent-list-container" class="mf-agent-table-wrap"><table class="mf-agent-table"><thead><tr><th>Agent</th><th>Company</th><th>Plan</th><th>Status</th><th>Actions</th></tr></thead><tbody id="mf-agent-list"></tbody></table></div>
+              </article>
+
+              <article class="mf-admin-card">
+                <h3>Database & Security</h3>
+                <p>Firebase remains connected to the calculator. Role enforcement will be added here after the final admin and agent permissions are defined.</p>
+                <span class="mf-admin-status">Firebase connected</span>
+              </article>
+            </div>
+
+            <div class="mf-admin-note"><strong>Setup required:</strong> register your administrator UID in <code>mortgagefit_agents</code>, publish the new Firestore rules, and deploy the secure create-agent Cloud Function before adding accounts. PDF plan restrictions are interface-level until PDF generation is moved to a protected server.</div>
+          </section>
           <header class="mf-header">
             <div class="mf-brand-block">
               <div class="mf-banner-brand">
@@ -665,7 +1409,39 @@ html.mf-custom-photo .mf-header:before{width:min(640px,52%);max-width:none;backg
               <button type="button" class="mf-btn mf-btn-outline" id="mf-login">Agent Login</button>
               <button type="button" class="mf-btn mf-btn-outline" id="mf-cases" hidden>Saved Cases</button>
               <button type="button" class="mf-btn mf-btn-outline" id="mf-save-case" hidden>Save Case</button>
-              <button type="button" class="mf-btn mf-btn-outline" id="mf-signout" hidden>Sign Out</button>
+              <button type="button" class="mf-btn mf-btn-outline" id="mf-header-signout" hidden>Log out</button>
+              <div class="mf-account-menu" id="mf-account-menu" hidden>
+                <button type="button" class="mf-account-trigger" id="mf-account-trigger" aria-haspopup="true" aria-expanded="false">
+                  <span class="mf-account-avatar" id="mf-account-avatar">A</span>
+                  <span class="mf-account-trigger-copy">
+                    <strong id="mf-account-trigger-name">My Account</strong>
+                    <small>Account</small>
+                  </span>
+                  <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m6 8 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+
+                <div class="mf-account-card" id="mf-account-card" role="dialog" aria-label="Agent account details">
+                  <div class="mf-account-card-head">
+                    <span class="mf-account-avatar mf-account-avatar-lg" id="mf-account-avatar-lg">A</span>
+                    <div>
+                      <strong id="mf-account-name">Agent</strong>
+                      <span>MortgageFit account</span>
+                    </div>
+                  </div>
+
+                  <div class="mf-account-details">
+                    <div><span>Email</span><strong id="mf-account-email">—</strong></div>
+                    <div><span>Email status</span><strong id="mf-account-verified">—</strong></div>
+                    <div><span>Last sign-in</span><strong id="mf-account-last-login">—</strong></div>
+                  </div>
+
+                  <button type="button" class="mf-account-signout" id="mf-signout" hidden>
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 5H5.8A1.8 1.8 0 0 0 4 6.8v10.4A1.8 1.8 0 0 0 5.8 19H10M15 8l4 4-4 4M8 12h11" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Sign out
+                  </button>
+                </div>
+              </div>
+              <button type="button" class="mf-btn mf-btn-outline" id="mf-preview" disabled>Preview PDF</button>
               <button type="button" class="mf-btn mf-btn-outline" id="mf-download" disabled>Download Client Estimate</button>
             </div>
           </header>
@@ -673,131 +1449,132 @@ html.mf-custom-photo .mf-header:before{width:min(640px,52%);max-width:none;backg
           <section class="mf-kpi-grid" aria-live="polite">
             <article class="mf-kpi mf-kpi-hero">
               <div class="mf-kpi-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 11.2 12 4l9 7.2v8.3a.5.5 0 0 1-.5.5H15v-6H9v6H3.5a.5.5 0 0 1-.5-.5z"/><path d="M7 8V5h3"/></svg></div><span>Estimated Lender Eligibility</span>
-              <strong id="score-eligibility">Not calculated</strong>
+              <strong id="score-eligibility">$0</strong>
               <small id="score-eligibility-note">Complete income, debt and mortgage assumptions</small>
             </article>
-            <article class="mf-kpi"><div class="mf-kpi-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v4c0 1.7 3.1 3 7 3s7-1.3 7-3V6"/><path d="M5 10v4c0 1.7 3.1 3 7 3s7-1.3 7-3v-4"/><path d="M5 14v4c0 1.7 3.1 3 7 3s7-1.3 7-3v-4"/></svg></div><span>Comfortable Mortgage</span><strong id="score-comfortable">Not calculated</strong><small id="score-comfortable-note">Uses after-tax income and household costs</small></article>
-            <article class="mf-kpi"><div class="mf-kpi-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="8.5" cy="8" r="3.2"/><circle cx="16.2" cy="8.7" r="2.7"/><path d="M2.8 20c.3-4.2 2.2-6.5 5.7-6.5s5.4 2.3 5.7 6.5z"/><path d="M13.2 14.2c.9-.7 1.9-1 3.1-1 3 0 4.6 2.1 4.9 6.8h-5.8"/></svg></div><span>Annual Qualifying Income</span><strong id="score-income">Waiting for input</strong><small id="score-income-note">Accepted income from all applicants</small></article>
-            <article class="mf-kpi"><div class="mf-kpi-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 11h8M8 15h5"/><circle cx="16.5" cy="17.5" r="1.5"/></svg></div><span>Monthly Expenses</span><strong id="score-expenses">Waiting for input</strong><small id="score-expenses-note">Debt, property and selected living costs</small></article>
+            <article class="mf-kpi"><div class="mf-kpi-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v4c0 1.7 3.1 3 7 3s7-1.3 7-3V6"/><path d="M5 10v4c0 1.7 3.1 3 7 3s7-1.3 7-3v-4"/><path d="M5 14v4c0 1.7 3.1 3 7 3s7-1.3 7-3v-4"/></svg></div><span>Comfortable Mortgage</span><strong id="score-comfortable">$0</strong><small id="score-comfortable-note">Uses after-tax income and household costs</small></article>
+            <article class="mf-kpi"><div class="mf-kpi-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="8.5" cy="8" r="3.2"/><circle cx="16.2" cy="8.7" r="2.7"/><path d="M2.8 20c.3-4.2 2.2-6.5 5.7-6.5s5.4 2.3 5.7 6.5z"/><path d="M13.2 14.2c.9-.7 1.9-1 3.1-1 3 0 4.6 2.1 4.9 6.8h-5.8"/></svg></div><span>Annual Qualifying Income</span><strong id="score-income">$0</strong><small id="score-income-note">Accepted income from all applicants</small></article>
+            <article class="mf-kpi"><div class="mf-kpi-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 11h8M8 15h5"/><circle cx="16.5" cy="17.5" r="1.5"/></svg></div><span>Monthly Expenses</span><strong id="score-expenses">$0</strong><small id="score-expenses-note">Debt, property and selected living costs</small></article>
           </section>
 
           <div class="mf-workspace">
             <nav class="mf-stepper" aria-label="Mortgage calculation steps">
-              <button type="button" class="mf-step active" data-step="0"><b>1</b><span>Client</span></button>
-              <button type="button" class="mf-step" data-step="1"><b>2</b><span>Income</span></button>
-              <button type="button" class="mf-step" data-step="2"><b>3</b><span>Funds</span></button>
-              <button type="button" class="mf-step" data-step="3"><b>4</b><span>Debt</span></button>
-              <button type="button" class="mf-step" data-step="4"><b>5</b><span>Property</span></button>
-              <button type="button" class="mf-step" data-step="5"><b>6</b><span>Living Costs</span></button>
-              <button type="button" class="mf-step" data-step="6"><b>7</b><span>Results</span></button>
+              <button type="button" class="mf-step active" data-step="0"><b aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><circle cx="12" cy="8" r="3.6"/><path d="M5 20c.5-4.2 3.3-6.2 7-6.2s6.5 2 7 6.2"/></svg></b><span>Client</span></button>
+              <button type="button" class="mf-step" data-step="1"><b aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><circle cx="12" cy="12" r="8.5"/><path d="M14.6 9.2c-.5-.8-1.4-1.2-2.6-1.2-1.5 0-2.5.8-2.5 2s1 1.7 2.5 2 2.5.8 2.5 2-1 2-2.5 2c-1.2 0-2.1-.4-2.6-1.2M12 5.8v1.5M12 16.7v1.5"/></svg></b><span>Income</span></button>
+              <button type="button" class="mf-step" data-step="2"><b aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M3 9.5 12 4l9 5.5"/><path d="M5.5 10.5v6.5M9.8 10.5v6.5M14.2 10.5v6.5M18.5 10.5v6.5"/><path d="M3.5 20h17"/></svg></b><span>Funds</span></button>
+              <button type="button" class="mf-step" data-step="3"><b aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><rect x="3" y="5.5" width="18" height="13" rx="2.2"/><path d="M3 10h18M7 14.8h4"/></svg></b><span>Debt</span></button>
+              <button type="button" class="mf-step" data-step="4"><b aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M3 11.2 12 4l9 7.2"/><path d="M5.5 9.8V20h13V9.8"/><path d="M10 20v-5.5h4V20"/></svg></b><span>Property</span></button>
+              <button type="button" class="mf-step" data-step="5"><b aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M3 4h2.6l2.1 11h10.1l2-8H6.6"/><circle cx="9.6" cy="19" r="1.4"/><circle cx="16.6" cy="19" r="1.4"/></svg></b><span>Living Costs</span></button>
+              <button type="button" class="mf-step" data-step="6"><b aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M4 4v16h16"/><rect x="7.5" y="12" width="3" height="5.5" rx=".6"/><rect x="12.3" y="8.5" width="3" height="9" rx=".6"/><rect x="17" y="5" width="2.6" height="12.5" rx=".6"/></svg></b><span>Results</span></button>
+              <div class="mf-built-ca"><svg class="mf-leaf" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><path fill="#D52B1E" d="M50 1 L58 18 L66 13 L63 35 L75 26 L73 38 L98 34 L88 55 L93 60 L72 78 L75 88 L53 84 L53 100 L47 100 L47 84 L25 88 L28 78 L7 60 L12 55 L2 34 L27 38 L25 26 L37 35 L34 13 L42 18 Z"/></svg><span>Built for Canadian Mortgage Professionals</span></div>
               <div class="mf-progress-shell"><i id="mf-progress-bar"></i></div>
               <small id="mf-progress-text">Step 1 of 7</small>
             </nav>
 
             <main class="mf-stage">
               <section class="mf-panel active" data-panel="0">
-                <div class="mf-section-title"><div><span>01</span><h2>Client &amp; Application Details</h2></div><p class="mf-tagline"><span>The right numbers</span><span>lead to brighter outcomes</span><i class="mf-leaf" aria-hidden="true"></i></p></div>
+                <div class="mf-section-title"><div><span>01</span><h2>Client &amp; Application Details</h2></div><p class="mf-tagline"><svg class="mf-leaf mf-leaf-front" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><path fill="#D52B1E" d="M50 1 L58 18 L66 13 L63 35 L75 26 L73 38 L98 34 L88 55 L93 60 L72 78 L75 88 L53 84 L53 100 L47 100 L47 84 L25 88 L28 78 L7 60 L12 55 L2 34 L27 38 L25 26 L37 35 L34 13 L42 18 Z"/></svg><span class="mf-tagtext"><span>The right numbers</span><span>lead to brighter outcomes</span></span></p></div>
                 <div class="mf-fields mf-fields-3">
                   <label>Client reference<input id="clientRef" type="text" placeholder="Example: VP-0726"></label>
-                  <label>Province<select id="province"><option>Ontario</option><option>Alberta</option><option>British Columbia</option><option>Manitoba</option><option>New Brunswick</option><option>Newfoundland and Labrador</option><option>Nova Scotia</option><option>Prince Edward Island</option><option>Quebec</option><option>Saskatchewan</option><option>Northwest Territories</option><option>Nunavut</option><option>Yukon</option></select></label>
-                  <label>Transaction<select id="transaction"><option>Purchase</option><option>Refinance</option><option>Renewal</option><option>Transfer</option></select></label>
-                  <label>Number of applicants<select id="applicantCount"><option value="1">1 applicant</option><option value="2">2 applicants</option><option value="3">3 applicants</option><option value="4">4 applicants</option></select></label>
-                  <label>First-time home buyer<select id="firstTime"><option>No</option><option>Yes</option></select></label>
-                  <label>Property type<select id="propertyType"><option>Detached</option><option>Semi-detached</option><option>Townhouse</option><option>Condominium</option><option>Duplex</option><option>Triplex</option><option>Fourplex</option><option>Rural property</option><option>New construction</option><option>Other</option></select></label>
-                  <label>Occupancy<select id="occupancy"><option>Owner occupied</option><option>Owner occupied with rental unit</option><option>Rental property</option><option>Second home</option></select></label>
-                  <label>Target purchase price>        <div class="mf-money"><span>$</span><input id="targetPrice" type="number" min="0" step="1000" value="700000"></div>
+                  <label>Province<select id="province"><option value="" selected disabled>Select</option><option>Ontario</option><option>Alberta</option><option>British Columbia</option><option>Manitoba</option><option>New Brunswick</option><option>Newfoundland and Labrador</option><option>Nova Scotia</option><option>Prince Edward Island</option><option>Quebec</option><option>Saskatchewan</option><option>Northwest Territories</option><option>Nunavut</option><option>Yukon</option></select></label>
+                  <label>Transaction<select id="transaction"><option value="" selected disabled>Select</option><option>Purchase</option><option>Refinance</option><option>Renewal</option><option>Transfer</option></select></label>
+                  <label>Number of applicants<select id="applicantCount"><option value="" selected disabled>Select</option><option value="1">1 applicant</option><option value="2">2 applicants</option><option value="3">3 applicants</option><option value="4">4 applicants</option></select></label>
+                  <label>First-time home buyer<select id="firstTime"><option value="" selected disabled>Select</option><option>No</option><option>Yes</option></select></label>
+                  <label>Property type<select id="propertyType"><option value="" selected disabled>Select</option><option>Detached</option><option>Semi-detached</option><option>Townhouse</option><option>Condominium</option><option>Duplex</option><option>Triplex</option><option>Fourplex</option><option>Rural property</option><option>New construction</option><option>Other</option></select></label>
+                  <label>Occupancy<select id="occupancy"><option value="" selected disabled>Select</option><option>Owner occupied</option><option>Owner occupied with rental unit</option><option>Rental property</option><option>Second home</option></select></label>
+                  <label>Target purchase price<div class="mf-money"><span>$</span><input id="targetPrice" type="number" min="0" step="1000"></div>
     </label>
                   <label>Expected closing date<input id="closingDate" type="date"></label>
                 </div>
               </section>
 
               <section class="mf-panel" data-panel="1">
-                <div class="mf-section-title"><div><span>02</span><h2>Applicant Income</h2></div><p>Use income reasonably expected to be accepted for qualification.</p></div>
+                <div class="mf-section-title"><div><span>02</span><h2>Applicant Income</h2></div><p class="mf-tagline"><svg class="mf-leaf mf-leaf-front" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><path fill="#D52B1E" d="M50 1 L58 18 L66 13 L63 35 L75 26 L73 38 L98 34 L88 55 L93 60 L72 78 L75 88 L53 84 L53 100 L47 100 L47 84 L25 88 L28 78 L7 60 L12 55 L2 34 L27 38 L25 26 L37 35 L34 13 L42 18 Z"/></svg><span class="mf-tagtext"><span>Use income reasonably expected</span><span>to be accepted for qualification</span></span></p></div>
                 <div id="applicant-list"></div>
                 <button type="button" class="mf-link-btn" id="add-applicant">+ Add applicant</button>
                 <div class="mf-total-line"><span>Combined annual qualifying income</span><strong id="income-total-inline">$0</strong></div>
               </section>
 
               <section class="mf-panel" data-panel="2">
-                <div class="mf-section-title"><div><span>03</span><h2>Net Household Income &amp; Available Funds</h2></div><p>Combine affordability cash flow with the client's down payment position.</p></div>
+                <div class="mf-section-title"><div><span>03</span><h2>Net Household Income &amp; Available Funds</h2></div><p class="mf-tagline"><svg class="mf-leaf mf-leaf-front" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><path fill="#D52B1E" d="M50 1 L58 18 L66 13 L63 35 L75 26 L73 38 L98 34 L88 55 L93 60 L72 78 L75 88 L53 84 L53 100 L47 100 L47 84 L25 88 L28 78 L7 60 L12 55 L2 34 L27 38 L25 26 L37 35 L34 13 L42 18 Z"/></svg><span class="mf-tagtext"><span>Combine affordability cash flow</span><span>with the client's down payment position</span></span></p></div>
                 <div class="mf-subgrid-two">
                   <div class="mf-subcard"><h3>Net Household Income</h3><div class="mf-fields">
-                    <label>Combined monthly after-tax income>        <div class="mf-money"><span>$</span><input id="netIncome" type="number" min="0" step="100" value="8500"></div>
+                    <label>Combined monthly after-tax income<div class="mf-money"><span>$</span><input id="netIncome" type="number" min="0" step="100"></div>
     <small>Required for the comfortable mortgage estimate.</small></label>
-                    <label>Other monthly cash income>        <div class="mf-money"><span>$</span><input id="otherNetIncome" type="number" min="0" step="50" value="0"></div>
+                    <label>Other monthly cash income<div class="mf-money"><span>$</span><input id="otherNetIncome" type="number" min="0" step="50"></div>
     </label>
-                    <label>Desired monthly cash cushion>        <div class="mf-money"><span>$</span><input id="cashCushion" type="number" min="0" step="50" value="1000"></div>
+                    <label>Desired monthly cash cushion<div class="mf-money"><span>$</span><input id="cashCushion" type="number" min="0" step="50"></div>
     </label>
                   </div></div>
                   <div class="mf-subcard"><h3>Available Down Payment &amp; Funds</h3><div class="mf-fields">
-                    <label>Available down payment>        <div class="mf-money"><span>$</span><input id="downPayment" type="number" min="0" step="1000" value="75000"></div>
+                    <label>Available down payment<div class="mf-money"><span>$</span><input id="downPayment" type="number" min="0" step="1000"></div>
     </label>
-                    <label>Additional closing funds>        <div class="mf-money"><span>$</span><input id="closingFunds" type="number" min="0" step="500" value="15000"></div>
+                    <label>Additional closing funds<div class="mf-money"><span>$</span><input id="closingFunds" type="number" min="0" step="500"></div>
     </label>
-                    <label>Emergency funds to retain>        <div class="mf-money"><span>$</span><input id="reserveFunds" type="number" min="0" step="500" value="10000"></div>
+                    <label>Emergency funds to retain<div class="mf-money"><span>$</span><input id="reserveFunds" type="number" min="0" step="500"></div>
     </label>
-                    <label>Down-payment source<select id="downPaymentSource"><option>Savings</option><option>TFSA</option><option>FHSA</option><option>RRSP Home Buyers’ Plan</option><option>Gift</option><option>Property sale</option><option>Multiple sources</option><option>Other</option></select></label>
+                    <label>Down-payment source<select id="downPaymentSource"><option value="" selected disabled>Select</option><option>Savings</option><option>TFSA</option><option>FHSA</option><option>RRSP Home Buyers’ Plan</option><option>Gift</option><option>Property sale</option><option>Multiple sources</option><option>Other</option></select></label>
                   </div></div>
                 </div>
                 <div class="mf-subcard" style="margin-top:12px">
                   <h3>Cash to Close &amp; Savings Plan</h3>
                   <div class="mf-fields mf-fields-3">
-                    <label>Legal / title estimate<div class="mf-money"><span>$</span><input id="legalCosts" type="number" min="0" step="100" value="2500"></div></label>
-                    <label>Inspection / appraisal<div class="mf-money"><span>$</span><input id="inspectionCosts" type="number" min="0" step="100" value="1000"></div></label>
-                    <label>Land transfer / transfer tax<div class="mf-money"><span>$</span><input id="transferTax" type="number" min="0" step="100" value="0"></div></label>
-                    <label>Other closing costs<div class="mf-money"><span>$</span><input id="otherClosingCosts" type="number" min="0" step="100" value="0"></div></label>
-                    <label>Additional reserve target<div class="mf-money"><span>$</span><input id="closingReserve" type="number" min="0" step="100" value="0"></div></label>
-                    <label>Planned monthly savings<div class="mf-money"><span>$</span><input id="plannedMonthlySavings" type="number" min="0" step="50" value="0"></div><small>Used only to estimate time to close a funding gap.</small></label>
+                    <label>Legal / title estimate<div class="mf-money"><span>$</span><input id="legalCosts" type="number" min="0" step="100"></div></label>
+                    <label>Inspection / appraisal<div class="mf-money"><span>$</span><input id="inspectionCosts" type="number" min="0" step="100"></div></label>
+                    <label>Land transfer / transfer tax<div class="mf-money"><span>$</span><input id="transferTax" type="number" min="0" step="100"></div></label>
+                    <label>Other closing costs<div class="mf-money"><span>$</span><input id="otherClosingCosts" type="number" min="0" step="100"></div></label>
+                    <label>Additional reserve target<div class="mf-money"><span>$</span><input id="closingReserve" type="number" min="0" step="100"></div></label>
+                    <label>Planned monthly savings<div class="mf-money"><span>$</span><input id="plannedMonthlySavings" type="number" min="0" step="50"></div><small>Used only to estimate time to close a funding gap.</small></label>
                   </div>
                 </div>
               </section>
 
               <section class="mf-panel" data-panel="3">
-                <div class="mf-section-title"><div><span>04</span><h2>Monthly Debt Obligations</h2></div><p>Toggle on only the obligations that apply. Enabled debts affect TDS.</p></div>
+                <div class="mf-section-title"><div><span>04</span><h2>Monthly Debt Obligations</h2></div><p class="mf-tagline"><svg class="mf-leaf mf-leaf-front" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><path fill="#D52B1E" d="M50 1 L58 18 L66 13 L63 35 L75 26 L73 38 L98 34 L88 55 L93 60 L72 78 L75 88 L53 84 L53 100 L47 100 L47 84 L25 88 L28 78 L7 60 L12 55 L2 34 L27 38 L25 26 L37 35 L34 13 L42 18 Z"/></svg><span class="mf-tagtext"><span>Toggle on only the obligations that apply</span><span>Enabled debts affect TDS</span></span></p></div>
                 <div class="mf-toggle-grid mf-toggle-grid-3" id="debt-grid"></div>
                 <div class="mf-total-line"><span>Total monthly debt obligations</span><strong id="debt-total-inline">$0</strong></div>
               </section>
 
               <section class="mf-panel" data-panel="4">
-                <div class="mf-section-title"><div><span>05</span><h2>Target Property Expenses &amp; Mortgage Assumptions</h2></div><p>Property carrying costs and qualification assumptions stay together.</p></div>
+                <div class="mf-section-title"><div><span>05</span><h2>Target Property Expenses &amp; Mortgage Assumptions</h2></div><p class="mf-tagline"><svg class="mf-leaf mf-leaf-front" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><path fill="#D52B1E" d="M50 1 L58 18 L66 13 L63 35 L75 26 L73 38 L98 34 L88 55 L93 60 L72 78 L75 88 L53 84 L53 100 L47 100 L47 84 L25 88 L28 78 L7 60 L12 55 L2 34 L27 38 L25 26 L37 35 L34 13 L42 18 Z"/></svg><span class="mf-tagtext"><span>Property carrying costs and</span><span>qualification assumptions stay together</span></span></p></div>
                 <div class="mf-subgrid-two">
                   <div class="mf-subcard"><h3>Target Property Expenses</h3><div class="mf-fields mf-fields-2">
-                    <label>Annual property taxes>        <div class="mf-money"><span>$</span><input id="annualTaxes" type="number" min="0" step="100" value="6000"></div>
+                    <label>Annual property taxes<div class="mf-money"><span>$</span><input id="annualTaxes" type="number" min="0" step="100"></div>
     </label>
-                    <label>Monthly heating>        <div class="mf-money"><span>$</span><input id="heating" type="number" min="0" step="10" value="150"></div>
+                    <label>Monthly heating<div class="mf-money"><span>$</span><input id="heating" type="number" min="0" step="10"></div>
     </label>
-                    <label>Monthly condo fee>        <div class="mf-money"><span>$</span><input id="condoFee" type="number" min="0" step="10" value="0"></div>
+                    <label>Monthly condo fee<div class="mf-money"><span>$</span><input id="condoFee" type="number" min="0" step="10"></div>
     </label>
-                    <label>Home insurance>        <div class="mf-money"><span>$</span><input id="homeInsurance" type="number" min="0" step="10" value="150"></div>
+                    <label>Home insurance<div class="mf-money"><span>$</span><input id="homeInsurance" type="number" min="0" step="10"></div>
     </label>
-                    <label>Electricity>        <div class="mf-money"><span>$</span><input id="propertyElectricity" type="number" min="0" step="10" value="0"></div>
+                    <label>Electricity<div class="mf-money"><span>$</span><input id="propertyElectricity" type="number" min="0" step="10"></div>
     </label>
-                    <label>Water>        <div class="mf-money"><span>$</span><input id="propertyWater" type="number" min="0" step="10" value="0"></div>
+                    <label>Water<div class="mf-money"><span>$</span><input id="propertyWater" type="number" min="0" step="10"></div>
     </label>
-                    <label>Other property costs>        <div class="mf-money"><span>$</span><input id="otherProperty" type="number" min="0" step="10" value="0"></div>
+                    <label>Other property costs<div class="mf-money"><span>$</span><input id="otherProperty" type="number" min="0" step="10"></div>
     </label>
-                    <label>Estimated closing cost<div class="mf-percent"><input id="closingCostPct" type="number" min="0" max="10" step="0.1" value="2"><span>%</span></div></label>
+                    <label>Estimated closing cost<div class="mf-percent"><input id="closingCostPct" type="number" min="0" max="10" step="0.1"><span>%</span></div></label>
                   </div></div>
                   <div class="mf-subcard"><h3>Mortgage Assumptions</h3><div class="mf-fields mf-fields-2">
-                    <label>Contract interest rate<div class="mf-percent"><input id="contractRate" type="number" min="0.1" max="30" step="0.01" value="4.50"><span>%</span></div></label>
-                    <label>Stress-test floor<div class="mf-percent"><input id="stressFloor" type="number" min="0" max="30" step="0.01" value="5.25"><span>%</span></div></label>
-                    <label>Rate increase<div class="mf-percent"><input id="stressIncrease" type="number" min="0" max="10" step="0.01" value="2.00"><span>%</span></div></label>
-                    <label>Amortization<select id="amortization"><option value="15">15 years</option><option value="20">20 years</option><option value="25" selected>25 years</option><option value="30">30 years</option></select></label>
-                    <label>Maximum GDS<div class="mf-percent"><input id="gdsLimit" type="number" min="1" max="100" step="0.1" value="39"><span>%</span></div></label>
-                    <label>Maximum TDS<div class="mf-percent"><input id="tdsLimit" type="number" min="1" max="100" step="0.1" value="44"><span>%</span></div></label>
-                    <label>Condo fee used in qualification<div class="mf-percent"><input id="condoPct" type="number" min="0" max="100" step="1" value="50"><span>%</span></div></label>
-                    <label>Payment frequency<select id="paymentFrequency"><option value="monthly">Monthly</option><option value="biweekly">Biweekly</option><option value="weekly">Weekly</option></select></label>
+                    <label>Contract interest rate<div class="mf-percent"><input id="contractRate" type="number" min="0.1" max="30" step="0.01"><span>%</span></div></label>
+                    <label>Stress-test floor<div class="mf-percent"><input id="stressFloor" type="number" min="0" max="30" step="0.01"><span>%</span></div></label>
+                    <label>Rate increase<div class="mf-percent"><input id="stressIncrease" type="number" min="0" max="10" step="0.01"><span>%</span></div></label>
+                    <label>Amortization<select id="amortization"><option value="" selected disabled>Select</option><option value="15">15 years</option><option value="20">20 years</option><option value="25">25 years</option><option value="30">30 years</option></select></label>
+                    <label>Maximum GDS<div class="mf-percent"><input id="gdsLimit" type="number" min="1" max="100" step="0.1"><span>%</span></div></label>
+                    <label>Maximum TDS<div class="mf-percent"><input id="tdsLimit" type="number" min="1" max="100" step="0.1"><span>%</span></div></label>
+                    <label>Condo fee used in qualification<div class="mf-percent"><input id="condoPct" type="number" min="0" max="100" step="1"><span>%</span></div></label>
+                    <label>Payment frequency<select id="paymentFrequency"><option value="" selected disabled>Select</option><option value="monthly">Monthly</option><option value="biweekly">Biweekly</option><option value="weekly">Weekly</option></select></label>
                   </div>
                   <details class="mf-advanced"><summary>Advanced assumptions</summary><div class="mf-fields mf-fields-2">
-                    <label>Credit card payment %<div class="mf-percent"><input id="ccPct" type="number" min="0" max="100" step="0.1" value="3"><span>%</span></div></label>
-                    <label>Line of credit payment %<div class="mf-percent"><input id="locPct" type="number" min="0" max="100" step="0.1" value="3"><span>%</span></div></label>
+                    <label>Credit card payment %<div class="mf-percent"><input id="ccPct" type="number" min="0" max="100" step="0.1"><span>%</span></div></label>
+                    <label>Line of credit payment %<div class="mf-percent"><input id="locPct" type="number" min="0" max="100" step="0.1"><span>%</span></div></label>
                   </div></details>
                   </div>
                 </div>
               </section>
 
               <section class="mf-panel" data-panel="5">
-                <div class="mf-section-title"><div><span>06</span><h2>Optional Household Living Expenses</h2></div><p>These affect the comfortable estimate, not standard GDS/TDS.</p></div>
+                <div class="mf-section-title"><div><span>06</span><h2>Optional Household Living Expenses</h2></div><p class="mf-tagline"><svg class="mf-leaf mf-leaf-front" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><path fill="#D52B1E" d="M50 1 L58 18 L66 13 L63 35 L75 26 L73 38 L98 34 L88 55 L93 60 L72 78 L75 88 L53 84 L53 100 L47 100 L47 84 L25 88 L28 78 L7 60 L12 55 L2 34 L27 38 L25 26 L37 35 L34 13 L42 18 Z"/></svg><span class="mf-tagtext"><span>These affect the comfortable estimate</span><span>not standard GDS/TDS</span></span></p></div>
                 <p class="mf-helper">Toggle on only the expenses that apply to this client's household budget.</p>
                 <div id="expense-categories" class="mf-expense-categories"></div>
                 <button type="button" class="mf-link-btn" id="add-custom-expense">+ Add custom expense</button>
@@ -806,7 +1583,7 @@ html.mf-custom-photo .mf-header:before{width:min(640px,52%);max-width:none;backg
               </section>
 
               <section class="mf-panel" data-panel="6">
-                <div class="mf-section-title"><div><span>07</span><h2>MortgageFit Results</h2></div><p>Review the estimate, ratios, cash flow and assumptions.</p></div>
+                <div class="mf-section-title"><div><span>07</span><h2>MortgageFit Results</h2></div><p class="mf-tagline"><svg class="mf-leaf mf-leaf-front" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><path fill="#D52B1E" d="M50 1 L58 18 L66 13 L63 35 L75 26 L73 38 L98 34 L88 55 L93 60 L72 78 L75 88 L53 84 L53 100 L47 100 L47 84 L25 88 L28 78 L7 60 L12 55 L2 34 L27 38 L25 26 L37 35 L34 13 L42 18 Z"/></svg><span class="mf-tagtext"><span>Review the estimate, ratios</span><span>cash flow and assumptions</span></span></p></div>
                 <div class="mf-results-empty" id="mf-results-empty"><h3>Ready to calculate?</h3><p>Complete the relevant sections, then calculate the mortgage estimate.</p><button class="mf-btn mf-btn-primary" type="button" id="mf-calculate">Calculate Mortgage Estimate</button></div>
                 <div class="mf-results" id="mf-results" hidden>
                   <div class="mf-result-hero">
@@ -837,8 +1614,8 @@ html.mf-custom-photo .mf-header:before{width:min(640px,52%);max-width:none;backg
                     <h3>Scenario Analysis</h3>
                     <p>Test common case-structuring changes without changing the base case.</p>
                     <div class="mf-scenario-controls">
-                      <label>Monthly debt payment to remove<div class="mf-money"><span>$</span><input id="scenarioDebtRemove" type="number" min="0" step="25" value="0"></div></label>
-                      <label>Additional down payment<div class="mf-money"><span>$</span><input id="scenarioDownAdd" type="number" min="0" step="1000" value="0"></div></label>
+                      <label>Monthly debt payment to remove<div class="mf-money"><span>$</span><input id="scenarioDebtRemove" type="number" min="0" step="25"></div></label>
+                      <label>Additional down payment<div class="mf-money"><span>$</span><input id="scenarioDownAdd" type="number" min="0" step="1000"></div></label>
                       <label>Scenario contract rate<div class="mf-percent"><input id="scenarioRate" type="number" min="0" max="25" step="0.01" placeholder="Current rate"><span>%</span></div></label>
                       <label>Scenario amortization<select id="scenarioAmortization"><option value="">Current</option><option value="20">20 years</option><option value="25">25 years</option><option value="30">30 years</option></select></label>
                     </div>
@@ -858,32 +1635,110 @@ html.mf-custom-photo .mf-header:before{width:min(640px,52%);max-width:none;backg
                     </div>
                   </div>
 
-                  <div class="mf-results-actions"><button type="button" class="mf-btn mf-btn-primary" id="mf-download-results">Download Client Estimate</button><button type="button" class="mf-btn mf-btn-outline" onclick="window.print()">Print Summary</button></div>
+                  <div class="mf-results-actions"><button type="button" class="mf-btn mf-btn-outline" id="mf-preview-results">Preview PDF</button><button type="button" class="mf-btn mf-btn-primary" id="mf-download-results">Download Client Estimate</button><button type="button" class="mf-btn mf-btn-outline" onclick="window.print()">Print Summary</button></div>
                   <p class="mf-disclaimer">This calculator provides an estimate for general planning purposes only. It does not constitute mortgage approval, a commitment to lend, financial advice, or a guarantee of financing. Final qualification depends on document verification, credit history, lender and insurer requirements, property review, applicable laws, and underwriting policies.</p>
                 </div>
               </section>
 
               <div class="mf-nav-actions">
                 <button class="mf-btn mf-btn-secondary" type="button" id="mf-prev" disabled>← Previous</button>
-                <div class="mf-live-pill"><span>Live estimate</span><strong id="mf-live-estimate">Waiting for income</strong></div>
+                <div class="mf-live-pill"><span>Live estimate</span><strong id="mf-live-estimate">$0</strong></div>
                 <button class="mf-btn mf-btn-primary" type="button" id="mf-next">Next: Income →</button>
               </div>
             </main>
           </div>
 
+          <div class="mf-modal" id="mf-branding-modal" hidden>
+            <div class="mf-modal-card mf-branding-modal-card" role="dialog" aria-modal="true" aria-labelledby="mf-branding-title">
+              <div class="mf-modal-head"><div><h2 id="mf-branding-title">Manage Agent Branding</h2><p>Only the administrator can change this information.</p></div><button type="button" id="mf-branding-close" aria-label="Close agent branding">×</button></div>
+              <label class="mf-branding-agent-select">Select agent <select id="mf-branding-agent-select" aria-label="Select agent to brand"></select></label>
+              <div class="mf-branding-layout">
+                <div class="mf-branding-logo-panel">
+                  <div class="mf-branding-logo-box" id="mf-branding-logo-box"><span id="mf-branding-logo-placeholder">YOUR LOGO</span><img id="mf-branding-logo-image" alt="Your brokerage logo preview" hidden></div>
+                  <input type="file" id="mf-branding-logo-file" accept="image/png,image/jpeg,image/webp" hidden>
+                  <button type="button" class="mf-btn mf-btn-outline" id="mf-branding-upload">Upload Logo</button>
+                  <button type="button" class="mf-link-btn" id="mf-branding-remove">Remove logo</button>
+                  <small>PNG, JPG or WebP. Best with a horizontal logo. Maximum file size 5 MB.</small>
+                </div>
+                <div class="mf-branding-fields">
+                  <label>Agent name<input type="text" id="mf-branding-name" maxlength="90" placeholder="Your full name"></label>
+                  <label>Brokerage / company<input type="text" id="mf-branding-company" maxlength="100" placeholder="Your brokerage name"></label>
+                  <label>License number<input type="text" id="mf-branding-license" maxlength="55" placeholder="License or registration number"></label>
+                  <label>Business phone<input type="tel" id="mf-branding-phone" maxlength="45" placeholder="(000) 000-0000"></label>
+                  <label>Business email<input type="email" id="mf-branding-email" maxlength="120" placeholder="agent@brokerage.ca"></label>
+                </div>
+              </div>
+              <div class="mf-branding-actions"><span id="mf-branding-status" role="status"></span><button type="button" class="mf-btn mf-btn-outline" id="mf-branding-preview">Preview PDF</button><button type="button" class="mf-btn mf-btn-primary" id="mf-branding-save">Save Branding</button></div>
+              <p class="mf-branding-footnote">This branding is assigned to the selected agent. Only administrators can save or remove it.</p>
+            </div>
+          </div>
+
+          <div class="mf-modal" id="mf-add-agent-modal" hidden>
+            <div class="mf-modal-card mf-agent-modal-card" role="dialog" aria-modal="true" aria-labelledby="mf-agent-modal-title">
+              <div class="mf-modal-head"><div><h2 id="mf-agent-modal-title">Add New Agent</h2><p>Create an account with a temporary password and assign access.</p></div><button type="button" id="mf-add-agent-close" aria-label="Close">×</button></div>
+              <form id="mf-add-agent-form">
+                <div class="mf-agent-fields">
+                  <label>Full name <input name="name" required maxlength="90" autocomplete="off" placeholder="Agent name"></label>
+                  <label>Email address <input name="email" type="email" required maxlength="120" autocomplete="off" placeholder="agent@example.com"></label>
+                  <label>Brokerage / company <input name="company" required maxlength="100" placeholder="Company name"></label>
+                  <label>Phone number (Canada/US) <input name="phone" type="tel" inputmode="numeric" autocomplete="tel-national" maxlength="17" placeholder="(416) 555-0123" pattern="(?:\+1 )?\([2-9][0-9]{2}\) [2-9][0-9]{2}-[0-9]{4}" title="Enter a valid 10-digit Canada/US phone number, e.g. (416) 555-0123, optionally starting with 1"></label>
+                  <label>License number <input name="license" maxlength="55" placeholder="License / registration"></label>
+                  <label>Temporary password <span class="mf-agent-password-wrap"><input name="password" type="password" required minlength="12" maxlength="128" autocomplete="new-password" placeholder="At least 12 characters" id="mf-new-agent-password"><button type="button" class="mf-password-eye" id="mf-new-agent-eye" aria-label="Show password" aria-pressed="false" title="Show password"><svg class="mf-agent-eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg><svg class="mf-agent-eye-closed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" hidden><path d="M3 3l18 18M10.6 5.1A11 11 0 0 1 12 5c6.5 0 10 7 10 7a15 15 0 0 1-3.2 4.2M6.2 6.2C3.5 8.2 2 12 2 12s3.5 7 10 7a10.5 10.5 0 0 0 4.1-.8"/><path d="M10 10a3 3 0 0 0 4 4"/></svg></button></span></label>
+                  <label>Access level <select name="plan"><option value="free">Free: Calculator only</option><option value="premium">Premium: Calculator + PDF</option></select></label>
+                  <label>Agent colour theme <select name="theme"><option value="pearl-gold">Pearl & Gold</option><option value="ocean-mist">Ocean Mist</option><option value="sage-stone">Sage & Stone</option><option value="professional-navy">Professional Navy</option><option value="emerald-ledger">Emerald Ledger</option><option value="royal-burgundy">Royal Burgundy</option><option value="midnight-black">Midnight Black</option></select></label><label>Account status <select name="status"><option value="active">Active</option><option value="suspended">Suspended</option></select></label>
+                </div>
+                <p class="mf-branding-footnote">The temporary password is used only to create the Firebase Authentication account. It is not saved in Firestore. Ask the agent to reset it after first login.</p>
+                <div id="mf-agent-feedback" role="status"></div>
+                <div class="mf-agent-actions"><button type="button" class="mf-btn mf-btn-outline" id="mf-agent-cancel">Cancel</button><button type="submit" class="mf-btn mf-btn-primary" id="mf-agent-create">Create Agent</button></div>
+              </form>
+            </div>
+          </div>
+          <div class="mf-modal" id="mf-edit-agent-modal" hidden>
+            <div class="mf-modal-card mf-agent-modal-card" role="dialog" aria-modal="true" aria-labelledby="mf-edit-agent-title">
+              <div class="mf-modal-head"><div><h2 id="mf-edit-agent-title">Edit Agent</h2><p>Manage this agent's plan, status and contact information.</p></div><button type="button" id="mf-edit-agent-close" aria-label="Close">×</button></div>
+              <form id="mf-edit-agent-form"><div class="mf-agent-fields">
+                <label>Full name <input name="name" required maxlength="90"></label>
+                <label>Email (read-only) <input name="email" readonly></label>
+                <label>Company <input name="company" required maxlength="100"></label>
+                <label>Phone (Canada/US) <input name="phone" type="tel" inputmode="numeric" maxlength="17" placeholder="(416) 555-0123" pattern="(?:\+1 )?\([2-9][0-9]{2}\) [2-9][0-9]{2}-[0-9]{4}" title="Enter a valid Canada/US phone number"></label>
+                <label>License <input name="license" maxlength="55"></label>
+                <label>Agent colour theme <select name="theme"><option value="pearl-gold">Pearl & Gold</option><option value="ocean-mist">Ocean Mist</option><option value="sage-stone">Sage & Stone</option><option value="professional-navy">Professional Navy</option><option value="emerald-ledger">Emerald Ledger</option><option value="royal-burgundy">Royal Burgundy</option><option value="midnight-black">Midnight Black</option></select></label><label>Plan <select name="plan"><option value="free">Free</option><option value="premium">Premium</option></select></label>
+                <label>Status <select name="status"><option value="active">Active</option><option value="suspended">Suspended</option></select></label>
+              </div><div id="mf-edit-agent-feedback" role="status"></div><div class="mf-agent-actions"><button type="button" class="mf-btn mf-btn-outline" id="mf-edit-agent-cancel">Cancel</button><button type="submit" class="mf-btn mf-btn-primary" id="mf-edit-agent-save">Save Changes</button></div></form>
+            </div>
+          </div>
+          <div class="mf-modal" id="mf-premium-modal" hidden>
+            <div class="mf-modal-card mf-agent-modal-card" role="dialog" aria-modal="true" aria-labelledby="mf-premium-title">
+              <div class="mf-modal-head"><div><h2 id="mf-premium-title">Unlock Premium PDF Reports</h2><p>PDF preview and downloads are a Premium feature.</p></div><button type="button" id="mf-premium-close" aria-label="Close">×</button></div>
+              <p>Continue using the calculator and saved cases for free. Request an upgrade from your administrator to generate branded PDF reports.</p>
+              <div id="mf-premium-feedback" role="status"></div><div class="mf-agent-actions"><button type="button" class="mf-btn mf-btn-outline" id="mf-premium-later">Not Now</button><button type="button" class="mf-btn mf-btn-primary" id="mf-premium-request">Request Premium Access</button></div>
+            </div>
+          </div>
           <div class="mf-modal" id="mf-cases-modal" hidden>
             <div class="mf-modal-card"><div class="mf-modal-head"><div><h2>Saved Cases</h2><p>Cases saved to your signed-in MortgageFit account.</p></div><button type="button" id="mf-cases-close">×</button></div><div id="mf-case-status" class="mf-case-status"></div><div id="mf-case-list"></div></div>
           </div>
 
 
-          <div class="mf-modal" id="mf-auth-modal" hidden>
+          <div class="mf-agent-tip" id="mf-agent-tip" role="tooltip">
+            <h4>Agent Details</h4>
+            <dl>
+              <dt>Name</dt><dd id="mf-agent-name"></dd>
+              <dt>Email</dt><dd id="mf-agent-email"></dd>
+              <dt>Phone</dt><dd id="mf-agent-phone"></dd>
+              <dt>Brokerage</dt><dd id="mf-agent-brokerage"></dd>
+              <dt>License #</dt><dd id="mf-agent-license"></dd>
+              <dt>Agent ID</dt><dd id="mf-agent-id"></dd>
+            </dl>
+          </div>
+          <div class="mf-modal mf-login-gate" id="mf-auth-modal">
             <div class="mf-modal-card mf-auth-card">
-              <div class="mf-modal-head">
-                <div>
-                  <h2>MortgageFit Agent Login</h2>
-                  <p>Sign in to securely save and reopen your own cases.</p>
-                </div>
-                <button type="button" id="mf-auth-close">×</button>
+              <div class="mf-login-brand">
+                <div class="mf-login-wordmark"><span>Mortgage</span><em>Fit</em></div>
+                <div class="mf-login-tagline">PLAN · QUALIFY · COMPARE · CLOSE</div>
+              </div>
+              <div class="mf-login-heading">
+                <h2>Welcome back</h2>
+                <p>Sign in to access your MortgageFit workspace.</p>
               </div>
 
               <div class="mf-auth-fields">
@@ -891,7 +1746,18 @@ html.mf-custom-photo .mf-header:before{width:min(640px,52%);max-width:none;backg
                   <input id="mf-auth-email" type="email" autocomplete="email" placeholder="agent@brokerage.ca">
                 </label>
                 <label>Password
-                  <input id="mf-auth-password" type="password" autocomplete="current-password" placeholder="Minimum 6 characters">
+                  <div class="mf-password-wrap">
+                    <input id="mf-auth-password" type="password" autocomplete="current-password" placeholder="Minimum 6 characters">
+                    <button type="button" class="mf-password-toggle" id="mf-password-toggle" aria-label="Show password" aria-pressed="false">
+                      <svg class="mf-eye-icon mf-eye-open" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6S2.5 12 2.5 12Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                        <circle cx="12" cy="12" r="2.7" fill="none" stroke="currentColor" stroke-width="1.8"/>
+                      </svg>
+                      <svg class="mf-eye-icon mf-eye-closed" viewBox="0 0 24 24" aria-hidden="true" hidden>
+                        <path d="M3 3l18 18M10.6 6.2A10.7 10.7 0 0 1 12 6c6 0 9.5 6 9.5 6a16 16 0 0 1-3.1 3.8M6.1 6.1C3.8 7.8 2.5 12 2.5 12s3.5 6 9.5 6a10.8 10.8 0 0 0 4.2-.8M9.9 9.9a3 3 0 0 0 4.2 4.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </button>
+                  </div>
                 </label>
               </div>
 
@@ -899,9 +1765,11 @@ html.mf-custom-photo .mf-header:before{width:min(640px,52%);max-width:none;backg
 
               <div class="mf-auth-actions">
                 <button type="button" class="mf-btn mf-btn-primary" id="mf-auth-signin">Sign In</button>
-                <button type="button" class="mf-btn mf-btn-outline" id="mf-auth-create">Create Account</button>
+                <button type="button" class="mf-btn mf-btn-outline" id="mf-auth-create" hidden>Create Account</button>
                 <button type="button" class="mf-link-btn" id="mf-auth-reset">Forgot password?</button>
               </div>
+              <button type="button" class="mf-link-btn" id="mf-auth-unapproved-signout" hidden>Sign out and use another account</button>
+              <p class="mf-login-security">Accounts are created by the MortgageFit administrator. Sign in with your assigned credentials.</p>
             </div>
           </div>
 
@@ -950,6 +1818,7 @@ html.mf-custom-photo .mf-header:before{width:min(640px,52%);max-width:none;backg
   <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-functions-compat.js"></script>
 
   <script>
 (() => {
@@ -961,6 +1830,10 @@ html.mf-custom-photo .mf-header:before{width:min(640px,52%);max-width:none;backg
   const pct = id => num(id)/100;
   const cfg = window.MortgageFitConfig || {firebaseEnabled:false};
   let currentStep = 0, applicantSeq = 0, lastResult = null, db = null, auth = null, uid = null;
+  const emptyBranding = () => ({name:'',company:'',license:'',phone:'',email:'',logoDataUrl:''});
+  let agentBranding = emptyBranding(), brandingLogoDraft = '', brandingLoadSeq = 0;
+  let accessProfile=null, isMortgageAdmin=false, agentDirectory=[], editAgentUid='', brandingTargetUid='', brandingTargetData=emptyBranding(), agentUnsubscribe=null, requestUnsubscribe=null, authCheckSeq=0;
+
 
   const stepNames = ['Income','Funds','Debt','Property','Living Costs','Results'];
   const debts = [
@@ -981,7 +1854,7 @@ html.mf-custom-photo .mf-header:before{width:min(640px,52%);max-width:none;backg
   ];
 
   function toggleRow(id,label,kind='expense') {
-    return `<div class="mf-toggle-row is-off"><input type="checkbox" id="${id}-on" data-toggle="${id}"><label for="${id}-on">${label}</label><div class="mf-money"><span>$</span><input id="${id}" data-${kind} type="number" min="0" step="10" value="0" disabled></div></div>`;
+    return `<div class="mf-toggle-row is-off"><input type="checkbox" id="${id}-on" data-toggle="${id}"><label for="${id}-on">${label}</label><div class="mf-money"><span>$</span><input id="${id}" data-${kind} type="number" min="0" step="10" disabled></div></div>`;
   }
 
   function buildDebtGrid(){ $('debt-grid').innerHTML = debts.map(d=>toggleRow(d[0],d[1],'debt')).join(''); }
@@ -994,22 +1867,22 @@ html.mf-custom-photo .mf-header:before{width:min(640px,52%);max-width:none;backg
     const id = applicantSeq;
     return `<div class="mf-applicant" data-applicant="${id}"><div class="mf-applicant-head"><strong>Applicant ${index}</strong><button type="button" class="mf-remove" data-remove-applicant="${id}">Remove</button></div><div class="mf-fields mf-fields-3">
       <label>Applicant label<input class="a-label" type="text" placeholder="Applicant ${index}"></label>
-      <label>Employment type<select class="a-employment"><option>Salaried</option><option>Hourly</option><option>Commission</option><option>Self-employed</option><option>Contract</option><option>Part-time</option><option>Retired</option><option>Other</option></select></label>
-      <label>Annual base salary<div class="mf-money"><span>$</span><input class="a-base" type="number" min="0" step="1000" value="${index===1?90000:0}"></div></label>
-      <label>Bonus / commission / overtime<div class="mf-money"><span>$</span><input class="a-variable" type="number" min="0" step="500" value="0"></div></label>
-      <label>Variable income accepted<div class="mf-percent"><input class="a-variable-pct" type="number" min="0" max="100" step="1" value="100"><span>%</span></div></label>
-      <label>Self-employed / pension income<div class="mf-money"><span>$</span><input class="a-other" type="number" min="0" step="500" value="0"></div></label>
-      <label>Rental income<div class="mf-money"><span>$</span><input class="a-rental" type="number" min="0" step="500" value="0"></div></label>
-      <label>Rental income accepted<div class="mf-percent"><input class="a-rental-pct" type="number" min="0" max="100" step="1" value="50"><span>%</span></div></label>
-      <label>Other qualifying income<div class="mf-money"><span>$</span><input class="a-extra" type="number" min="0" step="500" value="0"></div></label>
+      <label>Employment type<select class="a-employment"><option value="" selected disabled>Select</option><option>Salaried</option><option>Hourly</option><option>Commission</option><option>Self-employed</option><option>Contract</option><option>Part-time</option><option>Retired</option><option>Other</option></select></label>
+      <label>Annual base salary<div class="mf-money"><span>$</span><input class="a-base" type="number" min="0" step="1000"></div></label>
+      <label>Bonus / commission / overtime<div class="mf-money"><span>$</span><input class="a-variable" type="number" min="0" step="500"></div></label>
+      <label>Variable income accepted<div class="mf-percent"><input class="a-variable-pct" type="number" min="0" max="100" step="1"><span>%</span></div></label>
+      <label>Self-employed / pension income<div class="mf-money"><span>$</span><input class="a-other" type="number" min="0" step="500"></div></label>
+      <label>Rental income<div class="mf-money"><span>$</span><input class="a-rental" type="number" min="0" step="500"></div></label>
+      <label>Rental income accepted<div class="mf-percent"><input class="a-rental-pct" type="number" min="0" max="100" step="1"><span>%</span></div></label>
+      <label>Other qualifying income<div class="mf-money"><span>$</span><input class="a-extra" type="number" min="0" step="500"></div></label>
     </div><div class="mf-applicant-total">Accepted annual income <strong class="a-total">$0</strong></div></div>`;
   }
   function addApplicant(){ const list=$('applicant-list'); list.insertAdjacentHTML('beforeend', applicantTemplate(list.children.length+1)); renumberApplicants(); liveUpdate(); }
-  function renumberApplicants(){ $$('.mf-applicant').forEach((el,i)=>{ el.querySelector('.mf-applicant-head strong').textContent=`Applicant ${i+1}`; }); $('applicantCount').value=String(Math.min(4, Math.max(1,$$('.mf-applicant').length))); }
+  function renumberApplicants(){ $$('.mf-applicant').forEach((el,i)=>{ el.querySelector('.mf-applicant-head strong').textContent=`Applicant ${i+1}`; }); { const ac=$('applicantCount'), cnt=$$('.mf-applicant').length; if(ac.value!=='' || cnt>1) ac.value=String(Math.min(4, Math.max(1,cnt))); } }
 
   function setupToggles(){
     document.addEventListener('change', e=>{
-      if(e.target.matches('[data-toggle]')){ const id=e.target.dataset.toggle, input=$(id); input.disabled=!e.target.checked; e.target.closest('.mf-toggle-row').classList.toggle('is-off',!e.target.checked); if(!e.target.checked) input.value=0; liveUpdate(); }
+      if(e.target.matches('[data-toggle]')){ const id=e.target.dataset.toggle, input=$(id); input.disabled=!e.target.checked; e.target.closest('.mf-toggle-row').classList.toggle('is-off',!e.target.checked); if(!e.target.checked) input.value=''; liveUpdate(); }
       if(e.target.id==='applicantCount'){
         const desired=parseInt(e.target.value,10), current=$$('.mf-applicant').length;
         if(desired>current) for(let i=current;i<desired;i++) addApplicant();
@@ -1081,10 +1954,10 @@ html.mf-custom-photo .mf-header:before{width:min(640px,52%);max-width:none;backg
     const r=compute();
     $('income-total-inline').textContent=money(r.annualIncome); $('debt-total-inline').textContent=money(r.debtsMonthly); $('living-total-inline').textContent=money(r.living);
     if(r.annualIncome>0){ $('score-income').textContent=money(r.annualIncome); $('score-income-note').textContent=`${$$('.mf-applicant').length} applicant${$$('.mf-applicant').length===1?'':'s'}`; $('score-eligibility').textContent=money(r.lenderMortgage); $('score-eligibility-note').textContent=`Qualifying rate ${r.qualRate.toFixed(2)}%`; $('mf-live-estimate').textContent=money(r.lenderMortgage); }
-    else { $('score-income').textContent='Waiting for input'; $('score-eligibility').textContent='Not calculated'; $('mf-live-estimate').textContent='Waiting for income'; }
-    if(r.netMonthly>0 && r.annualIncome>0){ $('score-comfortable').textContent=money(r.comfortableMortgage||0); $('score-comfortable-note').textContent=r.lenderMortgage?`${Math.round((r.comfortableMortgage/r.lenderMortgage)*100)}% of lender estimate`:'Waiting for qualification'; }
-    else {$('score-comfortable').textContent='Not calculated'; $('score-comfortable-note').textContent='Enter monthly after-tax income';}
-    if(r.totalMonthlyExpenses>0){$('score-expenses').textContent=money(r.totalMonthlyExpenses);$('score-expenses-note').textContent=`Debt ${money(r.debtsMonthly)} · Living ${money(r.living)}`;} else $('score-expenses').textContent='Waiting for input';
+    else { $('score-income').textContent=money(0); $('score-eligibility').textContent=money(0); $('mf-live-estimate').textContent=money(0); }
+    if(r.netMonthly>0 && r.annualIncome>0){ $('score-comfortable').textContent=money(r.comfortableMortgage||0); $('score-comfortable-note').textContent=r.lenderMortgage?`${Math.round((r.comfortableMortgage/r.lenderMortgage)*100)}% of lender estimate`:'0% of lender estimate'; }
+    else {$('score-comfortable').textContent=money(0); $('score-comfortable-note').textContent='Enter monthly after-tax income';}
+    if(r.totalMonthlyExpenses>0){$('score-expenses').textContent=money(r.totalMonthlyExpenses);$('score-expenses-note').textContent=`Debt ${money(r.debtsMonthly)} · Living ${money(r.living)}`;} else $('score-expenses').textContent=money(0);
     updateSnapshotStatuses(r);
   }
 
@@ -1127,20 +2000,20 @@ html.mf-custom-photo .mf-header:before{width:min(640px,52%);max-width:none;backg
     });
   }
 
-  function ratioBlock(label,val,limit){ const ratio=Math.min(130,val/limit*100), cls=val>limit?'bad':val>limit*.9?'warn':''; return `<div class="mf-ratio"><div class="mf-ratio-head"><span>${label}</span><strong>${val.toFixed(2)}% / ${limit.toFixed(2)}%</strong></div><div class="mf-progress"><i class="${cls}" style="width:${ratio}%"></i></div></div>`; }
+  function ratioBlock(label,val,limit){ const ratio=limit>0?Math.min(130,val/limit*100):0, cls=val>limit?'bad':val>limit*.9?'warn':''; return `<div class="mf-ratio"><div class="mf-ratio-head"><span>${label}</span><strong>${val.toFixed(2)}% / ${limit.toFixed(2)}%</strong></div><div class="mf-progress"><i class="${cls}" style="width:${ratio}%"></i></div></div>`; }
   function dlRow(k,v){ return `<div><dt>${k}</dt><dd>${v}</dd></div>`; }
 
   function calculate(){
     const r=compute(); lastResult=r;
-    $('mf-results-empty').hidden=true; $('mf-results').hidden=false; $('mf-download').disabled=false;
-    $('res-eligibility').textContent=money(r.lenderMortgage); $('res-comfortable').textContent=r.comfortableMortgage===null?'Needs net income':money(r.comfortableMortgage); $('res-purchase').textContent=money(r.maxPurchase);
+    $('mf-results-empty').hidden=true; $('mf-results').hidden=false; $('mf-download').disabled=false; $('mf-preview').disabled=false;
+    $('res-eligibility').textContent=money(r.lenderMortgage); $('res-comfortable').textContent=money(r.comfortableMortgage||0); $('res-purchase').textContent=money(r.maxPurchase);
     $('res-status').textContent=r.annualIncome?'Estimate based on current assumptions':'Qualifying income required';
     $('mortgage-summary').innerHTML=dlRow('Contract rate',`${num('contractRate').toFixed(2)}%`)+dlRow('Qualifying rate',`${r.qualRate.toFixed(2)}%`)+dlRow('Amortization',`${r.years} years`)+dlRow('Estimated monthly payment',money(r.actualPayment))+dlRow('Qualifying monthly payment',money(r.qualPaymentAtMax))+dlRow('Mortgage insurance premium',money(r.mortgageAtMax.premium));
     $('ratio-summary').innerHTML=ratioBlock('GDS',r.gds,num('gdsLimit'))+ratioBlock('TDS',r.tds,num('tdsLimit'));
-    $('cashflow-summary').innerHTML=dlRow('After-tax monthly income',r.netMonthly?money(r.netMonthly):'Not entered')+dlRow('Monthly debts',money(r.debtsMonthly))+dlRow('Living expenses',money(r.living))+dlRow('Property costs',money(monthlyPropertyBudget()))+dlRow('Mortgage payment',money(r.actualPayment))+dlRow('Desired cash cushion',money(num('cashCushion')))+dlRow('Cash remaining',r.cashRemaining===null?'Not calculated':money(r.cashRemaining));
+    $('cashflow-summary').innerHTML=dlRow('After-tax monthly income',money(r.netMonthly))+dlRow('Monthly debts',money(r.debtsMonthly))+dlRow('Living expenses',money(r.living))+dlRow('Property costs',money(monthlyPropertyBudget()))+dlRow('Mortgage payment',money(r.actualPayment))+dlRow('Desired cash cushion',money(num('cashCushion')))+dlRow('Cash remaining',money(r.cashRemaining||0));
     $('closing-summary').innerHTML=dlRow('Down payment',money(r.down))+dlRow('Down payment %',r.maxPurchase?`${(r.down/r.maxPurchase*100).toFixed(2)}%`:'0%')+dlRow('Insurance premium',money(r.mortgageAtMax.premium))+dlRow('Estimated closing costs',money(r.closingCost))+dlRow('Additional closing funds',money(r.closingAvailable));
     $('mf-narrative').textContent = r.comfortableMortgage===null ? `Based on the information entered, the client may qualify for an estimated mortgage of ${money(r.lenderMortgage)} and an estimated maximum purchase price of ${money(r.maxPurchase)}. Enter after-tax household income to calculate the comfortable mortgage estimate.` : `Based on the information entered, the client may qualify for an estimated mortgage of ${money(r.lenderMortgage)}. With the available down payment, the estimated maximum purchase price is ${money(r.maxPurchase)}. After considering selected household expenses and the desired cash cushion, a mortgage around ${money(r.comfortableMortgage)} may provide a more comfortable monthly budget.`;
-    const warnings=[]; if(!r.annualIncome) warnings.push('Qualifying income has not been entered.'); if(r.gds>num('gdsLimit')+.05) warnings.push('The calculated GDS is above the selected guideline.'); if(r.tds>num('tdsLimit')+.05) warnings.push('The calculated TDS is above the selected guideline.'); if(r.down<minDownPayment(r.maxPurchase)) warnings.push('The available down payment may not satisfy the minimum down-payment requirement.'); if(r.closingAvailable<r.closingCost) warnings.push('Additional closing funds are below the estimated closing-cost amount.'); if(r.cashRemaining!==null && r.cashRemaining<0) warnings.push('The selected household budget produces negative monthly cash flow at the estimated maximum purchase price.'); if(num('amortization')===30) warnings.push('Review whether the selected 30-year amortization is permitted for this borrower and mortgage type.');
+    const warnings=[]; if(!r.annualIncome) warnings.push('Qualifying income has not been entered.'); if(r.gds>num('gdsLimit')+.05) warnings.push('The calculated GDS is above the selected guideline.'); if(r.tds>num('tdsLimit')+.05) warnings.push('The calculated TDS is above the selected guideline.'); if(r.down<minDownPayment(r.maxPurchase)) warnings.push('The available down payment may not satisfy the minimum down-payment requirement.'); if(r.closingAvailable<r.closingCost) warnings.push('Additional closing funds are below the estimated closing-cost amount.'); if(r.cashRemaining!==null && r.cashRemaining<0) warnings.push('The selected household budget produces negative monthly cash flow at the estimated maximum purchase price.'); if(!num('contractRate')) warnings.push('Contract interest rate has not been entered.'); if(!num('gdsLimit')||!num('tdsLimit')) warnings.push('Maximum GDS and TDS limits have not been entered.'); if(!$('amortization').value) warnings.push('Amortization has not been selected; 25 years was used for this estimate.'); if(num('amortization')===30) warnings.push('Review whether the selected 30-year amortization is permitted for this borrower and mortgage type.');
     $('mf-warnings').innerHTML=warnings.map(w=>`<div class="mf-warning-item">${w}</div>`).join('');
     $('qualification-driver').innerHTML=`<strong>Qualification Driver: ${r.qualificationDriver}</strong><br>${r.qualificationDriver==='TDS'?'Total debt obligations are currently the controlling qualification factor.':'Housing costs are currently the controlling qualification factor.'}<br><span style="color:var(--mf-muted)">GDS-supported payment: ${money(r.gdsPayment)} / month · TDS-supported payment: ${money(r.tdsPayment)} / month</span>`;
     $('cash-to-close-result').textContent=money(r.cashToClose);
@@ -1178,17 +2051,107 @@ html.mf-custom-photo .mf-header:before{width:min(640px,52%);max-width:none;backg
     ['scBaseMortgage','scNewMortgage','scDiffMortgage','scBasePrice','scNewPrice','scDiffPrice','scBasePayment','scNewPayment','scDiffPayment'].forEach(id=>$(id).textContent='—');
   }
 
-  function collectForm(){ const data={}; $$('#mortgagefit-app input,#mortgagefit-app select').forEach(el=>{ if(el.type==='checkbox') data[el.id]=el.checked; else data[el.id]=el.value; }); data.applicants=$$('.mf-applicant').map(a=>({label:a.querySelector('.a-label').value,employment:a.querySelector('.a-employment').value,base:a.querySelector('.a-base').value,variable:a.querySelector('.a-variable').value,variablePct:a.querySelector('.a-variable-pct').value,other:a.querySelector('.a-other').value,rental:a.querySelector('.a-rental').value,rentalPct:a.querySelector('.a-rental-pct').value,extra:a.querySelector('.a-extra').value})); return data; }
-  function applyForm(data){ if(!data) return; if(Array.isArray(data.applicants)){ $('applicant-list').innerHTML=''; data.applicants.forEach((a,i)=>{addApplicant(); const el=$$('.mf-applicant')[i]; el.querySelector('.a-label').value=a.label||''; el.querySelector('.a-employment').value=a.employment||'Salaried'; el.querySelector('.a-base').value=a.base||0; el.querySelector('.a-variable').value=a.variable||0; el.querySelector('.a-variable-pct').value=a.variablePct||100; el.querySelector('.a-other').value=a.other||0; el.querySelector('.a-rental').value=a.rental||0; el.querySelector('.a-rental-pct').value=a.rentalPct||50; el.querySelector('.a-extra').value=a.extra||0; }); }
-    Object.entries(data).forEach(([id,val])=>{ const el=$(id); if(!el || id==='applicants') return; if(el.type==='checkbox'){el.checked=!!val; const target=$(el.dataset.toggle||''); if(target){target.disabled=!el.checked; el.closest('.mf-toggle-row')?.classList.toggle('is-off',!el.checked);}} else el.value=val; }); renumberApplicants(); liveUpdate(); calculate(); }
+  function collectForm(){ const data={}; $$('#mortgagefit-app input,#mortgagefit-app select').filter(el=>!el.closest('.mf-admin-panel,.mf-modal,.mf-account-menu')).forEach(el=>{ if(el.type==='checkbox') data[el.id]=el.checked; else data[el.id]=el.value; }); data.applicants=$$('.mf-applicant').map(a=>({label:a.querySelector('.a-label').value,employment:a.querySelector('.a-employment').value,base:a.querySelector('.a-base').value,variable:a.querySelector('.a-variable').value,variablePct:a.querySelector('.a-variable-pct').value,other:a.querySelector('.a-other').value,rental:a.querySelector('.a-rental').value,rentalPct:a.querySelector('.a-rental-pct').value,extra:a.querySelector('.a-extra').value})); return data; }
+  function applyForm(data){ if(!data) return; if(Array.isArray(data.applicants)){ $('applicant-list').innerHTML=''; data.applicants.forEach((a,i)=>{addApplicant(); const el=$$('.mf-applicant')[i]; el.querySelector('.a-label').value=a.label||''; el.querySelector('.a-employment').value=a.employment||''; el.querySelector('.a-base').value=a.base||''; el.querySelector('.a-variable').value=a.variable||''; el.querySelector('.a-variable-pct').value=a.variablePct||''; el.querySelector('.a-other').value=a.other||''; el.querySelector('.a-rental').value=a.rental||''; el.querySelector('.a-rental-pct').value=a.rentalPct||''; el.querySelector('.a-extra').value=a.extra||''; }); }
+    Object.entries(data).forEach(([id,val])=>{ const el=$(id); if(!el || id==='applicants' || el.closest('.mf-admin-panel,.mf-modal,.mf-account-menu')) return; if(el.type==='checkbox'){el.checked=!!val; const target=$(el.dataset.toggle||''); if(target){target.disabled=!el.checked; el.closest('.mf-toggle-row')?.classList.toggle('is-off',!el.checked);}} else el.value=val; }); renumberApplicants(); liveUpdate(); calculate(); }
 
-  function addCustomExpense(name='Custom expense',amount=0){ const id='custom-'+Date.now()+'-'+Math.floor(Math.random()*999); $('custom-expenses').insertAdjacentHTML('beforeend',`<div class="mf-custom-row"><input type="text" value="${name}" aria-label="Custom expense name"><div class="mf-money"><span>$</span><input id="${id}" data-expense type="number" min="0" step="10" value="${amount}"></div><input type="checkbox" id="${id}-on" data-toggle="${id}" checked hidden><button type="button" data-remove-custom>Remove</button></div>`); liveUpdate(); }
+  function addCustomExpense(name='',amount=''){ const id='custom-'+Date.now()+'-'+Math.floor(Math.random()*999); $('custom-expenses').insertAdjacentHTML('beforeend',`<div class="mf-custom-row"><input type="text" value="${name}" placeholder="Expense name" aria-label="Custom expense name"><div class="mf-money"><span>$</span><input id="${id}" data-expense type="number" min="0" step="10"></div><input type="checkbox" id="${id}-on" data-toggle="${id}" checked hidden><button type="button" data-remove-custom>Remove</button></div>`); liveUpdate(); }
 
-  function pdf(){ if(!lastResult) calculate(); const r=lastResult; if(!window.jspdf) return toast('PDF library could not be loaded.'); const {jsPDF}=window.jspdf, doc=new jsPDF({unit:'pt',format:'letter'}), ref=$('clientRef').value.trim()||'Client-Estimate'; let y=48;
-    doc.setTextColor(16,42,67); doc.setFontSize(22); doc.setFont('helvetica','bold'); doc.text('MortgageFit Client Estimate',42,y); y+=22; doc.setFontSize(9); doc.setFont('helvetica','normal'); doc.setTextColor(107,124,147); doc.text(`Client reference: ${ref}   |   Date: ${new Date().toLocaleDateString('en-CA')}`,42,y); y+=28;
-    const rows=[['Estimated lender qualification',money(r.lenderMortgage)],['Comfortable mortgage',r.comfortableMortgage===null?'Not calculated':money(r.comfortableMortgage)],['Estimated maximum purchase price',money(r.maxPurchase)],['Estimated monthly payment',money(r.actualPayment)],['Annual qualifying income',money(r.annualIncome)],['Down payment',money(r.down)],['Qualifying rate',`${r.qualRate.toFixed(2)}%`],['GDS / TDS',`${r.gds.toFixed(2)}% / ${r.tds.toFixed(2)}%`],['Monthly debts',money(r.debtsMonthly)],['Selected living expenses',money(r.living)],['Qualification driver',r.qualificationDriver],['Cash to close',money(r.cashToClose)],['Funding gap',money(r.fundingGap)],['Savings timeline',r.fundingGap<=0?'Ready':(r.savingsMonths===null?'Not calculated':`${r.savingsMonths} months`)]];
-    rows.forEach(([k,v],i)=>{ if(i%2===0){doc.setFillColor(247,250,252);doc.rect(42,y-13,528,24,'F');} doc.setTextColor(51,78,104); doc.setFont('helvetica','normal'); doc.text(k,50,y); doc.setTextColor(16,42,67); doc.setFont('helvetica','bold'); doc.text(v,560,y,{align:'right'}); y+=24; });
-    y+=18; doc.setFontSize(9); doc.setFont('helvetica','normal'); doc.setTextColor(51,78,104); doc.text(doc.splitTextToSize($('mf-narrative').textContent,520),42,y); y+=62; doc.setFontSize(7.5); doc.setTextColor(107,124,147); const disclaimer='This report provides an estimate for general planning purposes only. It does not constitute mortgage approval, a commitment to lend, financial advice, or a guarantee of financing. Final qualification depends on verification, credit history, property review, lender and insurer requirements, and underwriting policies.'; doc.text(doc.splitTextToSize(disclaimer,520),42,y); doc.save(`MortgageFit-${ref.replace(/[^a-z0-9-_]/gi,'-')}-${new Date().toISOString().slice(0,10)}.pdf`); }
+  function buildEstimatePdf(){
+    if(!lastResult) calculate();
+    if(!window.jspdf){toast('PDF library could not be loaded.');return null;}
+    const r=lastResult, {jsPDF}=window.jspdf, doc=new jsPDF({unit:'pt',format:'letter'});
+    const left=42, right=570, width=528, navy=[16,42,67], muted=[96,115,134], teal=[13,116,144], pale=[244,249,251], edge=[221,231,238];
+    const brand=agentBranding||emptyBranding();
+    const ref=$('clientRef').value.trim()||'Client-Estimate';
+    const date=new Date().toLocaleDateString('en-CA',{year:'numeric',month:'long',day:'numeric'});
+    const clean=(value,max=150)=>String(value??'').replace(/[\r\n\t]+/g,' ').trim().slice(0,max);
+    const drawText=(value,x,y,size=9,bold=false,color=navy)=>{
+      doc.setFont('helvetica',bold?'bold':'normal');doc.setFontSize(size);doc.setTextColor(...color);doc.text(clean(value,500),x,y);
+    };
+    let y=40;
+    const ensure=(h)=>{if(y+h>725){doc.addPage();y=43;}};
+    doc.setFillColor(...teal);doc.rect(0,0,612,7,'F');
+    if(brand.logoDataUrl && /^data:image\/(png|jpeg|webp);base64,/i.test(brand.logoDataUrl)){
+      try{
+        const props=doc.getImageProperties(brand.logoDataUrl),scale=Math.min(118/props.width,57/props.height);
+        doc.addImage(brand.logoDataUrl,props.fileType||'PNG',left,40,props.width*scale,props.height*scale);
+      }catch(err){console.warn('Could not add agent logo to PDF',err);drawText('YOUR LOGO',left+10,65,12,true,muted);}
+    }else{
+      doc.setFillColor(...pale);doc.setDrawColor(...edge);doc.roundedRect(left,40,104,52,5,5,'FD');drawText('YOUR LOGO',left+13,69,12,true,muted);
+    }
+    const bx=178;
+    drawText(clean(brand.company||'Mortgage Advisory Team',72),bx,51,12,true,navy);
+    drawText(clean(brand.name||auth?.currentUser?.displayName||'Mortgage Professional',85),bx,68,10,true,navy);
+    const contact=[brand.license?`License: ${clean(brand.license,48)}`:'',brand.phone?clean(brand.phone,38):''].filter(Boolean).join('  |  ');
+    if(contact)drawText(contact,bx,83,8,false,muted);
+    drawText(clean(brand.email||auth?.currentUser?.email||'',90),bx,97,8,false,muted);
+    doc.setDrawColor(226,181,71);doc.setLineWidth(2);doc.line(left,115,right,115);
+    drawText('Mortgage Affordability Estimate',left,147,20,true,navy);
+    y=168;
+    const metadata=[['PREPARED FOR',clean(ref,52)],['REPORT DATE',date],['CLIENT REFERENCE',clean(ref,52)]];
+    doc.setFillColor(...pale);doc.setDrawColor(...edge);doc.roundedRect(left,y,width,57,5,5,'FD');
+    metadata.forEach(([label,value],i)=>{const x=left+12+i*176;drawText(label,x,y+18,7.3,true,muted);doc.setFontSize(9);doc.setFont('helvetica','bold');doc.setTextColor(...navy);doc.text(doc.splitTextToSize(value,154).slice(0,2),x,y+34);});
+    y+=79;
+    drawText('Your mortgage snapshot',left,y,11,true,navy);y+=13;
+    const cards=[['Estimated lender qualification',money(r.lenderMortgage)],['Comfortable mortgage',money(r.comfortableMortgage||0)],['Maximum purchase price',money(r.maxPurchase)]];
+    doc.setFillColor(...pale);doc.roundedRect(left,y,width,71,5,5,'F');
+    cards.forEach(([label,value],i)=>{const x=left+12+i*176;doc.setFontSize(7.5);doc.setFont('helvetica','normal');doc.setTextColor(...muted);doc.text(doc.splitTextToSize(label,150).slice(0,2),x,y+16);drawText(value,x,y+53,17,true,navy);});
+    y+=91;
+    const section=(title,items)=>{
+      ensure(35);drawText(title,left,y,11,true,navy);y+=12;
+      items.forEach(([key,value],i)=>{
+        ensure(25);if(i%2===0){doc.setFillColor(...pale);doc.rect(left,y,width,24,'F');}
+        drawText(key,left+10,y+16,9,false,muted);
+        doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(...navy);
+        doc.text(doc.splitTextToSize(clean(value,140),180).slice(0,1),right-10,y+16,{align:'right'});
+        y+=24;
+      });y+=17;
+    };
+    section('Qualification and monthly affordability',[
+      ['Estimated monthly mortgage payment',money(r.actualPayment)],['Annual qualifying income',money(r.annualIncome)],
+      ['Qualifying interest rate',`${r.qualRate.toFixed(2)}%`],['GDS / TDS ratios',`${r.gds.toFixed(2)}% / ${r.tds.toFixed(2)}%`],
+      ['Monthly debt payments',money(r.debtsMonthly)],['Selected living expenses',money(r.living)],
+      ['Qualification driver',r.qualificationDriver]
+    ]);
+    section('Down payment and cash requirements',[
+      ['Available down payment',money(r.down)],['Estimated cash to close',money(r.cashToClose)],
+      ['Estimated funding gap',money(r.fundingGap)],
+      ['Savings timeline',r.fundingGap<=0?'Ready':(r.savingsMonths===null?'0 months':`${r.savingsMonths} months`)]
+    ]);
+    const narrative=clean($('mf-narrative').textContent,1600);
+    if(narrative){
+      ensure(72);drawText('Advisor notes',left,y,11,true,navy);y+=14;
+      doc.setFont('helvetica','normal');doc.setFontSize(8.5);
+      const lines=doc.splitTextToSize(narrative,506);const lineHeight=12;
+      lines.forEach(line=>{ensure(lineHeight+5);doc.setTextColor(...muted);doc.text(line,left+10,y+9);y+=lineHeight;});y+=15;
+    }
+    const disclaimer='This report provides an estimate for general planning purposes only. It does not constitute mortgage approval, a commitment to lend, financial advice, or a guarantee of financing. Final qualification depends on verification, credit history, property review, lender and insurer requirements, and underwriting policies.';
+    doc.setFont('helvetica','normal');doc.setFontSize(7.5);
+    const dlines=doc.splitTextToSize(disclaimer,520);ensure(dlines.length*10+20);
+    doc.setTextColor(...muted);doc.text(dlines,left,y+8);
+    const pages=doc.getNumberOfPages();
+    for(let page=1;page<=pages;page++){
+      doc.setPage(page);doc.setDrawColor(...edge);doc.setLineWidth(.7);doc.line(left,744,right,744);
+      drawText('MortgageFit  |  Prepared by your mortgage professional',left,758,7.5,false,muted);
+      doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.setTextColor(...muted);doc.text(`Page ${page} of ${pages}`,right,758,{align:'right'});
+    }
+    return {doc,ref};
+  }
+  function pdf(preview=false){
+    if(!accessProfile||accessProfile.status!=='active')return toast('Your account is not active.');
+    if(!isMortgageAdmin&&accessProfile.plan!=='premium'){$('mf-premium-modal').hidden=false;return;}
+    const result=buildEstimatePdf();if(!result)return;
+    const {doc,ref}=result;
+    if(preview){
+      const blob=doc.output('blob'),url=URL.createObjectURL(blob),tab=window.open(url,'_blank');
+      if(!tab){URL.revokeObjectURL(url);toast('Allow pop-ups to preview your PDF.');return;}
+      setTimeout(()=>URL.revokeObjectURL(url),120000);
+    }else{
+      doc.save(`MortgageFit-${ref.replace(/[^a-z0-9-_]/gi,'-')}-${new Date().toISOString().slice(0,10)}.pdf`);
+    }
+  }
+
 
   function firebaseConfigComplete(){
     const f=cfg.firebase||{};
@@ -1202,16 +2165,196 @@ html.mf-custom-photo .mf-header:before{width:min(640px,52%);max-width:none;backg
     el.className='mf-auth-status'+(type?` is-${type}`:'');
   }
 
-  function updateAuthUI(user){
-    uid=user?.uid||null;
-    $('mf-login').hidden=!!user;
-    $('mf-signout').hidden=!user;
-    $('mf-save-case').hidden=!user;
-    $('mf-cases').hidden=!user;
-    if(user){
-      $('mf-login').textContent='Agent Login';
-      $('mf-auth-modal').hidden=true;
+  function agentDisplayName(user){
+    if(user?.displayName?.trim()) return user.displayName.trim();
+    const local=(user?.email||'Agent').split('@')[0];
+    return local
+      .replace(/[._-]+/g,' ')
+      .replace(/\b\w/g,c=>c.toUpperCase())
+      .trim() || 'Agent';
+  }
+
+  function agentInitials(name){
+    return String(name||'A')
+      .split(/\s+/)
+      .filter(Boolean)
+      .slice(0,2)
+      .map(x=>x.charAt(0).toUpperCase())
+      .join('') || 'A';
+  }
+
+  function formatFirebaseDate(value){
+    if(!value) return '—';
+    const d=new Date(value);
+    return Number.isNaN(d.getTime()) ? '—' : d.toLocaleString('en-CA',{
+      year:'numeric',month:'short',day:'numeric',hour:'numeric',minute:'2-digit'
+    });
+  }
+
+  function setBrandingStatus(message,error=false){
+    const el=$('mf-branding-status');if(!el)return;
+    el.textContent=message;el.style.color=error?'#b54708':'';
+  }
+  function refreshBrandingLogo(){
+    const img=$('mf-branding-logo-image'),placeholder=$('mf-branding-logo-placeholder');
+    img.hidden=!brandingLogoDraft;placeholder.hidden=!!brandingLogoDraft;
+    if(brandingLogoDraft)img.src=brandingLogoDraft;else img.removeAttribute('src');
+  }
+  function fillBrandingForm(){
+    ['name','company','license','phone','email'].forEach(key=>{$('mf-branding-'+key).value=brandingTargetData[key]||'';});
+    brandingLogoDraft=brandingTargetData.logoDataUrl||'';refreshBrandingLogo();
+  }
+  async function selectBrandingAgent(agentUid){
+    if(!isMortgageAdmin||!agentUid)return;
+    brandingTargetUid=agentUid;
+    brandingTargetData=emptyBranding();
+    fillBrandingForm();setBrandingStatus('Loading branding…');
+    try{
+      const snap=await db.collection('mortgagefit_agent_profiles').doc(agentUid).get();
+      if(brandingTargetUid!==agentUid)return;
+      brandingTargetData=snap.exists?{...emptyBranding(),...snap.data()}:emptyBranding();
+      const agent=agentDirectory.find(a=>a.uid===agentUid);
+      if(agent){brandingTargetData.name ||= agent.name||'';brandingTargetData.company ||= agent.company||'';brandingTargetData.email ||= agent.email||'';brandingTargetData.phone ||= agent.phone||'';brandingTargetData.license ||= agent.license||'';}
+      fillBrandingForm();setBrandingStatus('');
+    }catch(e){console.error(e);setBrandingStatus('Could not load branding.',true);}
+  }
+  function openBranding(agentUid){
+    if(!isMortgageAdmin)return toast('Administrator access required.');
+    const select=$('mf-branding-agent-select');
+    select.innerHTML=agentDirectory.map(a=>`<option value="${escapeHtml(a.uid)}">${escapeHtml(a.name||a.email||a.uid)} (${escapeHtml(a.email||'')})</option>`).join('');
+    if(!agentDirectory.length)return toast('Add an agent first.');
+    const target=typeof agentUid==='string'&&agentDirectory.some(a=>a.uid===agentUid)?agentUid:(agentDirectory.find(a=>a.uid===uid)?.uid||agentDirectory[0].uid);
+    select.value=target;
+    $('mf-branding-modal').hidden=false;
+    selectBrandingAgent(target);
+    $('mf-account-menu').classList.remove('is-open');
+    $('mf-account-trigger').setAttribute('aria-expanded','false');
+  }
+  function closeBranding(){$('mf-branding-modal').hidden=true;}
+  async function loadAgentBranding(user){
+    const seq=++brandingLoadSeq;
+    agentBranding=emptyBranding();
+    if(!user||!db)return;
+    try{
+      const snap=await db.collection('mortgagefit_agent_profiles').doc(user.uid).get();
+      if(seq!==brandingLoadSeq||auth?.currentUser?.uid!==user.uid)return;
+      if(snap.exists){const d=snap.data()||{};agentBranding={...emptyBranding(),...d};}
+      if(!$('mf-branding-modal').hidden)fillBrandingForm();
+    }catch(err){
+      console.warn('Agent branding could not load',err);
+      setBrandingStatus('Saved branding could not be loaded. Check Firestore rules.',true);
     }
+  }
+  async function saveAgentBranding(){
+    if(!db||!isMortgageAdmin||!brandingTargetUid)return setBrandingStatus('Administrator access required.',true);
+    const candidate={};
+    ['name','company','license','phone','email'].forEach(key=>candidate[key]=$('mf-branding-'+key).value.trim());
+    if(candidate.email&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(candidate.email))return setBrandingStatus('Enter a valid business email.',true);
+    candidate.logoDataUrl=brandingLogoDraft;
+    const button=$('mf-branding-save');button.disabled=true;setBrandingStatus('Saving branding…');
+    try{
+      await db.collection('mortgagefit_agent_profiles').doc(brandingTargetUid).set({
+        ...candidate,ownerUid:brandingTargetUid,updatedAt:firebase.firestore.FieldValue.serverTimestamp()
+      },{merge:true});
+      brandingTargetData={...emptyBranding(),...candidate};
+      if(brandingTargetUid===uid){agentBranding={...emptyBranding(),...candidate};if(auth?.currentUser)renderAgentProfile(auth.currentUser);}
+      setBrandingStatus('Branding saved for selected agent.');
+    }catch(err){console.error(err);setBrandingStatus('Could not save. Check administrator Firestore permissions.',true);}
+    finally{button.disabled=false;}
+  }
+  function handleLogoFile(file){
+    if(!file)return;
+    if(!['image/png','image/jpeg','image/webp'].includes(file.type))return setBrandingStatus('Choose a PNG, JPG or WebP image.',true);
+    if(file.size>5*1024*1024)return setBrandingStatus('Logo must be 5 MB or smaller.',true);
+    const reader=new FileReader();
+    reader.onerror=()=>setBrandingStatus('Could not read the logo.',true);
+    reader.onload=()=>{
+      const img=new Image();
+      img.onerror=()=>setBrandingStatus('The selected logo is not a valid image.',true);
+      img.onload=()=>{
+        const canvas=document.createElement('canvas'),scale=Math.min(1,680/img.width,260/img.height);
+        canvas.width=Math.max(1,Math.round(img.width*scale));canvas.height=Math.max(1,Math.round(img.height*scale));
+        const ctx=canvas.getContext('2d');ctx.drawImage(img,0,0,canvas.width,canvas.height);
+        let url=canvas.toDataURL('image/png');
+        if(url.length>170000){
+          ctx.globalCompositeOperation='destination-over';ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height);
+          url=canvas.toDataURL('image/jpeg',.78);
+        }
+        if(url.length>170000)return setBrandingStatus('Logo is too detailed. Please use a simpler or smaller image.',true);
+        brandingLogoDraft=url;refreshBrandingLogo();setBrandingStatus('Logo ready. Click Save Branding to keep it.');
+      };
+      img.src=reader.result;
+    };
+    reader.readAsDataURL(file);
+  }
+  function renderAgentProfile(user){
+    if(!user) return;
+    const name=agentBranding.name||agentDisplayName(user);
+    const initials=agentInitials(name);
+    $('mf-account-trigger-name').textContent=name;
+    $('mf-account-name').textContent=name;
+    $('mf-account-email').textContent=user.email||'—';
+    $('mf-account-verified').textContent=user.emailVerified?'Verified':'Not verified';
+    $('mf-account-last-login').textContent=formatFirebaseDate(user.metadata?.lastSignInTime);
+    $('mf-account-avatar').textContent=initials;
+    $('mf-account-avatar-lg').textContent=initials;
+  }
+
+  function resetAdminMode(){
+    document.body.classList.remove('mf-admin-authorized');
+    $('mf-admin-tab').hidden=true;
+    document.getElementById('mortgagefit-app').classList.remove('mf-admin-mode');
+    $('mf-agent-tab').classList.add('is-active');$('mf-admin-tab').classList.remove('is-active');
+    try{sessionStorage.setItem('mf-workspace-mode','agent');}catch(e){}
+    if(agentUnsubscribe){agentUnsubscribe();agentUnsubscribe=null;}
+    if(requestUnsubscribe){requestUnsubscribe();requestUnsubscribe=null;}
+    agentDirectory=[];
+  }
+  async function updateAuthUI(user){
+    const seq=++authCheckSeq;
+    uid=user?.uid||null;
+    accessProfile=null;isMortgageAdmin=false;resetAdminMode();
+    document.body.classList.add('mf-auth-locked');
+    $('mf-header-signout').hidden=true;
+    $('mf-auth-modal').hidden=false;
+    $('mf-auth-unapproved-signout').hidden=!user;
+    if(!user){
+      brandingLoadSeq++;agentBranding=emptyBranding();closeBranding();
+      try{const t=localStorage.getItem('mf-theme');document.documentElement.setAttribute('data-mf-theme',MF_AGENT_THEMES.includes(t)?t:'pearl-gold');}catch(e){}
+      $('mf-account-menu').classList.remove('is-open');
+      $('mf-cases-modal').hidden=true;
+      $('mf-auth-unapproved-signout').hidden=true;
+      setAuthStatus('');return;
+    }
+    setAuthStatus('Checking account access…');
+    try{
+      const snap=await db.collection('mortgagefit_agents').doc(user.uid).get();
+      if(seq!==authCheckSeq)return;
+      const profile=snap.exists?snap.data():null;
+      if(!profile||profile.status!=='active'||!['admin','agent'].includes(profile.role)){
+        setAuthStatus('This account is not active or has not been approved by the administrator.','error');return;
+      }
+      accessProfile=profile;
+      const assignedTheme=MF_AGENT_THEMES.includes(profile.theme)?profile.theme:null;
+      const adminLocalTheme=(()=>{try{return localStorage.getItem('mf-theme')}catch(e){return null}})();
+      document.documentElement.setAttribute('data-mf-theme',profile.role==='agent'?(assignedTheme||'pearl-gold'):(MF_AGENT_THEMES.includes(adminLocalTheme)?adminLocalTheme:'pearl-gold'));
+      isMortgageAdmin=profile.role==='admin';
+      document.body.classList.toggle('mf-admin-authorized',isMortgageAdmin);
+      $('mf-admin-tab').hidden=!isMortgageAdmin;
+      // Direct navigation from the homepage's administrator-only link.
+      if(isMortgageAdmin && new URLSearchParams(window.location.search).get('workspace')==='admin'){
+        requestAnimationFrame(()=>{if(isMortgageAdmin&&auth.currentUser?.uid===user.uid)$('mf-admin-tab').click();});
+      }
+      $('mf-auth-modal').hidden=true;
+      $('mf-auth-unapproved-signout').hidden=true;
+      document.body.classList.remove('mf-auth-locked');
+      $('mf-signout').hidden=false;$('mf-account-menu').hidden=false;$('mf-header-signout').hidden=false;
+      $('mf-save-case').hidden=false;$('mf-cases').hidden=false;$('mf-login').hidden=true;
+      renderAgentProfile(user);
+      loadAgentBranding(user).then(()=>{if(auth?.currentUser?.uid===user.uid)renderAgentProfile(user);});
+      if(isMortgageAdmin){listenAgents();listenUpgradeRequests();}
+      setAuthStatus('');$('mf-auth-password').value='';
+    }catch(e){console.error(e);if(seq===authCheckSeq)setAuthStatus('Could not verify account permissions. Check Firestore rules.','error');}
   }
 
   function friendlyAuthError(err){
@@ -1230,9 +2373,136 @@ html.mf-custom-photo .mf-header:before{width:min(640px,52%);max-width:none;backg
     return messages[code]||err?.message||'Authentication could not be completed.';
   }
 
+  function listenAgents(){
+    if(!isMortgageAdmin||!db)return;
+    if(agentUnsubscribe)agentUnsubscribe();
+    agentUnsubscribe=db.collection('mortgagefit_agents').onSnapshot(snapshot=>{
+      agentDirectory=snapshot.docs.map(d=>({uid:d.id,...d.data()})).sort((a,b)=>(a.name||a.email||'').localeCompare(b.name||b.email||''));
+      const status=$('mf-agent-list-status');
+      const agentCount=agentDirectory.filter(a=>a.role==='agent').length;
+      const adminCount=agentDirectory.filter(a=>a.role==='admin').length;
+      status.textContent=`${agentCount} agent${agentCount===1?'':'s'}${adminCount?' · '+adminCount+' administrator'+(adminCount===1?'':'s'):''}`;
+      $('mf-agent-list').innerHTML=agentDirectory.map(a=>`<tr><td><strong>${escapeHtml(a.name||'Unnamed agent')}</strong><br><small>${escapeHtml(a.email||'')}</small></td><td>${escapeHtml(a.company||'—')}</td><td><span class="mf-agent-pill">${a.role==='admin'?'Administrator':a.plan==='premium'?'Premium':'Free'}</span></td><td>${escapeHtml(a.status||'—')}</td><td><button type="button" class="mf-btn mf-btn-outline" data-mf-edit-agent="${escapeHtml(a.uid)}">Edit</button><button type="button" class="mf-btn mf-btn-outline" data-mf-brand-agent="${escapeHtml(a.uid)}">Branding</button></td></tr>`).join('');
+    },err=>{$('mf-agent-list-status').textContent='Could not load agents. Check Firestore rules.';console.error(err);});
+  }
+  function listenUpgradeRequests(){
+    if(requestUnsubscribe)requestUnsubscribe();
+    requestUnsubscribe=db.collection('mortgagefit_upgrade_requests').onSnapshot(snap=>{
+      const requests=snap.docs.map(d=>({uid:d.id,...d.data()})).filter(r=>r.status==='pending');
+      $('mf-upgrade-requests').innerHTML=requests.length?requests.map(r=>`<div class="mf-agent-toolbar"><span>${escapeHtml(r.email||r.uid)} requested Premium</span><button type="button" class="mf-btn mf-btn-outline" data-mf-approve-upgrade="${escapeHtml(r.uid)}">Approve Premium</button></div>`).join(''):'No pending upgrade requests.';
+    },e=>{console.error(e);$('mf-upgrade-requests').textContent='Could not load upgrade requests.';});
+  }
+  async function approveUpgrade(agentUid){
+    if(!isMortgageAdmin)return;
+    const agent=agentDirectory.find(a=>a.uid===agentUid);
+    if(!agent||agent.role!=='agent')return toast('Agent not found.');
+    try{
+      await db.collection('mortgagefit_agents').doc(agentUid).update({plan:'premium',updatedAt:firebase.firestore.FieldValue.serverTimestamp()});
+      await db.collection('mortgagefit_upgrade_requests').doc(agentUid).update({status:'approved',approvedAt:firebase.firestore.FieldValue.serverTimestamp()});
+      toast('Premium access approved. Agent can sign in again to refresh access.');
+    }catch(e){console.error(e);toast('Could not approve upgrade.');}
+  }
+  const MF_AGENT_THEMES=['pearl-gold','ocean-mist','sage-stone','professional-navy','emerald-ledger','royal-burgundy','midnight-black'];
+  function formatAgentPhone(value){
+    let digits=String(value||'').replace(/\D/g,'').slice(0,11);
+    if(digits.length===11&&digits[0]!=='1')digits=digits.slice(0,10);
+    const intl=digits.length===11&&digits[0]==='1';
+    const d=intl?digits.slice(1):digits;
+    if(!d)return '';
+    const formatted=d.length<3?'('+d:d.length===3?'('+d+')':d.length<7?'('+d.slice(0,3)+') '+d.slice(3):'('+d.slice(0,3)+') '+d.slice(3,6)+'-'+d.slice(6,10);
+    return (intl?'+1 ':'')+formatted;
+  }
+  function wireAgentPhone(formId){
+    const field=$(formId).elements.phone;
+    field.addEventListener('input',()=>{field.value=formatAgentPhone(field.value);field.setCustomValidity('');});
+    field.addEventListener('paste',()=>{setTimeout(()=>{field.value=formatAgentPhone(field.value);},0);});
+  }
+  function checkAgentPhone(field){
+    if(!field.value.trim()){field.setCustomValidity('');return true;}
+    const digits=field.value.replace(/\D/g,'');
+    const valid=/^(?:1)?[2-9]\d{2}[2-9]\d{6}$/.test(digits);
+    field.setCustomValidity(valid?'':'Enter a valid Canada/US phone number, e.g. (416) 555-0123.');
+    return valid;
+  }
+  function closeAddAgent(){
+    const modal=$('mf-add-agent-modal');
+    modal.hidden=true;
+    modal.style.display='none';
+    $('mf-add-agent-form').reset();
+    $('mf-new-agent-password').type='password';
+    $('mf-new-agent-eye').querySelector('.mf-agent-eye-open').hidden=false;
+    $('mf-new-agent-eye').querySelector('.mf-agent-eye-closed').hidden=true;
+    $('mf-new-agent-eye').setAttribute('aria-pressed','false');
+    $('mf-agent-feedback').textContent='';
+  }
+  function openAddAgent(){
+    if(!isMortgageAdmin)return toast('Administrator access required.');
+    $('mf-add-agent-form').reset();$('mf-agent-feedback').textContent='';
+    $('mf-add-agent-form').elements.theme.value='pearl-gold';
+    $('mf-add-agent-modal').style.removeProperty('display');
+    $('mf-add-agent-modal').hidden=false;
+  }
+  async function submitAddAgent(event){
+    event.preventDefault();
+    if(!isMortgageAdmin)return;
+    const form=event.currentTarget, data=Object.fromEntries(new FormData(form));
+    if(!checkAgentPhone(form.elements.phone)){form.elements.phone.reportValidity();return;}
+    if(data.password.length<12)return $('mf-agent-feedback').textContent='Use a temporary password with at least 12 characters.';
+    const button=$('mf-agent-create');button.disabled=true;$('mf-agent-feedback').textContent='Creating account securely…';
+    try{
+      if(!firebase.functions)throw new Error('Firebase Functions library is unavailable.');
+      const callable=firebase.functions().httpsCallable('mortgagefitCreateAgent');
+      const result=await callable({name:data.name.trim(),email:data.email.trim().toLowerCase(),company:data.company.trim(),phone:data.phone.trim(),license:data.license.trim(),password:data.password,plan:data.plan,status:data.status});
+      // The deployed function returns the new UID; save the agent's theme separately using admin-only Firestore rules.
+      const newUid=result?.data?.uid;
+      if(!newUid)throw new Error('Agent created, but its ID was not returned. Check the agent list before trying again.');
+      try{
+        await db.collection('mortgagefit_agents').doc(newUid).update({theme:MF_AGENT_THEMES.includes(data.theme)?data.theme:'pearl-gold'});
+        closeAddAgent();toast('Agent created with selected theme. Share the temporary password securely.');
+      }catch(themeError){
+        console.error('Agent created but theme could not be saved',themeError);
+        $('mf-agent-feedback').textContent='Agent account was created, but the theme could not be saved. Edit this agent to set the theme. Do not click Create Agent again.';
+      }
+    }catch(err){console.error(err);$('mf-agent-feedback').textContent='Account was not created: '+(err.message||'Check Cloud Function deployment.');}
+    finally{button.disabled=false;}
+  }
+  function openEditAgent(agentUid){
+    if(!isMortgageAdmin)return;
+    const a=agentDirectory.find(x=>x.uid===agentUid);if(!a)return;
+    editAgentUid=agentUid;
+    const f=$('mf-edit-agent-form');
+    for(const key of ['name','email','company','phone','license','theme','plan','status'])if(f.elements[key])f.elements[key].value=a[key]||(key==='plan'?'free':key==='status'?'active':'');
+    f.elements.plan.disabled=a.role==='admin';f.elements.status.disabled=a.role==='admin';
+    $('mf-edit-agent-feedback').textContent='';$('mf-edit-agent-modal').hidden=false;
+  }
+  async function submitEditAgent(event){
+    event.preventDefault();if(!isMortgageAdmin||!editAgentUid)return;
+    const a=agentDirectory.find(x=>x.uid===editAgentUid);if(!a)return;
+    const f=event.currentTarget,data=Object.fromEntries(new FormData(f));
+    if(!checkAgentPhone(f.elements.phone)){f.elements.phone.reportValidity();return;}
+    const button=$('mf-edit-agent-save');button.disabled=true;$('mf-edit-agent-feedback').textContent='Saving changes…';
+    try{
+      const changes={name:data.name.trim(),company:data.company.trim(),phone:data.phone.trim(),license:data.license.trim(),theme:MF_AGENT_THEMES.includes(data.theme)?data.theme:'pearl-gold',updatedAt:firebase.firestore.FieldValue.serverTimestamp()};
+      if(a.role!=='admin'){changes.plan=data.plan;changes.status=data.status;}
+      await db.collection('mortgagefit_agents').doc(editAgentUid).update(changes);
+      $('mf-edit-agent-modal').hidden=true;toast('Agent details updated.');
+    }catch(e){console.error(e);$('mf-edit-agent-feedback').textContent='Could not save changes. Check administrator permissions.';}
+    finally{button.disabled=false;}
+  }
+  async function requestPremium(){
+    if(!uid||!db)return;
+    const button=$('mf-premium-request');button.disabled=true;
+    $('mf-premium-feedback').textContent='Sending your request…';
+    try{
+      await db.collection('mortgagefit_upgrade_requests').doc(uid).set({ownerUid:uid,email:auth.currentUser.email||'',status:'pending',requestedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});
+      $('mf-premium-feedback').textContent='Request submitted. Your administrator can upgrade your plan.';
+    }catch(e){console.error(e);$('mf-premium-feedback').textContent='Could not submit request. Check Firestore permissions.';}
+    finally{button.disabled=false;}
+  }
   async function initFirebase(){
     if(!firebaseConfigComplete() || !window.firebase){
       updateAuthUI(null);
+      setAuthStatus('MortgageFit login is temporarily unavailable. Check the Firebase configuration.','error');
       return;
     }
     try{
@@ -1292,8 +2562,13 @@ html.mf-custom-photo .mf-header:before{width:min(640px,52%);max-width:none;backg
 
   async function signOutAgent(){
     if(!auth) return;
-    await auth.signOut();
-    toast('Signed out.');
+    try{
+      await auth.signOut();
+      window.location.assign('index.html');
+    }catch(err){
+      console.error(err);
+      toast('Could not sign out. Please try again.');
+    }
   }
   async function saveCase(){ if(!db||!uid) return toast('Please sign in before saving a case.'); const ref=$('clientRef').value.trim() || `Case-${new Date().toISOString().slice(0,10)}`; try{ await db.collection('mortgagefit_cases').add({ownerUid:uid,ownerEmail:auth?.currentUser?.email||'',clientRef:ref,form:collectForm(),result:compute(),createdAt:firebase.firestore.FieldValue.serverTimestamp(),updatedAt:firebase.firestore.FieldValue.serverTimestamp(),pluginVersion:cfg.version||'1.1.0'}); toast('Case saved to Firebase.'); }catch(e){console.error(e);toast('Could not save the case. Check Firebase settings and security rules.');} }
   async function loadCases(){ if(!db||!uid) return toast('Please sign in to view saved cases.'); $('mf-cases-modal').hidden=false; $('mf-case-status').textContent='Loading cases…'; $('mf-case-list').innerHTML=''; try{ const snap=await db.collection('mortgagefit_cases').where('ownerUid','==',uid).get(); const docs=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>((b.createdAt?.seconds||0)-(a.createdAt?.seconds||0))); $('mf-case-status').textContent=docs.length?`${docs.length} saved case${docs.length===1?'':'s'}`:'No saved cases yet.'; $('mf-case-list').innerHTML=docs.map(d=>`<div class="mf-saved-case"><div><strong>${escapeHtml(d.clientRef||'Saved Case')}</strong><small>${d.createdAt?.toDate?d.createdAt.toDate().toLocaleString('en-CA'):'Recently saved'}</small></div><div><button type="button" class="mf-btn mf-btn-outline" data-load-case="${d.id}">Open</button><button type="button" class="mf-remove" data-delete-case="${d.id}">Delete</button></div></div>`).join(''); }catch(e){console.error(e);$('mf-case-status').textContent='Could not load cases. Check Firebase security rules.';} }
@@ -1315,13 +2590,97 @@ html.mf-custom-photo .mf-header:before{width:min(640px,52%);max-width:none;backg
     });
     $$('.mf-step').forEach(s=>s.addEventListener('click',()=>showStep(parseInt(s.dataset.step,10))));
     $('mf-next').onclick=()=>showStep(currentStep+1); $('mf-prev').onclick=()=>showStep(currentStep-1); $('add-applicant').onclick=addApplicant; $('add-custom-expense').onclick=()=>addCustomExpense();
-    $('mf-reset').onclick=reset; $('mf-download').onclick=pdf; $('mf-download-results').onclick=pdf; $('mf-calculate').onclick=calculate; $('runScenario').onclick=runScenario; $('clearScenario').onclick=clearScenario; $('mf-save-case').onclick=saveCase; $('mf-cases').onclick=loadCases; $('mf-cases-close').onclick=()=>{$('mf-cases-modal').hidden=true;};
-    $('mf-login').onclick=()=>{ $('mf-auth-modal').hidden=false; setAuthStatus(firebaseConfigComplete()?'':'Firebase project configuration is still required.'); };
+    $('mf-reset').onclick=reset; $('mf-download').onclick=()=>pdf(false); $('mf-download-results').onclick=()=>pdf(false); $('mf-preview').onclick=()=>pdf(true); $('mf-preview-results').onclick=()=>pdf(true); $('mf-calculate').onclick=calculate; $('runScenario').onclick=runScenario; $('clearScenario').onclick=clearScenario; $('mf-save-case').onclick=saveCase; $('mf-cases').onclick=loadCases; $('mf-cases-close').onclick=()=>{$('mf-cases-modal').hidden=true;};
+    $('mf-login').onclick=()=>{};
     $('mf-signout').onclick=signOutAgent;
-    $('mf-auth-close').onclick=()=>{$('mf-auth-modal').hidden=true;};
+    $('mf-header-signout').onclick=signOutAgent;
+    $('mf-branding-open').onclick=()=>openBranding();
+    $('mf-branding-agent-select').onchange=e=>selectBrandingAgent(e.target.value);
+    $('mf-admin-pdf-preview').onclick=()=>pdf(true);
+    $('mf-admin-pdf-download').onclick=()=>pdf(false);
+    $('mf-branding-close').onclick=closeBranding;
+    $('mf-branding-modal').addEventListener('click',e=>{if(e.target===$('mf-branding-modal'))closeBranding();});
+    $('mf-branding-upload').onclick=()=>$('mf-branding-logo-file').click();
+    $('mf-branding-logo-file').onchange=e=>{handleLogoFile(e.target.files?.[0]);e.target.value='';};
+    $('mf-branding-remove').onclick=()=>{brandingLogoDraft='';refreshBrandingLogo();setBrandingStatus('Logo removed from preview. Save to apply.');};
+    $('mf-branding-save').onclick=saveAgentBranding;
+    $('mf-branding-preview').onclick=()=>{
+      if(!isMortgageAdmin)return;
+      const temp=agentBranding;
+      const draft={};['name','company','license','phone','email'].forEach(k=>draft[k]=$('mf-branding-'+k).value.trim());
+      agentBranding={...temp,...draft,logoDataUrl:brandingLogoDraft};
+      try{pdf(true);}finally{agentBranding=temp;}
+    };
+
+    $('mf-account-trigger').onclick=(e)=>{
+      e.stopPropagation();
+      const menu=$('mf-account-menu');
+      const open=!menu.classList.contains('is-open');
+      menu.classList.toggle('is-open',open);
+      $('mf-account-trigger').setAttribute('aria-expanded',String(open));
+    };
+    document.addEventListener('click',e=>{
+      const menu=$('mf-account-menu');
+      if(menu && !menu.contains(e.target)){
+        menu.classList.remove('is-open');
+        $('mf-account-trigger').setAttribute('aria-expanded','false');
+      }
+    });
     $('mf-auth-signin').onclick=signInAgent;
-    $('mf-auth-create').onclick=createAgentAccount;
+    $('mf-auth-create').onclick=()=>setAuthStatus('Ask your administrator to create an account.','error');
+    $('mf-auth-unapproved-signout').onclick=signOutAgent;
+    $('mf-agent-list-toggle').onclick=()=>{
+      const list=$('mf-agent-list-container'),button=$('mf-agent-list-toggle');
+      const oldTop=button.getBoundingClientRect().top;
+      const collapse=!list.hidden;
+      list.hidden=collapse;
+      button.setAttribute('aria-expanded',String(!collapse));
+      $('mf-agent-list-toggle-label').textContent=collapse?'Expand list':'Collapse list';
+      $('mf-agent-list-toggle-icon').textContent=collapse?'▾':'▴';
+      // Keep the toggle in the same viewport position even when the table
+      // changes the page height. Avoid browser scroll anchoring/smooth scroll.
+      const reposition=()=>{
+        const delta=button.getBoundingClientRect().top-oldTop;
+        if(Math.abs(delta)>1)window.scrollBy({top:delta,left:0,behavior:'instant'});
+      };
+      reposition();
+      requestAnimationFrame(reposition);
+    };
+    $('mf-add-agent-open').onclick=openAddAgent;
+    $('mf-add-agent-close').onclick=$('mf-agent-cancel').onclick=closeAddAgent;
+    $('mf-add-agent-form').onsubmit=submitAddAgent;
+    wireAgentPhone('mf-add-agent-form');wireAgentPhone('mf-edit-agent-form');
+    $('mf-new-agent-eye').onclick=()=>{
+      const input=$('mf-new-agent-password'),btn=$('mf-new-agent-eye'),visible=input.type==='password';
+      input.type=visible?'text':'password';
+      btn.querySelector('.mf-agent-eye-open').hidden=visible;
+      btn.querySelector('.mf-agent-eye-closed').hidden=!visible;
+      btn.title=visible?'Hide password':'Show password';
+      btn.setAttribute('aria-label',visible?'Hide password':'Show password');
+      btn.setAttribute('aria-pressed',String(visible));
+    };
+    $('mf-edit-agent-close').onclick=$('mf-edit-agent-cancel').onclick=()=>{$('mf-edit-agent-modal').hidden=true;};
+    $('mf-edit-agent-form').onsubmit=submitEditAgent;
+    $('mf-premium-close').onclick=$('mf-premium-later').onclick=()=>{$('mf-premium-modal').hidden=true;};
+    $('mf-premium-request').onclick=requestPremium;
+    document.addEventListener('click',e=>{
+      const edit=e.target.closest('[data-mf-edit-agent]');if(edit)openEditAgent(edit.dataset.mfEditAgent);
+      const brand=e.target.closest('[data-mf-brand-agent]');if(brand)openBranding(brand.dataset.mfBrandAgent);
+      const upgrade=e.target.closest('[data-mf-approve-upgrade]');if(upgrade)approveUpgrade(upgrade.dataset.mfApproveUpgrade);
+    });
     $('mf-auth-reset').onclick=resetAgentPassword;
+    ['mf-auth-email','mf-auth-password'].forEach(id=>$(id).addEventListener('keydown',e=>{ if(e.key==='Enter') signInAgent(); }));
+    $('mf-password-toggle').onclick=()=>{
+      const input=$('mf-auth-password');
+      const btn=$('mf-password-toggle');
+      const showing=input.type==='text';
+      input.type=showing?'password':'text';
+      btn.setAttribute('aria-pressed',String(!showing));
+      btn.setAttribute('aria-label',showing?'Show password':'Hide password');
+      btn.querySelector('.mf-eye-open').hidden=!showing;
+      btn.querySelector('.mf-eye-closed').hidden=showing;
+      input.focus();
+    };
     liveUpdate(); showStep(0); initFirebase();
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',bind); else bind();
@@ -1332,19 +2691,14 @@ html.mf-custom-photo .mf-header:before{width:min(640px,52%);max-width:none;backg
   <!-- MortgageFit colour-theme + header-photo controls (visual only; independent of calculator and Firebase code) -->
   <script id="mf-theme-switcher">
   (function(){
-    var THEMES=[["pearl-gold","Pearl & Gold"],["ocean-mist","Ocean Mist"],["sage-stone","Sage & Stone"],["professional-navy","Professional Navy"]];
-    var HOME_URL="home.html";   /* change if your home page has another name */
+    var THEMES=[["pearl-gold","Pearl & Gold"],["ocean-mist","Ocean Mist"],["sage-stone","Sage & Stone"],["professional-navy","Professional Navy"],["emerald-ledger","Emerald Ledger"],["royal-burgundy","Royal Burgundy"],["midnight-black","Midnight Black"]];
     var root=document.documentElement, app=document.getElementById("mortgagefit-app");
     if(!app) return;
-    function withTheme(u,id){ var h=u.split("#")[0].replace(/([?&])theme=[^&]*&?/,"$1").replace(/[?&]$/,""); return h+(h.indexOf("?")>-1?"&":"?")+"theme="+id; }
     var bar=document.createElement("div");
     bar.className="mf-theme-bar"; bar.setAttribute("role","radiogroup"); bar.setAttribute("aria-label","Color theme");
-    var home=document.createElement("a"); home.className="mf-home-link"; home.textContent="← Home"; home.href=HOME_URL; bar.appendChild(home);
     var label=document.createElement("span"); label.className="mf-theme-label"; label.textContent="Color theme"; bar.appendChild(label);
     function mark(id){
       root.setAttribute("data-mf-theme",id);
-      home.href=withTheme(HOME_URL,id);
-      try{ var cur=new URL(location.href); if(cur.searchParams.has("theme")){ cur.searchParams.set("theme",id); history.replaceState(null,"",cur.toString()); } }catch(e){}
       Array.prototype.forEach.call(bar.querySelectorAll(".mf-theme-btn"),function(b){b.setAttribute("aria-checked",b.dataset.theme===id?"true":"false");});
     }
     THEMES.forEach(function(t){
@@ -1378,7 +2732,7 @@ html.mf-custom-photo .mf-header:before{width:min(640px,52%);max-width:none;backg
           c.width=Math.max(1,Math.round(img.width*s)); c.height=Math.max(1,Math.round(img.height*s));
           c.getContext("2d").drawImage(img,0,0,c.width,c.height);
           var url=c.toDataURL("image/jpeg",.86);
-          root.style.setProperty("--mf-photo",'url("'+url+'")'); root.classList.add("mf-custom-photo");
+          root.style.setProperty("--mf-photo",'url("'+url+'")'); root.classList.add("mf-custom-photo"); root.style.setProperty("--mf-photo-ar",c.width/c.height);
           try{ localStorage.setItem("mf-photo",url); say("Photo updated."); }catch(e){ say("Photo applied for this visit only."); }
         };
         img.src=r.result;
@@ -1386,31 +2740,40 @@ html.mf-custom-photo .mf-header:before{width:min(640px,52%);max-width:none;backg
       r.readAsDataURL(f); file.value="";
     });
     reset.addEventListener("click",function(){
-      root.style.removeProperty("--mf-photo"); root.classList.remove("mf-custom-photo");
+      root.style.removeProperty("--mf-photo"); root.classList.remove("mf-custom-photo"); root.style.removeProperty("--mf-photo-ar");
       try{ localStorage.removeItem("mf-photo"); }catch(e){}
       say("Original photo restored.");
     });
 
-    var stepper=app.querySelector(".mf-stepper"), shell=stepper&&stepper.querySelector(".mf-progress-shell");
-    if(stepper&&shell&&!stepper.querySelector(".mf-built")){
-      var built=document.createElement("div"); built.className="mf-built";
-      var lf=document.createElement("i"); lf.className="mf-leaf"; lf.setAttribute("aria-hidden","true");
-      var tx=document.createElement("span"); tx.textContent="Built for Canadian Mortgage Professionals";
-      built.appendChild(lf); built.appendChild(tx); stepper.insertBefore(built,shell);
-    }
-    app.insertBefore(bar,app.firstChild);
+    var adminAppearance=document.getElementById("mf-admin-appearance");
+    if(adminAppearance) adminAppearance.appendChild(bar); else app.insertBefore(bar,app.firstChild);
     mark(root.getAttribute("data-mf-theme")||"pearl-gold");
-    /* Keep every open tab/page on the same theme */
-    var ALLOWED=THEMES.map(function(t){return t[0];});
-    window.addEventListener("storage",function(e){ if(e.key==="mf-theme"&&e.newValue&&ALLOWED.indexOf(e.newValue)>-1) mark(e.newValue); });
-    window.addEventListener("pageshow",function(e){ if(e.persisted){ try{ var v=localStorage.getItem("mf-theme"); if(v&&ALLOWED.indexOf(v)>-1) mark(v); }catch(x){} } });
-    /* Arriving from the home page's "Login" button (?login=1): open the Agent Login popup */
-    try{
-      if(/[?&]login=1(&|$)/.test(location.search)){
-        window.addEventListener("load",function(){ var l=document.getElementById("mf-login"); if(l&&!l.hidden) l.click(); });
-      }
-    }catch(e){}
   })();
   </script>
+
+<script id="mf-admin-tabs-v1">
+(function(){
+  var app=document.getElementById('mortgagefit-app');
+  var agent=document.getElementById('mf-agent-tab');
+  var admin=document.getElementById('mf-admin-tab');
+  if(!app||!agent||!admin) return;
+  function setMode(mode){
+    var isAdmin=mode==='admin'&&!admin.hidden;
+    app.classList.toggle('mf-admin-mode',isAdmin);
+    agent.classList.toggle('is-active',!isAdmin);
+    admin.classList.toggle('is-active',isAdmin);
+    agent.setAttribute('aria-selected',String(!isAdmin));
+    admin.setAttribute('aria-selected',String(isAdmin));
+    try{sessionStorage.setItem('mf-workspace-mode',isAdmin?'admin':'agent');}catch(e){}
+    window.scrollTo({top:0,behavior:'auto'});
+  }
+  agent.addEventListener('click',function(){setMode('agent');});
+  admin.addEventListener('click',function(){setMode('admin');});
+  var saved='agent';
+  try{saved=sessionStorage.getItem('mf-workspace-mode')||'agent';}catch(e){}
+  setMode(saved==='admin'?'admin':'agent');
+})();
+</script>
+
 </body>
 </html>

@@ -8,9 +8,7 @@
 <script>
 /* Apply the theme chosen in the calculator (shared setting) before first paint. */
 (function(){var ok=["pearl-gold","ocean-mist","sage-stone","professional-navy"],t="pearl-gold";
-try{var q=new URLSearchParams(location.search).get("theme");
-if(q&&ok.indexOf(q)>-1){t=q;try{localStorage.setItem("mf-theme",q)}catch(e){}}
-else{var s=localStorage.getItem("mf-theme");if(s&&ok.indexOf(s)>-1)t=s}}catch(e){}
+try{var s=localStorage.getItem("mf-theme");if(s&&ok.indexOf(s)>-1)t=s}catch(e){}
 document.documentElement.setAttribute("data-mf-theme",t)})();
 </script>
 <style>
@@ -333,7 +331,6 @@ img{max-width:100%}
 .nav-links a{padding:8px 14px;border-radius:999px;font-size:13px;font-weight:700;color:var(--mf-soft);text-decoration:none;transition:background .18s,color .18s}
 .nav-links a:hover{background:var(--mf-fill);color:var(--mf-head)}
 .nav-right{margin-left:auto;display:flex;align-items:center;gap:14px}
-.nav-actions{display:flex;align-items:center;gap:8px}
 .dots{display:flex;gap:7px;align-items:center}
 .dot{width:20px;height:20px;border-radius:50%;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.28);cursor:pointer;padding:0;transition:transform .15s}
 .dot:hover{transform:scale(1.12)}
@@ -343,6 +340,7 @@ img{max-width:100%}
 .dot[data-theme="sage-stone"]{background:linear-gradient(135deg,#62a07c,#c8a35c)}
 .dot[data-theme="professional-navy"]{background:linear-gradient(135deg,#3f74d6,#14306b)}
 
+.mf-auth-nav[hidden]{display:none!important}
 /* ---------- Hero ---------- */
 .hero{display:grid;grid-template-columns:minmax(0,1.02fr) minmax(0,.98fr);gap:56px;align-items:center;padding:72px 0 24px}
 h1{font-family:var(--mf-serif);font-size:clamp(46px,5.8vw,84px);line-height:.96;letter-spacing:-.02em;font-weight:700;margin:24px 0 22px;color:var(--mf-head)}
@@ -479,7 +477,7 @@ footer{margin-top:92px;padding:34px 0 46px;border-top:1px solid var(--mf-line)}
   .float{left:14px}
   .steps{grid-template-columns:repeat(4,minmax(0,1fr))}
   .grid-3{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .pro-grid{grid-template-columns:minmax(0,1fr)}
+  .pro-grid{grid-template-columns:1fr}
   .nav-links{display:none}
 }
 @media(max-width:760px){
@@ -487,14 +485,9 @@ footer{margin-top:92px;padding:34px 0 46px;border-top:1px solid var(--mf-line)}
   .wrap{width:min(1240px,100% - 28px)}
   .nav-in{padding:9px 10px 9px 18px}
   .dots{display:none}
-  .nav .btn{padding:9px 13px;font-size:12.5px}
-  .nav-in{gap:8px}
-  .nav-right{gap:8px}
-  .brand{font-size:27px}
+  .nav .btn{padding:10px 14px;font-size:12.5px}
   .steps{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .grid-3,.usp,.vs,.plans{grid-template-columns:minmax(0,1fr)}
-  .paper-wrap{padding:30px 6px 34px}
-  .paper{padding:22px 16px 16px}
+  .grid-3,.usp,.vs,.plans{grid-template-columns:1fr}
   .plan{padding:28px}
   .price{font-size:64px}
   .mini strong{font-size:16px}
@@ -505,11 +498,10 @@ footer{margin-top:92px;padding:34px 0 46px;border-top:1px solid var(--mf-line)}
   .final{padding:42px 22px}
   .cta-row .btn{flex:1 1 100%}
 }
-@media(max-width:400px){.nav-in{padding:8px 8px 8px 14px}.brand{font-size:24px}.nav .btn{padding:8px 10px;font-size:12px}.nav-actions{gap:6px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
 </style>
 </head>
-<body data-calculator="calculator.html" data-upgrade="calculator.html" data-login="calculator.html?login=1" data-contact="mailto:hello@example.com">
+<body data-calculator="calculator.html" data-upgrade="calculator.html" data-contact="mailto:hello@example.com">
 
 <!-- Icon sprite -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
@@ -552,10 +544,10 @@ footer{margin-top:92px;padding:34px 0 46px;border-top:1px solid var(--mf-line)}
         <button class="dot" type="button" role="radio" data-theme="sage-stone" title="Sage &amp; Stone" aria-label="Sage and Stone theme"></button>
         <button class="dot" type="button" role="radio" data-theme="professional-navy" title="Professional Navy" aria-label="Professional Navy theme"></button>
       </div>
-      <div class="nav-actions">
-        <a class="btn btn-ghost" href="calculator.html?login=1" data-link="login">Login</a>
-        <a class="btn btn-primary" href="calculator.html" data-link="calculator">Open calculator</a>
-      </div>
+      <a class="btn btn-ghost mf-auth-nav" id="mf-home-admin" href="calculator.html?workspace=admin" hidden>Admin Panel</a>
+      <a class="btn btn-ghost mf-auth-nav" id="mf-home-login" href="calculator.html" hidden>Login</a>
+      <button class="btn btn-ghost mf-auth-nav" id="mf-home-logout" type="button" hidden>Log out</button>
+      <a class="btn btn-primary" href="calculator.html" data-link="calculator">Open calculator</a>
     </div>
   </div>
 </header>
@@ -784,30 +776,55 @@ footer{margin-top:92px;padding:34px 0 46px;border-top:1px solid var(--mf-line)}
   </div>
 </footer>
 
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+<script>
+(function(){
+  var login=document.getElementById('mf-home-login');
+  var logout=document.getElementById('mf-home-logout');
+  var adminLink=document.getElementById('mf-home-admin');
+  var roleCheck=0;
+  function displayUser(user){
+    login.hidden=!!user;
+    logout.hidden=!user;
+    adminLink.hidden=true;
+  }
+  try{
+    var config={apiKey:'AIzaSyD2c3Y8shwkpyRf-o6MYQyTwdFZx_adRzo',authDomain:'mortgagefit.firebaseapp.com',projectId:'mortgagefit',appId:'1:932670979650:web:dcd2f64e198cbbd31377db'};
+    if(!firebase.apps.length)firebase.initializeApp(config);
+    var auth=firebase.auth();
+    var db=firebase.firestore();
+    auth.onAuthStateChanged(async function(user){
+      var seq=++roleCheck;
+      displayUser(user);
+      if(!user)return;
+      try{
+        var snap=await db.collection('mortgagefit_agents').doc(user.uid).get();
+        if(seq!==roleCheck||auth.currentUser?.uid!==user.uid)return;
+        var profile=snap.exists?snap.data():null;
+        adminLink.hidden=!(profile&&profile.role==='admin'&&profile.status==='active');
+      }catch(err){console.error('Home admin role check failed',err);adminLink.hidden=true;}
+    },function(err){console.error('Home auth check failed',err);displayUser(null);});
+    logout.addEventListener('click',async function(){
+      logout.disabled=true;
+      try{await auth.signOut();displayUser(null);}
+      catch(err){console.error('Sign out failed',err);alert('Could not sign out. Please try again.');}
+      finally{logout.disabled=false;}
+    });
+  }catch(err){console.error('Firebase unavailable on home page',err);displayUser(null);}
+})();
+</script>
 <script>
 (function(){
   /* One place to point the page at your own files/addresses (set on <body data-...>). */
-  var b=document.body, cfg={calculator:b.dataset.calculator,upgrade:b.dataset.upgrade,login:b.dataset.login,contact:b.dataset.contact};
+  var b=document.body, cfg={calculator:b.dataset.calculator,upgrade:b.dataset.upgrade,contact:b.dataset.contact};
   Array.prototype.forEach.call(document.querySelectorAll("[data-link]"),function(a){var u=cfg[a.dataset.link]; if(u) a.setAttribute("href",u);});
   var yr=document.getElementById("yr"); if(yr) yr.textContent=new Date().getFullYear();
 
   /* Theme dots (same four themes, same saved choice as the calculator) */
   var root=document.documentElement, dots=document.querySelectorAll(".dot");
-  var ALLOWED=["pearl-gold","ocean-mist","sage-stone","professional-navy"];
-  function withTheme(u,id){ var h=u.split("#")[0].replace(/([?&])theme=[^&]*&?/,"$1").replace(/[?&]$/,""); return h+(h.indexOf("?")>-1?"&":"?")+"theme="+id; }
-  function syncLinks(t){ /* links into the calculator carry the chosen theme */
-    Array.prototype.forEach.call(document.querySelectorAll("[data-link]"),function(a){
-      var u=cfg[a.dataset.link]; if(u && u.indexOf("mailto:")!==0) a.setAttribute("href",withTheme(u,t));
-    });
-  }
-  function mark(t){
-    root.setAttribute("data-mf-theme",t);
-    Array.prototype.forEach.call(dots,function(d){d.setAttribute("aria-checked",d.dataset.theme===t?"true":"false");});
-    syncLinks(t);
-    try{ var cur=new URL(location.href); if(cur.searchParams.has("theme")){ cur.searchParams.set("theme",t); history.replaceState(null,"",cur.toString()); } }catch(e){}
-  }
-  window.addEventListener("storage",function(e){ if(e.key==="mf-theme"&&e.newValue&&ALLOWED.indexOf(e.newValue)>-1) mark(e.newValue); });
-  window.addEventListener("pageshow",function(e){ if(e.persisted){ try{ var v=localStorage.getItem("mf-theme"); if(v&&ALLOWED.indexOf(v)>-1) mark(v); }catch(x){} } });
+  function mark(t){ root.setAttribute("data-mf-theme",t); Array.prototype.forEach.call(dots,function(d){d.setAttribute("aria-checked",d.dataset.theme===t?"true":"false");}); }
   Array.prototype.forEach.call(dots,function(d){ d.addEventListener("click",function(){ mark(d.dataset.theme); try{localStorage.setItem("mf-theme",d.dataset.theme);}catch(e){} }); });
   mark(root.getAttribute("data-mf-theme")||"pearl-gold");
 })();
