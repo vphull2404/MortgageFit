@@ -1422,6 +1422,30 @@ input:focus,select:focus,textarea:focus{border-color:#777b80!important;box-shado
 }
 </style>
 
+
+<style id="mf-firebase-auth-ui-v18">
+.mf-auth-card{width:min(470px,100%)!important}
+.mf-auth-fields{display:grid;gap:13px;margin-top:18px}
+.mf-auth-fields label{font-size:11px;font-weight:800;color:#222}
+.mf-auth-fields input{
+  margin-top:6px;
+  width:100%;
+  min-height:42px;
+  padding:10px 12px;
+  border:1px solid #d8d8d5;
+  border-radius:10px;
+  background:#fff;
+  color:#222;
+  outline:none;
+}
+.mf-auth-fields input:focus{border-color:#777;box-shadow:0 0 0 3px rgba(0,0,0,.06)}
+.mf-auth-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:15px}
+.mf-auth-status{min-height:18px;margin-top:10px;font-size:11px;color:#666}
+.mf-auth-status.is-error{color:#a61b1b}
+.mf-auth-status.is-success{color:#176b3a}
+#mf-signout{white-space:nowrap}
+</style>
+
 </head>
 <body>
 
@@ -1441,8 +1465,10 @@ input:focus,select:focus,textarea:focus{border-color:#777b80!important;box-shado
             </div>
             <div class="mf-header-actions">
               <button type="button" class="mf-btn mf-btn-secondary" id="mf-reset">Reset</button>
-              <button type="button" class="mf-btn mf-btn-outline" id="mf-cases" hidden>Load Case</button>
+              <button type="button" class="mf-btn mf-btn-outline" id="mf-login">Agent Login</button>
+              <button type="button" class="mf-btn mf-btn-outline" id="mf-cases" hidden>Saved Cases</button>
               <button type="button" class="mf-btn mf-btn-outline" id="mf-save-case" hidden>Save Case</button>
+              <button type="button" class="mf-btn mf-btn-outline" id="mf-signout" hidden>Sign Out</button>
               <button type="button" class="mf-btn mf-btn-outline" id="mf-download" disabled>Download Client Estimate</button>
             </div>
           </header>
@@ -1649,11 +1675,41 @@ input:focus,select:focus,textarea:focus{border-color:#777b80!important;box-shado
           </div>
 
           <div class="mf-modal" id="mf-cases-modal" hidden>
-            <div class="mf-modal-card"><div class="mf-modal-head"><div><h2>Load Case</h2><p>Cases saved from this browser profile.</p></div><button type="button" id="mf-cases-close">×</button></div><div id="mf-case-status" class="mf-case-status"></div><div id="mf-case-list"></div></div>
+            <div class="mf-modal-card"><div class="mf-modal-head"><div><h2>Saved Cases</h2><p>Cases saved to your signed-in MortgageFit account.</p></div><button type="button" id="mf-cases-close">×</button></div><div id="mf-case-status" class="mf-case-status"></div><div id="mf-case-list"></div></div>
+          </div>
+
+
+          <div class="mf-modal" id="mf-auth-modal" hidden>
+            <div class="mf-modal-card mf-auth-card">
+              <div class="mf-modal-head">
+                <div>
+                  <h2>MortgageFit Agent Login</h2>
+                  <p>Sign in to securely save and reopen your own cases.</p>
+                </div>
+                <button type="button" id="mf-auth-close">×</button>
+              </div>
+
+              <div class="mf-auth-fields">
+                <label>Email
+                  <input id="mf-auth-email" type="email" autocomplete="email" placeholder="agent@brokerage.ca">
+                </label>
+                <label>Password
+                  <input id="mf-auth-password" type="password" autocomplete="current-password" placeholder="Minimum 6 characters">
+                </label>
+              </div>
+
+              <div id="mf-auth-status" class="mf-auth-status"></div>
+
+              <div class="mf-auth-actions">
+                <button type="button" class="mf-btn mf-btn-primary" id="mf-auth-signin">Sign In</button>
+                <button type="button" class="mf-btn mf-btn-outline" id="mf-auth-create">Create Account</button>
+                <button type="button" class="mf-link-btn" id="mf-auth-reset">Forgot password?</button>
+              </div>
+            </div>
           </div>
 
           <div class="mf-toast" id="mf-toast" hidden></div>
-          <p class="mf-privacy">Calculations run locally in your browser. Firebase case storage is optional and is used only when the agent explicitly clicks “Save Case.” Avoid entering unnecessary personal identifiers.</p>
+          <p class="mf-privacy">Calculations run locally in your browser. When an agent signs in and chooses “Save Case,” the case is stored in Firebase Firestore under that agent’s user ID. Use real client data only after Firebase Authentication and Firestore Security Rules are configured.</p>
         </div>
         
 
@@ -1661,30 +1717,31 @@ input:focus,select:focus,textarea:focus{border-color:#777b80!important;box-shado
     ============================================================
     FIREBASE CONFIGURATION
     ============================================================
-    MortgageFit works without Firebase.
+    Database/authentication code is built into this file.
 
-    To enable Save Case / Saved Cases:
+    Before using real client data:
     1. Create a Firebase project.
-    2. Enable Anonymous Authentication.
+    2. Enable Authentication > Email/Password.
     3. Create a Firestore database.
-    4. Replace the values below with your Firebase web app config.
-    5. Change firebaseEnabled from false to true.
+    4. Apply owner-only Firestore Security Rules.
+    5. Paste your Firebase Web App configuration below.
+    6. Change firebaseEnabled to true.
 
-    Firebase web API keys are designed to be included in client-side
-    applications. Your Firestore Security Rules are what protect data.
+    Firebase web config values are public application identifiers.
+    Firestore Security Rules protect the actual client records.
     ============================================================
   -->
   <script>
     window.MortgageFitConfig = {
-      firebaseEnabled: false,
-      version: "1.1.0-github",
+      firebaseEnabled: true,
+      version: "1.2.0-auth-firestore",
       firebase: {
-        apiKey: "",
-        authDomain: "",
-        projectId: "",
-        storageBucket: "",
-        messagingSenderId: "",
-        appId: ""
+        apiKey: "AIzaSyD2c3Y8shwkpyRf-o6MYQyTwdFZx_adRzo",
+        authDomain: "mortgagefit.firebaseapp.com",
+        projectId: "mortgagefit",
+        storageBucket: "mortgagefit.firebasestorage.app",
+        messagingSenderId: "932670979650",
+        appId: "1:932670979650:web:dcd2f64e198cbbd31377db"
       }
     };
   </script>
@@ -1936,12 +1993,116 @@ input:focus,select:focus,textarea:focus{border-color:#777b80!important;box-shado
     rows.forEach(([k,v],i)=>{ if(i%2===0){doc.setFillColor(247,250,252);doc.rect(42,y-13,528,24,'F');} doc.setTextColor(51,78,104); doc.setFont('helvetica','normal'); doc.text(k,50,y); doc.setTextColor(16,42,67); doc.setFont('helvetica','bold'); doc.text(v,560,y,{align:'right'}); y+=24; });
     y+=18; doc.setFontSize(9); doc.setFont('helvetica','normal'); doc.setTextColor(51,78,104); doc.text(doc.splitTextToSize($('mf-narrative').textContent,520),42,y); y+=62; doc.setFontSize(7.5); doc.setTextColor(107,124,147); const disclaimer='This report provides an estimate for general planning purposes only. It does not constitute mortgage approval, a commitment to lend, financial advice, or a guarantee of financing. Final qualification depends on verification, credit history, property review, lender and insurer requirements, and underwriting policies.'; doc.text(doc.splitTextToSize(disclaimer,520),42,y); doc.save(`MortgageFit-${ref.replace(/[^a-z0-9-_]/gi,'-')}-${new Date().toISOString().slice(0,10)}.pdf`); }
 
-  async function initFirebase(){ if(!cfg.firebaseEnabled || !window.firebase) return; try{ firebase.initializeApp(cfg.firebase); auth=firebase.auth(); db=firebase.firestore(); const cred=await auth.signInAnonymously(); uid=cred.user.uid; }catch(err){ console.error(err); toast('Firebase is configured but could not connect.'); } }
-  async function saveCase(){ if(!db||!uid) return toast('Firebase case storage is not available.'); const ref=$('clientRef').value.trim() || `Case-${new Date().toISOString().slice(0,10)}`; try{ await db.collection('mortgagefit_cases').add({ownerUid:uid,clientRef:ref,form:collectForm(),result:compute(),createdAt:firebase.firestore.FieldValue.serverTimestamp(),updatedAt:firebase.firestore.FieldValue.serverTimestamp(),pluginVersion:cfg.version||'1.1.0'}); toast('Case saved to Firebase.'); }catch(e){console.error(e);toast('Could not save the case. Check Firebase settings and security rules.');} }
-  async function loadCases(){ if(!db||!uid) return toast('Firebase case storage is not available.'); $('mf-cases-modal').hidden=false; $('mf-case-status').textContent='Loading cases…'; $('mf-case-list').innerHTML=''; try{ const snap=await db.collection('mortgagefit_cases').where('ownerUid','==',uid).get(); const docs=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>((b.createdAt?.seconds||0)-(a.createdAt?.seconds||0))); $('mf-case-status').textContent=docs.length?`${docs.length} saved case${docs.length===1?'':'s'}`:'No saved cases yet.'; $('mf-case-list').innerHTML=docs.map(d=>`<div class="mf-saved-case"><div><strong>${escapeHtml(d.clientRef||'Saved Case')}</strong><small>${d.createdAt?.toDate?d.createdAt.toDate().toLocaleString('en-CA'):'Recently saved'}</small></div><div><button type="button" class="mf-btn mf-btn-outline" data-load-case="${d.id}">Open</button><button type="button" class="mf-remove" data-delete-case="${d.id}">Delete</button></div></div>`).join(''); }catch(e){console.error(e);$('mf-case-status').textContent='Could not load cases. Check Firebase security rules.';} }
+  function firebaseConfigComplete(){
+    const f=cfg.firebase||{};
+    return !!(cfg.firebaseEnabled && f.apiKey && f.authDomain && f.projectId && f.appId);
+  }
+
+  function setAuthStatus(message='',type=''){
+    const el=$('mf-auth-status');
+    if(!el) return;
+    el.textContent=message;
+    el.className='mf-auth-status'+(type?` is-${type}`:'');
+  }
+
+  function updateAuthUI(user){
+    uid=user?.uid||null;
+    $('mf-login').hidden=!!user;
+    $('mf-signout').hidden=!user;
+    $('mf-save-case').hidden=!user;
+    $('mf-cases').hidden=!user;
+    if(user){
+      $('mf-login').textContent='Agent Login';
+      $('mf-auth-modal').hidden=true;
+    }
+  }
+
+  function friendlyAuthError(err){
+    const code=err?.code||'';
+    const messages={
+      'auth/invalid-email':'Enter a valid email address.',
+      'auth/missing-password':'Enter your password.',
+      'auth/weak-password':'Use a password with at least 6 characters.',
+      'auth/email-already-in-use':'An account already exists for this email.',
+      'auth/invalid-credential':'Email or password is incorrect.',
+      'auth/user-not-found':'No account was found for this email.',
+      'auth/wrong-password':'Email or password is incorrect.',
+      'auth/too-many-requests':'Too many attempts. Please try again later.',
+      'auth/network-request-failed':'Network error. Check your connection and try again.'
+    };
+    return messages[code]||err?.message||'Authentication could not be completed.';
+  }
+
+  async function initFirebase(){
+    if(!firebaseConfigComplete() || !window.firebase){
+      updateAuthUI(null);
+      return;
+    }
+    try{
+      if(!firebase.apps.length) firebase.initializeApp(cfg.firebase);
+      auth=firebase.auth();
+      db=firebase.firestore();
+      auth.onAuthStateChanged(user=>updateAuthUI(user));
+    }catch(err){
+      console.error(err);
+      updateAuthUI(null);
+      toast('Firebase could not connect. Check the project configuration.');
+    }
+  }
+
+  async function signInAgent(){
+    if(!firebaseConfigComplete()) return setAuthStatus('Firebase is not configured yet. Add the Firebase Web App config first.','error');
+    const email=$('mf-auth-email').value.trim();
+    const password=$('mf-auth-password').value;
+    setAuthStatus('Signing in…');
+    try{
+      await auth.signInWithEmailAndPassword(email,password);
+      setAuthStatus('Signed in.','success');
+      toast('Signed in to MortgageFit.');
+    }catch(err){
+      console.error(err);
+      setAuthStatus(friendlyAuthError(err),'error');
+    }
+  }
+
+  async function createAgentAccount(){
+    if(!firebaseConfigComplete()) return setAuthStatus('Firebase is not configured yet. Add the Firebase Web App config first.','error');
+    const email=$('mf-auth-email').value.trim();
+    const password=$('mf-auth-password').value;
+    setAuthStatus('Creating account…');
+    try{
+      await auth.createUserWithEmailAndPassword(email,password);
+      setAuthStatus('Account created and signed in.','success');
+      toast('MortgageFit account created.');
+    }catch(err){
+      console.error(err);
+      setAuthStatus(friendlyAuthError(err),'error');
+    }
+  }
+
+  async function resetAgentPassword(){
+    if(!firebaseConfigComplete()) return setAuthStatus('Firebase is not configured yet. Add the Firebase Web App config first.','error');
+    const email=$('mf-auth-email').value.trim();
+    if(!email) return setAuthStatus('Enter your email address first.','error');
+    try{
+      await auth.sendPasswordResetEmail(email);
+      setAuthStatus('Password reset email sent.','success');
+    }catch(err){
+      console.error(err);
+      setAuthStatus(friendlyAuthError(err),'error');
+    }
+  }
+
+  async function signOutAgent(){
+    if(!auth) return;
+    await auth.signOut();
+    toast('Signed out.');
+  }
+  async function saveCase(){ if(!db||!uid) return toast('Please sign in before saving a case.'); const ref=$('clientRef').value.trim() || `Case-${new Date().toISOString().slice(0,10)}`; try{ await db.collection('mortgagefit_cases').add({ownerUid:uid,ownerEmail:auth?.currentUser?.email||'',clientRef:ref,form:collectForm(),result:compute(),createdAt:firebase.firestore.FieldValue.serverTimestamp(),updatedAt:firebase.firestore.FieldValue.serverTimestamp(),pluginVersion:cfg.version||'1.1.0'}); toast('Case saved to Firebase.'); }catch(e){console.error(e);toast('Could not save the case. Check Firebase settings and security rules.');} }
+  async function loadCases(){ if(!db||!uid) return toast('Please sign in to view saved cases.'); $('mf-cases-modal').hidden=false; $('mf-case-status').textContent='Loading cases…'; $('mf-case-list').innerHTML=''; try{ const snap=await db.collection('mortgagefit_cases').where('ownerUid','==',uid).get(); const docs=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>((b.createdAt?.seconds||0)-(a.createdAt?.seconds||0))); $('mf-case-status').textContent=docs.length?`${docs.length} saved case${docs.length===1?'':'s'}`:'No saved cases yet.'; $('mf-case-list').innerHTML=docs.map(d=>`<div class="mf-saved-case"><div><strong>${escapeHtml(d.clientRef||'Saved Case')}</strong><small>${d.createdAt?.toDate?d.createdAt.toDate().toLocaleString('en-CA'):'Recently saved'}</small></div><div><button type="button" class="mf-btn mf-btn-outline" data-load-case="${d.id}">Open</button><button type="button" class="mf-remove" data-delete-case="${d.id}">Delete</button></div></div>`).join(''); }catch(e){console.error(e);$('mf-case-status').textContent='Could not load cases. Check Firebase security rules.';} }
   function escapeHtml(s){return String(s).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
-  async function openCase(id){ const doc=await db.collection('mortgagefit_cases').doc(id).get(); if(doc.exists){applyForm(doc.data().form); $('mf-cases-modal').hidden=true; showStep(6); toast('Saved case opened.');} }
-  async function deleteCase(id){ if(!confirm('Delete this saved case?')) return; await db.collection('mortgagefit_cases').doc(id).delete(); loadCases(); }
+  async function openCase(id){ if(!db||!uid) return toast('Please sign in first.'); const doc=await db.collection('mortgagefit_cases').doc(id).get(); if(doc.exists){applyForm(doc.data().form); $('mf-cases-modal').hidden=true; showStep(6); toast('Saved case opened.');} }
+  async function deleteCase(id){ if(!db||!uid) return toast('Please sign in first.'); if(!confirm('Delete this saved case?')) return; await db.collection('mortgagefit_cases').doc(id).delete(); loadCases(); }
   function toast(msg){ const t=$('mf-toast'); t.textContent=msg;t.hidden=false;clearTimeout(t._timer);t._timer=setTimeout(()=>t.hidden=true,3200); }
 
   function reset(){ if(confirm('Reset all calculator values?')) location.reload(); }
@@ -1958,6 +2119,12 @@ input:focus,select:focus,textarea:focus{border-color:#777b80!important;box-shado
     $$('.mf-step').forEach(s=>s.addEventListener('click',()=>showStep(parseInt(s.dataset.step,10))));
     $('mf-next').onclick=()=>showStep(currentStep+1); $('mf-prev').onclick=()=>showStep(currentStep-1); $('add-applicant').onclick=addApplicant; $('add-custom-expense').onclick=()=>addCustomExpense();
     $('mf-reset').onclick=reset; $('mf-download').onclick=pdf; $('mf-download-results').onclick=pdf; $('mf-calculate').onclick=calculate; $('runScenario').onclick=runScenario; $('clearScenario').onclick=clearScenario; $('mf-save-case').onclick=saveCase; $('mf-cases').onclick=loadCases; $('mf-cases-close').onclick=()=>{$('mf-cases-modal').hidden=true;};
+    $('mf-login').onclick=()=>{ $('mf-auth-modal').hidden=false; setAuthStatus(firebaseConfigComplete()?'':'Firebase project configuration is still required.'); };
+    $('mf-signout').onclick=signOutAgent;
+    $('mf-auth-close').onclick=()=>{$('mf-auth-modal').hidden=true;};
+    $('mf-auth-signin').onclick=signInAgent;
+    $('mf-auth-create').onclick=createAgentAccount;
+    $('mf-auth-reset').onclick=resetAgentPassword;
     liveUpdate(); showStep(0); initFirebase();
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',bind); else bind();
