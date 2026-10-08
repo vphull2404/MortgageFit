@@ -883,10 +883,97 @@ html.mf-custom-photo .mf-header:before{left:auto;width:auto;max-width:60%;aspect
   -webkit-mask-composite:source-in;mask-composite:intersect}
 </style>
 
+
+<style id="mf-admin-panel-v1">
+/* ---------- Workspace / Admin top tabs ---------- */
+.mf-mode-tabs{
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  width:max-content;max-width:calc(100% - 24px);margin:12px auto 14px;padding:5px;
+  border:1px solid var(--mf-edge);border-radius:16px;background:var(--mf-glass);
+  box-shadow:var(--mf-shadow),inset 0 1px 0 var(--mf-hl);
+  -webkit-backdrop-filter:var(--mf-blur);backdrop-filter:var(--mf-blur);
+}
+.mf-mode-tab{
+  appearance:none;border:1px solid transparent;border-radius:11px;padding:9px 18px;
+  font:700 12.5px/1 var(--mf-sans);letter-spacing:.01em;color:var(--mf-soft);
+  background:transparent;cursor:pointer;transition:.18s ease;
+}
+.mf-mode-tab:hover{background:var(--mf-fill);color:var(--mf-head)}
+.mf-mode-tab.is-active{background:linear-gradient(135deg,var(--mf-btn-1),var(--mf-btn-2));color:var(--mf-btn-ink);box-shadow:0 8px 18px rgba(var(--mf-acc-rgb),.18)}
+
+/* Agent workspace is the normal calculator. Admin mode hides its normal direct children. */
+.mf-admin-panel{display:none;margin:0 0 24px;padding:24px;border-radius:24px;background:var(--mf-glass);border:1px solid var(--mf-edge);box-shadow:var(--mf-shadow),inset 0 1px 0 var(--mf-hl);-webkit-backdrop-filter:var(--mf-blur);backdrop-filter:var(--mf-blur)}
+.mf-app.mf-admin-mode > :not(.mf-mode-tabs):not(.mf-admin-panel){display:none!important}
+.mf-app.mf-admin-mode > .mf-admin-panel{display:block!important}
+.mf-admin-head{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;padding-bottom:18px;border-bottom:1px solid var(--mf-line)}
+.mf-admin-head h2{margin:0 0 5px;font-size:24px;color:var(--mf-head);letter-spacing:-.4px}
+.mf-admin-head p{margin:0;color:var(--mf-muted);font-size:12.5px;line-height:1.55}
+.mf-admin-badge{display:inline-flex;align-items:center;gap:7px;padding:7px 11px;border-radius:999px;border:1px solid var(--mf-on-edge);background:var(--mf-on-bg);color:var(--mf-acc);font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;white-space:nowrap}
+.mf-admin-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:18px}
+.mf-admin-card{padding:18px;border-radius:18px;border:1px solid var(--mf-edge-hi);background:var(--mf-fill);box-shadow:inset 0 1px 0 var(--mf-hl)}
+.mf-admin-card.is-wide{grid-column:1/-1}
+.mf-admin-card h3{margin:0 0 6px;font-size:15px;color:var(--mf-head)}
+.mf-admin-card p{margin:0;color:var(--mf-muted);font-size:11.5px;line-height:1.5}
+.mf-admin-card .mf-admin-status{display:inline-flex;margin-top:12px;padding:5px 9px;border-radius:999px;background:var(--mf-note);color:var(--mf-acc);font-size:10px;font-weight:800;letter-spacing:.04em;text-transform:uppercase}
+.mf-admin-appearance{margin-top:14px}
+.mf-admin-appearance .mf-theme-bar{margin:0;padding:10px 12px;background:transparent;border:0;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none}
+.mf-admin-note{margin-top:15px;padding:11px 13px;border-radius:12px;background:var(--mf-note);border:1px solid var(--mf-line);color:var(--mf-soft);font-size:11px;line-height:1.5}
+@media(max-width:760px){.mf-admin-grid{grid-template-columns:1fr}.mf-admin-card.is-wide{grid-column:auto}.mf-admin-head{flex-direction:column}.mf-mode-tab{padding:9px 13px}}
+@media print{.mf-mode-tabs,.mf-admin-panel{display:none!important}}
+</style>
+
 </head>
 <body>
 
         <div class="mf-app" id="mortgagefit-app">
+          <nav class="mf-mode-tabs" aria-label="MortgageFit workspace">
+            <button type="button" class="mf-mode-tab is-active" id="mf-agent-tab" aria-selected="true">Agent Workspace</button>
+            <button type="button" class="mf-mode-tab" id="mf-admin-tab" aria-selected="false">Admin Panel</button>
+          </nav>
+
+          <section class="mf-admin-panel" id="mf-admin-panel" aria-labelledby="mf-admin-title">
+            <div class="mf-admin-head">
+              <div>
+                <h2 id="mf-admin-title">Admin Panel</h2>
+                <p>Manage MortgageFit appearance and prepare administrative controls separately from the agent workspace.</p>
+              </div>
+              <span class="mf-admin-badge">Owner workspace</span>
+            </div>
+
+            <div class="mf-admin-grid">
+              <article class="mf-admin-card is-wide">
+                <h3>Appearance & Branding</h3>
+                <p>Choose the product colour theme and manage the header image. These controls are no longer shown in the agent workspace.</p>
+                <div class="mf-admin-appearance" id="mf-admin-appearance"></div>
+              </article>
+
+              <article class="mf-admin-card">
+                <h3>Agent Feature Access</h3>
+                <p>This area will control which MortgageFit features agents can see and use once you define the agent package.</p>
+                <span class="mf-admin-status">Ready for configuration</span>
+              </article>
+
+              <article class="mf-admin-card">
+                <h3>Mortgage Rules & Defaults</h3>
+                <p>Reserved for administrator-controlled qualification assumptions such as ratios, stress-test settings, condo-fee treatment and amortization defaults.</p>
+                <span class="mf-admin-status">Planned</span>
+              </article>
+
+              <article class="mf-admin-card">
+                <h3>Agents & Access</h3>
+                <p>Reserved for agent accounts, roles, status and future plan-level permissions.</p>
+                <span class="mf-admin-status">Planned</span>
+              </article>
+
+              <article class="mf-admin-card">
+                <h3>Database & Security</h3>
+                <p>Firebase remains connected to the calculator. Role enforcement will be added here after the final admin and agent permissions are defined.</p>
+                <span class="mf-admin-status">Firebase connected</span>
+              </article>
+            </div>
+
+            <div class="mf-admin-note"><strong>Current stage:</strong> this separates the Admin Panel visually from the Agent Workspace. Firebase role-based authorization will be added when the limited agent feature set is finalized.</div>
+          </section>
           <header class="mf-header">
             <div class="mf-brand-block">
               <div class="mf-banner-brand">
@@ -1643,9 +1730,35 @@ html.mf-custom-photo .mf-header:before{left:auto;width:auto;max-width:60%;aspect
       say("Original photo restored.");
     });
 
-    app.insertBefore(bar,app.firstChild);
+    var adminAppearance=document.getElementById("mf-admin-appearance");
+    if(adminAppearance) adminAppearance.appendChild(bar); else app.insertBefore(bar,app.firstChild);
     mark(root.getAttribute("data-mf-theme")||"pearl-gold");
   })();
   </script>
+
+<script id="mf-admin-tabs-v1">
+(function(){
+  var app=document.getElementById('mortgagefit-app');
+  var agent=document.getElementById('mf-agent-tab');
+  var admin=document.getElementById('mf-admin-tab');
+  if(!app||!agent||!admin) return;
+  function setMode(mode){
+    var isAdmin=mode==='admin';
+    app.classList.toggle('mf-admin-mode',isAdmin);
+    agent.classList.toggle('is-active',!isAdmin);
+    admin.classList.toggle('is-active',isAdmin);
+    agent.setAttribute('aria-selected',String(!isAdmin));
+    admin.setAttribute('aria-selected',String(isAdmin));
+    try{sessionStorage.setItem('mf-workspace-mode',isAdmin?'admin':'agent');}catch(e){}
+    window.scrollTo({top:0,behavior:'auto'});
+  }
+  agent.addEventListener('click',function(){setMode('agent');});
+  admin.addEventListener('click',function(){setMode('admin');});
+  var saved='agent';
+  try{saved=sessionStorage.getItem('mf-workspace-mode')||'agent';}catch(e){}
+  setMode(saved==='admin'?'admin':'agent');
+})();
+</script>
+
 </body>
 </html>
