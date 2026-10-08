@@ -1195,6 +1195,42 @@ body.mf-auth-locked .mf-login-gate{
 }
 </style>
 
+
+<style id="mf-account-dropdown-visibility-v5">
+/* Ensure the agent profile flyout is never clipped by the banner/header */
+.mf-header,
+.mf-header-actions,
+.mf-banner-brand,
+.mf-brand-block{
+  overflow:visible!important;
+}
+
+.mf-header{
+  position:relative!important;
+  z-index:5000!important;
+}
+
+.mf-header-actions,
+.mf-account-menu{
+  position:relative!important;
+  z-index:6000!important;
+}
+
+.mf-account-card{
+  z-index:99999!important;
+  top:calc(100% + 8px)!important;
+}
+
+/* Keep following page sections below the open account card */
+.mf-kpi-grid,
+.mf-shell,
+.mf-workspace,
+.mf-main{
+  position:relative!important;
+  z-index:1!important;
+}
+</style>
+
 </head>
 <body class="mf-auth-locked">
 
