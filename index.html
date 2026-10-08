@@ -922,8 +922,50 @@ html.mf-custom-photo .mf-header:before{left:auto;width:auto;max-width:60%;aspect
 @media print{.mf-mode-tabs,.mf-admin-panel{display:none!important}}
 </style>
 
+
+<style id="mf-login-gate-v1">
+body.mf-auth-locked{overflow:hidden!important}
+body.mf-auth-locked #mortgagefit-app{display:none!important}
+body:not(.mf-auth-locked) #mortgagefit-app{display:block}
+.mf-login-gate{
+  position:fixed!important;inset:0!important;z-index:99999!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  padding:24px!important;
+  background:
+    radial-gradient(850px 520px at 12% 0%,rgba(var(--mf-acc-rgb),.18),transparent 68%),
+    radial-gradient(760px 520px at 100% 100%,rgba(var(--mf-acc-rgb),.10),transparent 70%),
+    var(--mf-page)!important;
+  -webkit-backdrop-filter:none!important;backdrop-filter:none!important
+}
+.mf-login-gate[hidden]{display:none!important}
+.mf-login-gate .mf-auth-card{
+  width:min(440px,100%)!important;padding:30px!important;border-radius:24px!important;
+  background:var(--mf-modal)!important;border:1px solid var(--mf-edge)!important;
+  box-shadow:var(--mf-shadow),0 26px 80px -35px var(--mf-modal-shadow)!important;
+  -webkit-backdrop-filter:var(--mf-blur)!important;backdrop-filter:var(--mf-blur)!important
+}
+.mf-login-brand{padding-bottom:21px;margin-bottom:21px;border-bottom:1px solid var(--mf-line)}
+.mf-login-wordmark{font-family:var(--mf-sans);font-size:31px;line-height:1;font-weight:800;letter-spacing:-1.4px}
+.mf-login-wordmark span{color:var(--mf-head)}
+.mf-login-wordmark em{color:var(--mf-acc);font-style:normal}
+.mf-login-tagline{margin-top:9px;color:var(--mf-muted);font-size:8px;line-height:1;font-weight:800;letter-spacing:.24em;white-space:nowrap}
+.mf-login-heading h2{margin:0 0 6px;color:var(--mf-head);font-size:22px;letter-spacing:-.35px}
+.mf-login-heading p{margin:0 0 18px;color:var(--mf-muted);font-size:12px;line-height:1.5}
+.mf-login-gate .mf-auth-fields{margin-top:0!important}
+.mf-login-gate .mf-auth-actions{margin-top:18px!important}
+.mf-login-gate #mf-auth-signin{min-width:110px}
+.mf-login-security{margin:18px 0 0;padding-top:15px;border-top:1px solid var(--mf-line);color:var(--mf-muted);font-size:9.5px;line-height:1.5}
+#mf-login{display:none!important}
+@media(max-width:560px){
+  .mf-login-gate{padding:14px!important}
+  .mf-login-gate .mf-auth-card{padding:22px!important;border-radius:20px!important}
+  .mf-login-wordmark{font-size:27px}
+  .mf-login-tagline{letter-spacing:.16em;font-size:7px}
+}
+</style>
+
 </head>
-<body>
+<body class="mf-auth-locked">
 
         <div class="mf-app" id="mortgagefit-app">
           <nav class="mf-mode-tabs" aria-label="MortgageFit workspace">
@@ -1215,14 +1257,15 @@ html.mf-custom-photo .mf-header:before{left:auto;width:auto;max-width:60%;aspect
               <dt>Agent ID</dt><dd id="mf-agent-id"></dd>
             </dl>
           </div>
-          <div class="mf-modal" id="mf-auth-modal" hidden>
+          <div class="mf-modal mf-login-gate" id="mf-auth-modal">
             <div class="mf-modal-card mf-auth-card">
-              <div class="mf-modal-head">
-                <div>
-                  <h2>MortgageFit Agent Login</h2>
-                  <p>Sign in to securely save and reopen your own cases.</p>
-                </div>
-                <button type="button" id="mf-auth-close">×</button>
+              <div class="mf-login-brand">
+                <div class="mf-login-wordmark"><span>Mortgage</span><em>Fit</em></div>
+                <div class="mf-login-tagline">PLAN · QUALIFY · COMPARE · CLOSE</div>
+              </div>
+              <div class="mf-login-heading">
+                <h2>Welcome back</h2>
+                <p>Sign in to access your MortgageFit workspace.</p>
               </div>
 
               <div class="mf-auth-fields">
@@ -1241,6 +1284,7 @@ html.mf-custom-photo .mf-header:before{left:auto;width:auto;max-width:60%;aspect
                 <button type="button" class="mf-btn mf-btn-outline" id="mf-auth-create">Create Account</button>
                 <button type="button" class="mf-link-btn" id="mf-auth-reset">Forgot password?</button>
               </div>
+              <p class="mf-login-security">Your MortgageFit workspace and saved cases are available only after successful authentication.</p>
             </div>
           </div>
 
@@ -1543,13 +1587,20 @@ html.mf-custom-photo .mf-header:before{left:auto;width:auto;max-width:60%;aspect
 
   function updateAuthUI(user){
     uid=user?.uid||null;
-    $('mf-login').hidden=!!user;
-    $('mf-signout').hidden=!user;
-    $('mf-save-case').hidden=!user;
-    $('mf-cases').hidden=!user;
-    if(user){
-      $('mf-login').textContent='Agent Login';
-      $('mf-auth-modal').hidden=true;
+    const signedIn=!!user;
+    document.body.classList.toggle('mf-auth-locked',!signedIn);
+    $('mf-auth-modal').hidden=signedIn;
+    $('mf-signout').hidden=!signedIn;
+    $('mf-save-case').hidden=!signedIn;
+    $('mf-cases').hidden=!signedIn;
+    $('mf-login').hidden=true;
+    if(signedIn){
+      setAuthStatus('');
+      $('mf-auth-password').value='';
+    }else{
+      $('mf-cases-modal').hidden=true;
+      setAuthStatus('');
+      window.scrollTo(0,0);
     }
   }
 
@@ -1572,6 +1623,7 @@ html.mf-custom-photo .mf-header:before{left:auto;width:auto;max-width:60%;aspect
   async function initFirebase(){
     if(!firebaseConfigComplete() || !window.firebase){
       updateAuthUI(null);
+      setAuthStatus('MortgageFit login is temporarily unavailable. Check the Firebase configuration.','error');
       return;
     }
     try{
@@ -1631,8 +1683,13 @@ html.mf-custom-photo .mf-header:before{left:auto;width:auto;max-width:60%;aspect
 
   async function signOutAgent(){
     if(!auth) return;
-    await auth.signOut();
-    toast('Signed out.');
+    try{
+      await auth.signOut();
+      updateAuthUI(null);
+    }catch(err){
+      console.error(err);
+      toast('Could not sign out. Please try again.');
+    }
   }
   async function saveCase(){ if(!db||!uid) return toast('Please sign in before saving a case.'); const ref=$('clientRef').value.trim() || `Case-${new Date().toISOString().slice(0,10)}`; try{ await db.collection('mortgagefit_cases').add({ownerUid:uid,ownerEmail:auth?.currentUser?.email||'',clientRef:ref,form:collectForm(),result:compute(),createdAt:firebase.firestore.FieldValue.serverTimestamp(),updatedAt:firebase.firestore.FieldValue.serverTimestamp(),pluginVersion:cfg.version||'1.1.0'}); toast('Case saved to Firebase.'); }catch(e){console.error(e);toast('Could not save the case. Check Firebase settings and security rules.');} }
   async function loadCases(){ if(!db||!uid) return toast('Please sign in to view saved cases.'); $('mf-cases-modal').hidden=false; $('mf-case-status').textContent='Loading cases…'; $('mf-case-list').innerHTML=''; try{ const snap=await db.collection('mortgagefit_cases').where('ownerUid','==',uid).get(); const docs=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>((b.createdAt?.seconds||0)-(a.createdAt?.seconds||0))); $('mf-case-status').textContent=docs.length?`${docs.length} saved case${docs.length===1?'':'s'}`:'No saved cases yet.'; $('mf-case-list').innerHTML=docs.map(d=>`<div class="mf-saved-case"><div><strong>${escapeHtml(d.clientRef||'Saved Case')}</strong><small>${d.createdAt?.toDate?d.createdAt.toDate().toLocaleString('en-CA'):'Recently saved'}</small></div><div><button type="button" class="mf-btn mf-btn-outline" data-load-case="${d.id}">Open</button><button type="button" class="mf-remove" data-delete-case="${d.id}">Delete</button></div></div>`).join(''); }catch(e){console.error(e);$('mf-case-status').textContent='Could not load cases. Check Firebase security rules.';} }
@@ -1655,17 +1712,12 @@ html.mf-custom-photo .mf-header:before{left:auto;width:auto;max-width:60%;aspect
     $$('.mf-step').forEach(s=>s.addEventListener('click',()=>showStep(parseInt(s.dataset.step,10))));
     $('mf-next').onclick=()=>showStep(currentStep+1); $('mf-prev').onclick=()=>showStep(currentStep-1); $('add-applicant').onclick=addApplicant; $('add-custom-expense').onclick=()=>addCustomExpense();
     $('mf-reset').onclick=reset; $('mf-download').onclick=pdf; $('mf-download-results').onclick=pdf; $('mf-calculate').onclick=calculate; $('runScenario').onclick=runScenario; $('clearScenario').onclick=clearScenario; $('mf-save-case').onclick=saveCase; $('mf-cases').onclick=loadCases; $('mf-cases-close').onclick=()=>{$('mf-cases-modal').hidden=true;};
-    $('mf-login').onclick=()=>{ $('mf-auth-modal').hidden=false; setAuthStatus(firebaseConfigComplete()?'':'Firebase project configuration is still required.'); };
+    $('mf-login').onclick=()=>{};
     $('mf-signout').onclick=signOutAgent;
-    $('mf-auth-close').onclick=()=>{$('mf-auth-modal').hidden=true;};
     $('mf-auth-signin').onclick=signInAgent;
     $('mf-auth-create').onclick=createAgentAccount;
     $('mf-auth-reset').onclick=resetAgentPassword;
-    (function(){ const btn=$('mf-login'), tip=$('mf-agent-tip'); if(!btn||!tip) return;
-      const show=()=>{ const r=btn.getBoundingClientRect(); const w=tip.offsetWidth||280; tip.style.top=(r.bottom+8)+'px'; tip.style.left=Math.max(8,Math.min(r.right-w,window.innerWidth-w-8))+'px'; tip.classList.add('is-open'); };
-      const hide=()=>tip.classList.remove('is-open');
-      btn.addEventListener('mouseenter',show); btn.addEventListener('mouseleave',hide); btn.addEventListener('focus',show); btn.addEventListener('blur',hide); btn.addEventListener('click',hide);
-      window.addEventListener('scroll',hide,{passive:true}); })();
+    ['mf-auth-email','mf-auth-password'].forEach(id=>$(id).addEventListener('keydown',e=>{ if(e.key==='Enter') signInAgent(); }));
     liveUpdate(); showStep(0); initFirebase();
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',bind); else bind();
