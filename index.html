@@ -2373,9 +2373,18 @@ body.mf-admin-authorized .mf-mode-tabs{display:flex!important}
       toast('Premium access approved. Agent can sign in again to refresh access.');
     }catch(e){console.error(e);toast('Could not approve upgrade.');}
   }
+  function closeAddAgent(){
+    const modal=$('mf-add-agent-modal');
+    modal.hidden=true;
+    modal.style.display='none';
+    $('mf-add-agent-form').reset();
+    $('mf-agent-feedback').textContent='';
+  }
   function openAddAgent(){
     if(!isMortgageAdmin)return toast('Administrator access required.');
-    $('mf-add-agent-form').reset();$('mf-agent-feedback').textContent='';$('mf-add-agent-modal').hidden=false;
+    $('mf-add-agent-form').reset();$('mf-agent-feedback').textContent='';
+    $('mf-add-agent-modal').style.removeProperty('display');
+    $('mf-add-agent-modal').hidden=false;
   }
   async function submitAddAgent(event){
     event.preventDefault();
@@ -2387,7 +2396,7 @@ body.mf-admin-authorized .mf-mode-tabs{display:flex!important}
       if(!firebase.functions)throw new Error('Firebase Functions library is unavailable.');
       const callable=firebase.functions().httpsCallable('mortgagefitCreateAgent');
       await callable({name:data.name.trim(),email:data.email.trim().toLowerCase(),company:data.company.trim(),phone:data.phone.trim(),license:data.license.trim(),password:data.password,plan:data.plan,status:data.status});
-      form.reset();$('mf-add-agent-modal').hidden=true;toast('Agent account created. Share the temporary password securely.');
+      closeAddAgent();toast('Agent account created. Share the temporary password securely.');
     }catch(err){console.error(err);$('mf-agent-feedback').textContent='Account was not created: '+(err.message||'Check Cloud Function deployment.');}
     finally{button.disabled=false;}
   }
@@ -2553,7 +2562,7 @@ body.mf-admin-authorized .mf-mode-tabs{display:flex!important}
     $('mf-auth-create').onclick=()=>setAuthStatus('Ask your administrator to create an account.','error');
     $('mf-auth-unapproved-signout').onclick=signOutAgent;
     $('mf-add-agent-open').onclick=openAddAgent;
-    $('mf-add-agent-close').onclick=$('mf-agent-cancel').onclick=()=>{$('mf-add-agent-modal').hidden=true;};
+    $('mf-add-agent-close').onclick=$('mf-agent-cancel').onclick=closeAddAgent;
     $('mf-add-agent-form').onsubmit=submitAddAgent;
     $('mf-edit-agent-close').onclick=$('mf-edit-agent-cancel').onclick=()=>{$('mf-edit-agent-modal').hidden=true;};
     $('mf-edit-agent-form').onsubmit=submitEditAgent;
