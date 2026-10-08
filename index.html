@@ -1231,6 +1231,42 @@ body.mf-auth-locked .mf-login-gate{
 }
 </style>
 
+
+<style id="mf-account-hover-bridge-v6">
+/* Keep the account card open while the mouse moves from the trigger into the card. */
+.mf-account-menu{
+  padding-bottom:10px!important;
+  margin-bottom:-10px!important;
+}
+
+.mf-account-card{
+  top:calc(100% + 2px)!important;
+}
+
+/* Invisible hover bridge across the small space between trigger and flyout. */
+.mf-account-card::before{
+  content:""!important;
+  position:absolute!important;
+  left:0!important;
+  right:0!important;
+  top:-12px!important;
+  height:12px!important;
+  background:transparent!important;
+  pointer-events:auto!important;
+}
+
+/* Keep the card visible while hovering anywhere in the menu, the bridge, or the card. */
+.mf-account-menu:hover .mf-account-card,
+.mf-account-card:hover,
+.mf-account-menu:focus-within .mf-account-card,
+.mf-account-menu.is-open .mf-account-card{
+  opacity:1!important;
+  visibility:visible!important;
+  pointer-events:auto!important;
+  transform:translateY(0)!important;
+}
+</style>
+
 </head>
 <body class="mf-auth-locked">
 
