@@ -964,6 +964,40 @@ body:not(.mf-auth-locked) #mortgagefit-app{display:block}
 }
 </style>
 
+
+<style id="mf-login-gate-fix-v2">
+/* Fix: the login modal lives inside #mortgagefit-app, so the app container itself
+   must remain mounted while signed out. The full-screen login gate covers it. */
+body.mf-auth-locked #mortgagefit-app{
+  display:block!important;
+}
+body.mf-auth-locked{
+  overflow:hidden!important;
+}
+
+/* Keep the login page fully opaque so the workspace is not visible behind it. */
+body.mf-auth-locked .mf-login-gate{
+  display:flex!important;
+  background:
+    radial-gradient(850px 520px at 12% 0%,rgba(var(--mf-acc-rgb),.18),transparent 68%),
+    radial-gradient(760px 520px at 100% 100%,rgba(var(--mf-acc-rgb),.10),transparent 70%),
+    var(--mf-base)!important;
+}
+
+/* Ensure login inputs/buttons are visible and usable above every other layer. */
+.mf-login-gate .mf-auth-card,
+.mf-login-gate .mf-auth-fields,
+.mf-login-gate .mf-auth-actions{
+  position:relative!important;
+  z-index:100001!important;
+}
+.mf-login-gate .mf-auth-fields input{
+  display:block!important;
+  visibility:visible!important;
+  opacity:1!important;
+}
+</style>
+
 </head>
 <body class="mf-auth-locked">
 
