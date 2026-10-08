@@ -8,13 +8,13 @@
 
   <script>
   /* MortgageFit visual preferences: apply saved theme and header photo before first paint. */
-  (function(){var ok=["pearl-gold","ocean-mist","sage-stone","professional-navy"],t="pearl-gold",d=document.documentElement;
+  (function(){var ok=["pearl-gold","ocean-mist","sage-stone","professional-navy","emerald-ledger","royal-burgundy","midnight-black"],t="pearl-gold",d=document.documentElement;
   try{var s=localStorage.getItem("mf-theme");if(s&&ok.indexOf(s)>-1)t=s}catch(e){}
   d.setAttribute("data-mf-theme",t);
-  try{var p=localStorage.getItem("mf-photo");if(p&&p.indexOf("data:image/")===0){d.style.setProperty("--mf-photo",'url("'+p+'")');d.classList.add("mf-custom-photo")}}catch(e){}})();
+  try{var p=localStorage.getItem("mf-photo");if(p&&p.indexOf("data:image/")===0){d.style.setProperty("--mf-photo",'url("'+p+'")');d.classList.add("mf-custom-photo");var im=new Image();im.onload=function(){if(im.naturalHeight)d.style.setProperty("--mf-photo-ar",im.naturalWidth/im.naturalHeight)};im.src=p}}catch(e){}})();
   </script>
   <style>
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Manrope:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
 /* Theme: Pearl & Gold */
 :root,html[data-mf-theme="pearl-gold"]{
@@ -292,10 +292,216 @@ html[data-mf-theme="professional-navy"]{
   --mf-toast-ink:#fff;
   --mf-arrow:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5l5-5' fill='none' stroke='%231f4fa3' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
 }
+html[data-mf-theme="emerald-ledger"]{
+  --mf-base:#ecf2ef;
+  --mf-page:radial-gradient(900px 620px at 4% -6%,rgba(110,190,160,.30),transparent 62%),radial-gradient(820px 620px at 100% 2%,rgba(170,205,190,.38),transparent 62%),radial-gradient(900px 700px at 70% 106%,rgba(190,220,208,.42),transparent 62%),linear-gradient(180deg,#f2f7f5,#e1ebe7);
+  --mf-head:#0d2620;
+  --mf-text:#1a3a32;
+  --mf-soft:#3d5a52;
+  --mf-muted:#637a72;
+  --mf-acc-rgb:20,110,84;
+  --mf-acc:#146e54;
+  --mf-btn-1:#2fa57f;
+  --mf-btn-2:#12604a;
+  --mf-btn-ink:#ffffff;
+  --mf-fit-1:#2fa57f;
+  --mf-fit-2:#0f5642;
+  --mf-glass:linear-gradient(150deg,rgba(255,255,255,.90),rgba(255,255,255,.66));
+  --mf-edge:rgba(255,255,255,.92);
+  --mf-edge-hi:rgba(14,46,38,.26);
+  --mf-hl:rgba(255,255,255,.95);
+  --mf-shadow:0 22px 50px -22px rgba(14,46,38,.34),0 0 0 1px rgba(14,46,38,.06);
+  --mf-kpi-hl:rgba(255,255,255,.55);
+  --mf-hdr:linear-gradient(135deg,#dbe8e2,#f0f6f3);
+  --mf-hdr-m:linear-gradient(90deg,rgba(243,248,246,.96),rgba(243,248,246,.72)),var(--mf-photo) center/cover no-repeat,linear-gradient(135deg,#dbe8e2,#f0f6f3);
+  --mf-hdr-hl:rgba(255,255,255,.55);
+  --mf-hdr-btn:rgba(255,255,255,.72);
+  --mf-fill:rgba(255,255,255,.7);
+  --mf-fill-2:rgba(255,255,255,.9);
+  --mf-line:rgba(14,46,38,.11);
+  --mf-track:rgba(14,46,38,.13);
+  --mf-field:rgba(255,255,255,.95);
+  --mf-field-focus:#fff;
+  --mf-field-edge:rgba(14,46,38,.2);
+  --mf-inset:rgba(14,46,38,.07);
+  --mf-ph:rgba(14,46,38,.42);
+  --mf-scheme:light;
+  --mf-opt-bg:#fff;
+  --mf-hero:linear-gradient(150deg,rgba(20,110,84,.34),rgba(20,110,84,.08) 62%,rgba(255,255,255,.45));
+  --mf-hero-edge:rgba(20,110,84,.55);
+  --mf-hero-glow:rgba(20,110,84,.38);
+  --mf-step-on:linear-gradient(135deg,rgba(20,110,84,.26),rgba(20,110,84,.08));
+  --mf-on-edge:rgba(20,110,84,.5);
+  --mf-on-bg:rgba(20,110,84,.1);
+  --mf-done:#15803d;
+  --mf-done-bg:rgba(22,163,74,.14);
+  --mf-done-edge:rgba(22,163,74,.42);
+  --mf-bar-1:#4fc09a;
+  --mf-bar-2:#12604a;
+  --mf-nav:linear-gradient(150deg,rgba(255,255,255,.92),rgba(255,255,255,.68));
+  --mf-rh1:linear-gradient(150deg,rgba(20,110,84,.30),rgba(20,110,84,.07));
+  --mf-rh2:linear-gradient(150deg,rgba(71,85,105,.28),rgba(71,85,105,.06));
+  --mf-rh3:linear-gradient(150deg,rgba(14,116,144,.28),rgba(14,116,144,.06));
+  --mf-note:linear-gradient(90deg,rgba(20,110,84,.16),rgba(20,110,84,.03));
+  --mf-ok:#1f9d5c;
+  --mf-warn:#e08e0b;
+  --mf-bad:#e0455f;
+  --mf-ok-text:#15803d;
+  --mf-warn-bg:rgba(245,158,11,.14);
+  --mf-warn-edge:rgba(217,119,6,.42);
+  --mf-warn-text:#8a4f05;
+  --mf-bad-text:#be123c;
+  --mf-bad-bg:rgba(225,29,72,.08);
+  --mf-bad-edge:rgba(225,29,72,.32);
+  --mf-modal:linear-gradient(150deg,rgba(255,255,255,.97),rgba(246,250,248,.95));
+  --mf-modal-shadow:rgba(14,46,38,.4);
+  --mf-scrim:rgba(14,46,38,.38);
+  --mf-toast:linear-gradient(150deg,#12302a,#08181a);
+  --mf-toast-ink:#fff;
+  --mf-arrow:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5l5-5' fill='none' stroke='%23146e54' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+html[data-mf-theme="royal-burgundy"]{
+  --mf-base:#f2ecee;
+  --mf-page:radial-gradient(900px 620px at 4% -6%,rgba(205,130,150,.30),transparent 62%),radial-gradient(820px 620px at 100% 2%,rgba(220,180,190,.38),transparent 62%),radial-gradient(900px 700px at 70% 106%,rgba(225,200,208,.42),transparent 62%),linear-gradient(180deg,#f8f3f4,#ece2e5);
+  --mf-head:#2a0e16;
+  --mf-text:#3b1c25;
+  --mf-soft:#5e3d47;
+  --mf-muted:#84646d;
+  --mf-acc-rgb:128,32,52;
+  --mf-acc:#802034;
+  --mf-btn-1:#b8465f;
+  --mf-btn-2:#7a1f35;
+  --mf-btn-ink:#ffffff;
+  --mf-fit-1:#b8465f;
+  --mf-fit-2:#6e1a2f;
+  --mf-glass:linear-gradient(150deg,rgba(255,255,255,.90),rgba(255,255,255,.66));
+  --mf-edge:rgba(255,255,255,.92);
+  --mf-edge-hi:rgba(70,20,35,.26);
+  --mf-hl:rgba(255,255,255,.95);
+  --mf-shadow:0 22px 50px -22px rgba(70,20,35,.34),0 0 0 1px rgba(70,20,35,.06);
+  --mf-kpi-hl:rgba(255,255,255,.55);
+  --mf-hdr:linear-gradient(135deg,#ecdfe3,#f8f1f3);
+  --mf-hdr-m:linear-gradient(90deg,rgba(249,244,246,.96),rgba(249,244,246,.72)),var(--mf-photo) center/cover no-repeat,linear-gradient(135deg,#ecdfe3,#f8f1f3);
+  --mf-hdr-hl:rgba(255,255,255,.55);
+  --mf-hdr-btn:rgba(255,255,255,.72);
+  --mf-fill:rgba(255,255,255,.7);
+  --mf-fill-2:rgba(255,255,255,.9);
+  --mf-line:rgba(70,20,35,.11);
+  --mf-track:rgba(70,20,35,.13);
+  --mf-field:rgba(255,255,255,.95);
+  --mf-field-focus:#fff;
+  --mf-field-edge:rgba(70,20,35,.2);
+  --mf-inset:rgba(70,20,35,.07);
+  --mf-ph:rgba(70,20,35,.42);
+  --mf-scheme:light;
+  --mf-opt-bg:#fff;
+  --mf-hero:linear-gradient(150deg,rgba(128,32,52,.34),rgba(128,32,52,.08) 62%,rgba(255,255,255,.45));
+  --mf-hero-edge:rgba(128,32,52,.55);
+  --mf-hero-glow:rgba(128,32,52,.38);
+  --mf-step-on:linear-gradient(135deg,rgba(128,32,52,.26),rgba(128,32,52,.08));
+  --mf-on-edge:rgba(128,32,52,.5);
+  --mf-on-bg:rgba(128,32,52,.1);
+  --mf-done:#15803d;
+  --mf-done-bg:rgba(22,163,74,.14);
+  --mf-done-edge:rgba(22,163,74,.42);
+  --mf-bar-1:#d0728a;
+  --mf-bar-2:#7a1f35;
+  --mf-nav:linear-gradient(150deg,rgba(255,255,255,.92),rgba(255,255,255,.68));
+  --mf-rh1:linear-gradient(150deg,rgba(128,32,52,.30),rgba(128,32,52,.07));
+  --mf-rh2:linear-gradient(150deg,rgba(71,85,105,.28),rgba(71,85,105,.06));
+  --mf-rh3:linear-gradient(150deg,rgba(14,116,144,.28),rgba(14,116,144,.06));
+  --mf-note:linear-gradient(90deg,rgba(128,32,52,.16),rgba(128,32,52,.03));
+  --mf-ok:#1f9d5c;
+  --mf-warn:#e08e0b;
+  --mf-bad:#e0455f;
+  --mf-ok-text:#15803d;
+  --mf-warn-bg:rgba(245,158,11,.14);
+  --mf-warn-edge:rgba(217,119,6,.42);
+  --mf-warn-text:#8a4f05;
+  --mf-bad-text:#be123c;
+  --mf-bad-bg:rgba(225,29,72,.08);
+  --mf-bad-edge:rgba(225,29,72,.32);
+  --mf-modal:linear-gradient(150deg,rgba(255,255,255,.97),rgba(250,247,248,.95));
+  --mf-modal-shadow:rgba(70,20,35,.4);
+  --mf-scrim:rgba(70,20,35,.38);
+  --mf-toast:linear-gradient(150deg,#2e1520,#1a0a10);
+  --mf-toast-ink:#fff;
+  --mf-arrow:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5l5-5' fill='none' stroke='%23802034' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
+html[data-mf-theme="midnight-black"]{
+  --mf-base:#0b0c0f;
+  --mf-page:radial-gradient(900px 620px at 4% -6%,rgba(212,176,106,.12),transparent 62%),radial-gradient(820px 620px at 100% 2%,rgba(90,100,135,.18),transparent 62%),radial-gradient(900px 700px at 70% 106%,rgba(60,66,90,.20),transparent 62%),linear-gradient(180deg,#111216,#050506);
+  --mf-head:#f4f1ea;
+  --mf-text:#dcd9d2;
+  --mf-soft:#b4b0a7;
+  --mf-muted:#8d8981;
+  --mf-acc-rgb:212,176,106;
+  --mf-acc:#dcb976;
+  --mf-btn-1:#ecd198;
+  --mf-btn-2:#b8923f;
+  --mf-btn-ink:#1a1305;
+  --mf-fit-1:#ecd198;
+  --mf-fit-2:#b8923f;
+  --mf-glass:linear-gradient(150deg,rgba(32,33,38,.92),rgba(20,21,25,.84));
+  --mf-edge:rgba(255,255,255,.08);
+  --mf-edge-hi:rgba(255,255,255,.16);
+  --mf-hl:rgba(255,255,255,.07);
+  --mf-shadow:0 22px 50px -22px rgba(0,0,0,.85),0 0 0 1px rgba(255,255,255,.04);
+  --mf-kpi-hl:rgba(255,255,255,.05);
+  --mf-hdr:linear-gradient(135deg,#17181c,#0e0f12);
+  --mf-hdr-m:linear-gradient(90deg,rgba(14,15,18,.96),rgba(14,15,18,.72)),var(--mf-photo) center/cover no-repeat,linear-gradient(135deg,#17181c,#0e0f12);
+  --mf-hdr-hl:rgba(255,255,255,.05);
+  --mf-hdr-btn:rgba(255,255,255,.08);
+  --mf-fill:rgba(255,255,255,.05);
+  --mf-fill-2:rgba(255,255,255,.1);
+  --mf-line:rgba(255,255,255,.1);
+  --mf-track:rgba(255,255,255,.12);
+  --mf-field:rgba(255,255,255,.06);
+  --mf-field-focus:rgba(255,255,255,.1);
+  --mf-field-edge:rgba(255,255,255,.18);
+  --mf-inset:rgba(0,0,0,.35);
+  --mf-ph:rgba(255,255,255,.35);
+  --mf-scheme:dark;
+  --mf-opt-bg:#1b1c21;
+  --mf-hero:linear-gradient(150deg,rgba(212,176,106,.28),rgba(212,176,106,.06) 62%,rgba(255,255,255,.04));
+  --mf-hero-edge:rgba(212,176,106,.5);
+  --mf-hero-glow:rgba(212,176,106,.28);
+  --mf-step-on:linear-gradient(135deg,rgba(212,176,106,.22),rgba(212,176,106,.06));
+  --mf-on-edge:rgba(212,176,106,.45);
+  --mf-on-bg:rgba(212,176,106,.08);
+  --mf-done:#4ade80;
+  --mf-done-bg:rgba(74,222,128,.14);
+  --mf-done-edge:rgba(74,222,128,.4);
+  --mf-bar-1:#ecd198;
+  --mf-bar-2:#b8923f;
+  --mf-nav:linear-gradient(150deg,rgba(28,29,34,.96),rgba(18,19,23,.92));
+  --mf-rh1:linear-gradient(150deg,rgba(212,176,106,.24),rgba(212,176,106,.05));
+  --mf-rh2:linear-gradient(150deg,rgba(148,163,184,.22),rgba(148,163,184,.05));
+  --mf-rh3:linear-gradient(150deg,rgba(56,189,248,.2),rgba(56,189,248,.05));
+  --mf-note:linear-gradient(90deg,rgba(212,176,106,.16),rgba(212,176,106,.03));
+  --mf-ok:#34d399;
+  --mf-warn:#fbbf24;
+  --mf-bad:#fb7185;
+  --mf-ok-text:#4ade80;
+  --mf-warn-bg:rgba(251,191,36,.14);
+  --mf-warn-edge:rgba(251,191,36,.4);
+  --mf-warn-text:#fcd34d;
+  --mf-bad-text:#fda4af;
+  --mf-bad-bg:rgba(251,113,133,.12);
+  --mf-bad-edge:rgba(251,113,133,.4);
+  --mf-modal:linear-gradient(150deg,rgba(28,29,34,.98),rgba(16,17,20,.97));
+  --mf-modal-shadow:rgba(0,0,0,.7);
+  --mf-scrim:rgba(0,0,0,.6);
+  --mf-toast:linear-gradient(150deg,#26272d,#15161a);
+  --mf-toast-ink:#fff;
+  --mf-arrow:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5l5-5' fill='none' stroke='%23dcb976' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
 
 :root{
-  --mf-serif:'Cormorant Garamond',Georgia,'Times New Roman',serif;
-  --mf-sans:'Manrope',Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --mf-serif:'Plus Jakarta Sans','Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --mf-sans:'Plus Jakarta Sans','Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
   --mf-blur:blur(22px) saturate(160%);
   --mf-success:var(--mf-ok);--mf-warning:var(--mf-warn);--mf-error:var(--mf-bad);
 }
@@ -332,7 +538,7 @@ body{margin:0;min-height:100vh;color:var(--mf-text);font-family:var(--mf-sans);-
 .mf-remove{font-family:inherit;border:0;background:transparent;color:var(--mf-bad-text);cursor:pointer;font-weight:700;font-size:12px}
 
 /* ---------- Header ---------- */
-.mf-header{border-radius:24px;padding:26px 30px;min-height:264px;display:flex;justify-content:space-between;align-items:flex-start;gap:24px;position:relative;overflow:hidden;background:var(--mf-hdr)}
+.mf-header{border-radius:24px;padding:20px 30px;min-height:190px;display:flex;justify-content:space-between;align-items:flex-start;gap:24px;position:relative;overflow:hidden;background:var(--mf-hdr)}
 .mf-header:after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(180deg,var(--mf-hdr-hl),transparent 38%)}
 .mf-brand-block{display:grid;grid-template-columns:max-content 1px max-content;align-items:center;column-gap:28px;position:relative;z-index:2;align-self:center}
 .mf-banner-brand{display:flex;flex-direction:column}
@@ -586,9 +792,9 @@ body{margin:0;min-height:100vh;color:var(--mf-text);font-family:var(--mf-sans);-
 
 
 /* ---------- Header photo layer: whole house visible, left edge fades into the header ---------- */
-:root{--mf-photo-w:520px}
+:root{--mf-photo-w:390px}
 .mf-header:before{content:"";position:absolute;top:0;right:0;bottom:0;width:var(--mf-photo-w);max-width:46%;z-index:0;pointer-events:none;
-  background:var(--mf-photo) 0 -79px/100% auto no-repeat;
+  background:var(--mf-photo) 0 -58px/100% auto no-repeat;
   -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 16%);mask-image:linear-gradient(90deg,transparent 0,#000 16%)}
 /* Uploaded photos can have any shape, so they fill the layer instead */
 html.mf-custom-photo .mf-header:before{width:min(640px,52%);max-width:none;background-size:cover;background-position:center}
@@ -615,7 +821,47 @@ html.mf-custom-photo .mf-header:before{width:min(640px,52%);max-width:none;backg
 @media(max-width:480px){.mf-theme-btn{flex:1 1 calc(50% - 10px);justify-content:flex-start}.mf-photo-tools{margin-left:0;width:100%}}
 @media print{.mf-theme-bar{display:none!important}}
 
-  </style>
+  
+/* ---------- Sidebar icons, Canadian badge & tagline ---------- */
+.mf-step b svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;display:block}
+.mf-built-ca{display:flex;align-items:center;gap:9px;margin:10px 4px 0;padding:10px 8px 0;border-top:1px solid var(--mf-line);color:var(--mf-muted);font-size:10.5px;font-weight:700;letter-spacing:.04em;line-height:1.3;text-transform:uppercase}
+.mf-leaf{width:20px;height:20px;flex:0 0 20px;display:block}
+.mf-section-title p.mf-tagline{display:flex;flex-direction:column;align-items:flex-end;gap:2px;max-width:none;margin:0;text-align:right;text-transform:uppercase;letter-spacing:.14em;font-size:11px;font-weight:800;line-height:1.35;color:var(--mf-acc)}
+.mf-section-title p.mf-tagline span:last-of-type{color:var(--mf-head)}
+.mf-tagline .mf-leaf-br{width:22px;height:22px;flex:0 0 22px;margin-top:6px}
+@media(max-width:1100px){.mf-built-ca{display:none}}
+@media(max-width:900px){.mf-section-title p.mf-tagline{align-items:flex-start;text-align:left}}
+
+/* ---------- Refinements ---------- */
+.mf-wordmark{font-size:42px;letter-spacing:-.8px}
+.mf-banner-message>div{font-size:22px;letter-spacing:-.2px}
+.mf-section-title h2{font-size:23px;letter-spacing:-.2px}
+.mf-section-title p.mf-tagline{flex-direction:row;align-items:center;justify-content:flex-end;gap:10px}
+.mf-tagline .mf-tagtext{display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left}
+.mf-tagline .mf-tagtext span{display:block}
+.mf-tagline .mf-tagtext span:last-child{color:var(--mf-head)}
+.mf-tagline .mf-leaf-front{width:26px;height:26px;flex:0 0 26px;margin:0}
+.mf-theme-btn[data-theme="emerald-ledger"] .mf-theme-dot{background:linear-gradient(135deg,#2fa57f,#0f5642)}
+.mf-theme-btn[data-theme="royal-burgundy"] .mf-theme-dot{background:linear-gradient(135deg,#b8465f,#6e1a2f)}
+/* Uploaded header photos: show the whole picture (never cropped), fading only the left edge */
+html.mf-custom-photo .mf-header:before{width:min(720px,56%);max-width:none;background-size:contain;background-position:right center;
+  -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 7%);mask-image:linear-gradient(90deg,transparent 0,#000 7%)}
+@media(max-width:900px){.mf-section-title p.mf-tagline{justify-content:flex-start}}
+
+/* ---------- Round 3 refinements ---------- */
+.mf-wordmark{font-size:40px;font-weight:800;letter-spacing:-1.4px;margin-bottom:8px}
+.mf-banner-message>div{font-size:21px;font-weight:700;letter-spacing:-.4px;line-height:1.15}
+.mf-section-title h2{font-weight:700;letter-spacing:-.4px}
+.mf-banner-message small{display:flex;align-items:center;gap:10px;margin-top:9px}
+.mf-banner-message small:before{content:"";width:28px;height:2px;border-radius:2px;background:currentColor;flex:0 0 28px}
+.mf-theme-btn[data-theme="midnight-black"] .mf-theme-dot{background:linear-gradient(135deg,#3a3b41,#0a0a0c 55%,#d4b06a)}
+/* Uploaded photo: whole picture, all four edges dissolve into the header background */
+html.mf-custom-photo .mf-header:before{left:auto;width:auto;max-width:60%;aspect-ratio:var(--mf-photo-ar,1.5);
+  background:var(--mf-photo) center/cover no-repeat;
+  -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 24%,#000 92%,transparent 100%),linear-gradient(180deg,transparent 0,#000 20%,#000 80%,transparent 100%);
+  mask-image:linear-gradient(90deg,transparent 0,#000 24%,#000 92%,transparent 100%),linear-gradient(180deg,transparent 0,#000 20%,#000 80%,transparent 100%);
+  -webkit-mask-composite:source-in;mask-composite:intersect}
+</style>
 
 </head>
 <body>
@@ -657,20 +903,21 @@ html.mf-custom-photo .mf-header:before{width:min(640px,52%);max-width:none;backg
 
           <div class="mf-workspace">
             <nav class="mf-stepper" aria-label="Mortgage calculation steps">
-              <button type="button" class="mf-step active" data-step="0"><b>1</b><span>Client</span></button>
-              <button type="button" class="mf-step" data-step="1"><b>2</b><span>Income</span></button>
-              <button type="button" class="mf-step" data-step="2"><b>3</b><span>Funds</span></button>
-              <button type="button" class="mf-step" data-step="3"><b>4</b><span>Debt</span></button>
-              <button type="button" class="mf-step" data-step="4"><b>5</b><span>Property</span></button>
-              <button type="button" class="mf-step" data-step="5"><b>6</b><span>Living Costs</span></button>
-              <button type="button" class="mf-step" data-step="6"><b>7</b><span>Results</span></button>
+              <button type="button" class="mf-step active" data-step="0"><b aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><circle cx="12" cy="8" r="3.6"/><path d="M5 20c.5-4.2 3.3-6.2 7-6.2s6.5 2 7 6.2"/></svg></b><span>Client</span></button>
+              <button type="button" class="mf-step" data-step="1"><b aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><circle cx="12" cy="12" r="8.5"/><path d="M14.6 9.2c-.5-.8-1.4-1.2-2.6-1.2-1.5 0-2.5.8-2.5 2s1 1.7 2.5 2 2.5.8 2.5 2-1 2-2.5 2c-1.2 0-2.1-.4-2.6-1.2M12 5.8v1.5M12 16.7v1.5"/></svg></b><span>Income</span></button>
+              <button type="button" class="mf-step" data-step="2"><b aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M3 9.5 12 4l9 5.5"/><path d="M5.5 10.5v6.5M9.8 10.5v6.5M14.2 10.5v6.5M18.5 10.5v6.5"/><path d="M3.5 20h17"/></svg></b><span>Funds</span></button>
+              <button type="button" class="mf-step" data-step="3"><b aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><rect x="3" y="5.5" width="18" height="13" rx="2.2"/><path d="M3 10h18M7 14.8h4"/></svg></b><span>Debt</span></button>
+              <button type="button" class="mf-step" data-step="4"><b aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M3 11.2 12 4l9 7.2"/><path d="M5.5 9.8V20h13V9.8"/><path d="M10 20v-5.5h4V20"/></svg></b><span>Property</span></button>
+              <button type="button" class="mf-step" data-step="5"><b aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M3 4h2.6l2.1 11h10.1l2-8H6.6"/><circle cx="9.6" cy="19" r="1.4"/><circle cx="16.6" cy="19" r="1.4"/></svg></b><span>Living Costs</span></button>
+              <button type="button" class="mf-step" data-step="6"><b aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M4 4v16h16"/><rect x="7.5" y="12" width="3" height="5.5" rx=".6"/><rect x="12.3" y="8.5" width="3" height="9" rx=".6"/><rect x="17" y="5" width="2.6" height="12.5" rx=".6"/></svg></b><span>Results</span></button>
+              <div class="mf-built-ca"><svg class="mf-leaf" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><path fill="#D52B1E" d="M50 1 L58 18 L66 13 L63 35 L75 26 L73 38 L98 34 L88 55 L93 60 L72 78 L75 88 L53 84 L53 100 L47 100 L47 84 L25 88 L28 78 L7 60 L12 55 L2 34 L27 38 L25 26 L37 35 L34 13 L42 18 Z"/></svg><span>Built for Canadian Mortgage Professionals</span></div>
               <div class="mf-progress-shell"><i id="mf-progress-bar"></i></div>
               <small id="mf-progress-text">Step 1 of 7</small>
             </nav>
 
             <main class="mf-stage">
               <section class="mf-panel active" data-panel="0">
-                <div class="mf-section-title"><div><span>01</span><h2>Client &amp; Application Details</h2></div><p>Start with the basic transaction and property profile.</p></div>
+                <div class="mf-section-title"><div><span>01</span><h2>Client &amp; Application Details</h2></div><p class="mf-tagline"><svg class="mf-leaf mf-leaf-front" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><path fill="#D52B1E" d="M50 1 L58 18 L66 13 L63 35 L75 26 L73 38 L98 34 L88 55 L93 60 L72 78 L75 88 L53 84 L53 100 L47 100 L47 84 L25 88 L28 78 L7 60 L12 55 L2 34 L27 38 L25 26 L37 35 L34 13 L42 18 Z"/></svg><span class="mf-tagtext"><span>The right numbers</span><span>lead to brighter outcomes</span></span></p></div>
                 <div class="mf-fields mf-fields-3">
                   <label>Client reference<input id="clientRef" type="text" placeholder="Example: VP-0726"></label>
                   <label>Province<select id="province"><option>Ontario</option><option>Alberta</option><option>British Columbia</option><option>Manitoba</option><option>New Brunswick</option><option>Newfoundland and Labrador</option><option>Nova Scotia</option><option>Prince Edward Island</option><option>Quebec</option><option>Saskatchewan</option><option>Northwest Territories</option><option>Nunavut</option><option>Yukon</option></select></label>
@@ -1306,7 +1553,7 @@ html.mf-custom-photo .mf-header:before{width:min(640px,52%);max-width:none;backg
   <!-- MortgageFit colour-theme + header-photo controls (visual only; independent of calculator and Firebase code) -->
   <script id="mf-theme-switcher">
   (function(){
-    var THEMES=[["pearl-gold","Pearl & Gold"],["ocean-mist","Ocean Mist"],["sage-stone","Sage & Stone"],["professional-navy","Professional Navy"]];
+    var THEMES=[["pearl-gold","Pearl & Gold"],["ocean-mist","Ocean Mist"],["sage-stone","Sage & Stone"],["professional-navy","Professional Navy"],["emerald-ledger","Emerald Ledger"],["royal-burgundy","Royal Burgundy"],["midnight-black","Midnight Black"]];
     var root=document.documentElement, app=document.getElementById("mortgagefit-app");
     if(!app) return;
     var bar=document.createElement("div");
@@ -1347,7 +1594,7 @@ html.mf-custom-photo .mf-header:before{width:min(640px,52%);max-width:none;backg
           c.width=Math.max(1,Math.round(img.width*s)); c.height=Math.max(1,Math.round(img.height*s));
           c.getContext("2d").drawImage(img,0,0,c.width,c.height);
           var url=c.toDataURL("image/jpeg",.86);
-          root.style.setProperty("--mf-photo",'url("'+url+'")'); root.classList.add("mf-custom-photo");
+          root.style.setProperty("--mf-photo",'url("'+url+'")'); root.classList.add("mf-custom-photo"); root.style.setProperty("--mf-photo-ar",c.width/c.height);
           try{ localStorage.setItem("mf-photo",url); say("Photo updated."); }catch(e){ say("Photo applied for this visit only."); }
         };
         img.src=r.result;
@@ -1355,7 +1602,7 @@ html.mf-custom-photo .mf-header:before{width:min(640px,52%);max-width:none;backg
       r.readAsDataURL(f); file.value="";
     });
     reset.addEventListener("click",function(){
-      root.style.removeProperty("--mf-photo"); root.classList.remove("mf-custom-photo");
+      root.style.removeProperty("--mf-photo"); root.classList.remove("mf-custom-photo"); root.style.removeProperty("--mf-photo-ar");
       try{ localStorage.removeItem("mf-photo"); }catch(e){}
       say("Original photo restored.");
     });
