@@ -1302,6 +1302,10 @@ body.mf-auth-locked .mf-login-gate{
 .mf-branding-footnote{margin:14px 0 0}
 @media(max-width:620px){.mf-branding-layout{grid-template-columns:1fr}.mf-branding-logo-panel{max-width:250px}.mf-branding-fields{grid-template-columns:1fr}}
 
+/* Workspace tabs are only relevant to verified administrators. */
+.mf-mode-tabs{display:none!important}
+body.mf-admin-authorized .mf-mode-tabs{display:flex!important}
+
 /* Agent PDF configuration is managed from the Admin Panel. */
 .mf-admin-pdf-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:16px}
 .mf-admin-pdf-card .mf-admin-pdf-hint{margin-top:11px;font-size:10.5px}
@@ -2279,6 +2283,7 @@ body.mf-auth-locked .mf-login-gate{
   }
 
   function resetAdminMode(){
+    document.body.classList.remove('mf-admin-authorized');
     $('mf-admin-tab').hidden=true;
     document.getElementById('mortgagefit-app').classList.remove('mf-admin-mode');
     $('mf-agent-tab').classList.add('is-active');$('mf-admin-tab').classList.remove('is-active');
@@ -2311,6 +2316,7 @@ body.mf-auth-locked .mf-login-gate{
       }
       accessProfile=profile;
       isMortgageAdmin=profile.role==='admin';
+      document.body.classList.toggle('mf-admin-authorized',isMortgageAdmin);
       $('mf-admin-tab').hidden=!isMortgageAdmin;
       $('mf-auth-modal').hidden=true;
       $('mf-auth-unapproved-signout').hidden=true;
