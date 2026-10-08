@@ -903,7 +903,7 @@ html.mf-custom-photo .mf-header:before{left:auto;width:auto;max-width:60%;aspect
 
 /* Agent workspace is the normal calculator. Admin mode hides its normal direct children. */
 .mf-admin-panel{display:none;margin:0 0 24px;padding:24px;border-radius:24px;background:var(--mf-glass);border:1px solid var(--mf-edge);box-shadow:var(--mf-shadow),inset 0 1px 0 var(--mf-hl);-webkit-backdrop-filter:var(--mf-blur);backdrop-filter:var(--mf-blur)}
-.mf-app.mf-admin-mode > :not(.mf-mode-tabs):not(.mf-admin-panel){display:none!important}
+.mf-app.mf-admin-mode > :not(.mf-mode-tabs):not(.mf-admin-panel):not(#mf-branding-modal){display:none!important}
 .mf-app.mf-admin-mode > .mf-admin-panel{display:block!important}
 .mf-admin-head{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;padding-bottom:18px;border-bottom:1px solid var(--mf-line)}
 .mf-admin-head h2{margin:0 0 5px;font-size:24px;color:var(--mf-head);letter-spacing:-.4px}
@@ -1285,6 +1285,11 @@ body.mf-auth-locked .mf-login-gate{
 #mf-branding-status{font-size:11px;color:var(--mf-muted);margin-right:auto;flex:1 1 180px}
 .mf-branding-footnote{margin:14px 0 0}
 @media(max-width:620px){.mf-branding-layout{grid-template-columns:1fr}.mf-branding-logo-panel{max-width:250px}.mf-branding-fields{grid-template-columns:1fr}}
+
+/* Agent PDF configuration is managed from the Admin Panel. */
+.mf-admin-pdf-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:16px}
+.mf-admin-pdf-card .mf-admin-pdf-hint{margin-top:11px;font-size:10.5px}
+@media(max-width:600px){.mf-admin-pdf-actions .mf-btn{width:100%}}
 </style>
 </head>
 <body class="mf-auth-locked">
@@ -1309,6 +1314,17 @@ body.mf-auth-locked .mf-login-gate{
                 <h3>Appearance & Branding</h3>
                 <p>Choose the product colour theme and manage the header image. These controls are no longer shown in the agent workspace.</p>
                 <div class="mf-admin-appearance" id="mf-admin-appearance"></div>
+              </article>
+
+              <article class="mf-admin-card is-wide mf-admin-pdf-card">
+                <h3>Agent Branding &amp; PDF</h3>
+                <p>Personalize your client estimates with your brokerage logo, agent contact details and license number. Saved branding is linked to your signed-in account.</p>
+                <div class="mf-admin-pdf-actions">
+                  <button type="button" class="mf-btn mf-btn-primary" id="mf-branding-open">Configure Agent Branding</button>
+                  <button type="button" class="mf-btn mf-btn-outline" id="mf-admin-pdf-preview">Preview PDF</button>
+                  <button type="button" class="mf-btn mf-btn-outline" id="mf-admin-pdf-download">Download Client Estimate</button>
+                </div>
+                <p class="mf-admin-pdf-hint">PDF previews and downloads use the current Agent Workspace estimate. Complete or update the calculator there first.</p>
               </article>
 
               <article class="mf-admin-card">
@@ -1380,8 +1396,6 @@ body.mf-auth-locked .mf-login-gate{
                     <div><span>Email status</span><strong id="mf-account-verified">—</strong></div>
                     <div><span>Last sign-in</span><strong id="mf-account-last-login">—</strong></div>
                   </div>
-
-                  <button type="button" class="mf-branding-entry" id="mf-branding-open">Agent Branding &amp; PDF</button>
 
                   <button type="button" class="mf-account-signout" id="mf-signout" hidden>
                     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 5H5.8A1.8 1.8 0 0 0 4 6.8v10.4A1.8 1.8 0 0 0 5.8 19H10M15 8l4 4-4 4M8 12h11" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -2316,6 +2330,8 @@ body.mf-auth-locked .mf-login-gate{
     $('mf-login').onclick=()=>{};
     $('mf-signout').onclick=signOutAgent;
     $('mf-branding-open').onclick=openBranding;
+    $('mf-admin-pdf-preview').onclick=()=>pdf(true);
+    $('mf-admin-pdf-download').onclick=()=>pdf(false);
     $('mf-branding-close').onclick=closeBranding;
     $('mf-branding-modal').addEventListener('click',e=>{if(e.target===$('mf-branding-modal'))closeBranding();});
     $('mf-branding-upload').onclick=()=>$('mf-branding-logo-file').click();
