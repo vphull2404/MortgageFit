@@ -1306,6 +1306,10 @@ body.mf-auth-locked .mf-login-gate{
 .mf-mode-tabs{display:none!important}
 body.mf-admin-authorized .mf-mode-tabs{display:flex!important}
 
+.mf-agent-password-wrap{position:relative;display:block}
+.mf-agent-password-wrap input{padding-right:68px!important;width:100%}
+.mf-password-eye{position:absolute;right:7px;top:50%;transform:translateY(-50%);border:1px solid var(--mf-field-edge);border-radius:7px;background:var(--mf-fill-2);color:var(--mf-head);padding:6px 9px;font:700 11px var(--mf-sans);cursor:pointer}
+.mf-password-eye:focus-visible{outline:2px solid var(--mf-acc);outline-offset:2px}
 /* Agent PDF configuration is managed from the Admin Panel. */
 .mf-admin-pdf-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:16px}
 .mf-admin-pdf-card .mf-admin-pdf-hint{margin-top:11px;font-size:10.5px}
@@ -1663,11 +1667,11 @@ body.mf-admin-authorized .mf-mode-tabs{display:flex!important}
                   <label>Full name <input name="name" required maxlength="90" autocomplete="off" placeholder="Agent name"></label>
                   <label>Email address <input name="email" type="email" required maxlength="120" autocomplete="off" placeholder="agent@example.com"></label>
                   <label>Brokerage / company <input name="company" required maxlength="100" placeholder="Company name"></label>
-                  <label>Phone number <input name="phone" type="tel" maxlength="45" placeholder="Business phone"></label>
+                  <label>Phone number (Canada/US) <input name="phone" type="tel" inputmode="numeric" autocomplete="tel-national" maxlength="17" placeholder="(416) 555-0123" pattern="(?:\+1 )?\([2-9][0-9]{2}\) [2-9][0-9]{2}-[0-9]{4}" title="Enter a valid 10-digit Canada/US phone number, e.g. (416) 555-0123, optionally starting with 1"></label>
                   <label>License number <input name="license" maxlength="55" placeholder="License / registration"></label>
-                  <label>Temporary password <input name="password" type="password" required minlength="12" maxlength="128" autocomplete="new-password" placeholder="At least 12 characters"></label>
+                  <label>Temporary password <span class="mf-agent-password-wrap"><input name="password" type="password" required minlength="12" maxlength="128" autocomplete="new-password" placeholder="At least 12 characters" id="mf-new-agent-password"><button type="button" class="mf-password-eye" id="mf-new-agent-eye" aria-label="Show password" aria-pressed="false" title="Show password">Show</button></span></label>
                   <label>Access level <select name="plan"><option value="free">Free: Calculator only</option><option value="premium">Premium: Calculator + PDF</option></select></label>
-                  <label>Account status <select name="status"><option value="active">Active</option><option value="suspended">Suspended</option></select></label>
+                  <label>Agent colour theme <select name="theme"><option value="pearl-gold">Pearl & Gold</option><option value="ocean-mist">Ocean Mist</option><option value="sage-stone">Sage & Stone</option><option value="professional-navy">Professional Navy</option><option value="emerald-ledger">Emerald Ledger</option><option value="royal-burgundy">Royal Burgundy</option><option value="midnight-black">Midnight Black</option></select></label><label>Account status <select name="status"><option value="active">Active</option><option value="suspended">Suspended</option></select></label>
                 </div>
                 <p class="mf-branding-footnote">The temporary password is used only to create the Firebase Authentication account. It is not saved in Firestore. Ask the agent to reset it after first login.</p>
                 <div id="mf-agent-feedback" role="status"></div>
@@ -1682,9 +1686,9 @@ body.mf-admin-authorized .mf-mode-tabs{display:flex!important}
                 <label>Full name <input name="name" required maxlength="90"></label>
                 <label>Email (read-only) <input name="email" readonly></label>
                 <label>Company <input name="company" required maxlength="100"></label>
-                <label>Phone <input name="phone" maxlength="45"></label>
+                <label>Phone (Canada/US) <input name="phone" type="tel" inputmode="numeric" maxlength="17" placeholder="(416) 555-0123" pattern="(?:\+1 )?\([2-9][0-9]{2}\) [2-9][0-9]{2}-[0-9]{4}" title="Enter a valid Canada/US phone number"></label>
                 <label>License <input name="license" maxlength="55"></label>
-                <label>Plan <select name="plan"><option value="free">Free</option><option value="premium">Premium</option></select></label>
+                <label>Agent colour theme <select name="theme"><option value="pearl-gold">Pearl & Gold</option><option value="ocean-mist">Ocean Mist</option><option value="sage-stone">Sage & Stone</option><option value="professional-navy">Professional Navy</option><option value="emerald-ledger">Emerald Ledger</option><option value="royal-burgundy">Royal Burgundy</option><option value="midnight-black">Midnight Black</option></select></label><label>Plan <select name="plan"><option value="free">Free</option><option value="premium">Premium</option></select></label>
                 <label>Status <select name="status"><option value="active">Active</option><option value="suspended">Suspended</option></select></label>
               </div><div id="mf-edit-agent-feedback" role="status"></div><div class="mf-agent-actions"><button type="button" class="mf-btn mf-btn-outline" id="mf-edit-agent-cancel">Cancel</button><button type="submit" class="mf-btn mf-btn-primary" id="mf-edit-agent-save">Save Changes</button></div></form>
             </div>
@@ -2301,6 +2305,7 @@ body.mf-admin-authorized .mf-mode-tabs{display:flex!important}
     $('mf-auth-unapproved-signout').hidden=!user;
     if(!user){
       brandingLoadSeq++;agentBranding=emptyBranding();closeBranding();
+      try{const t=localStorage.getItem('mf-theme');document.documentElement.setAttribute('data-mf-theme',MF_AGENT_THEMES.includes(t)?t:'pearl-gold');}catch(e){}
       $('mf-account-menu').classList.remove('is-open');
       $('mf-cases-modal').hidden=true;
       $('mf-auth-unapproved-signout').hidden=true;
@@ -2315,6 +2320,9 @@ body.mf-admin-authorized .mf-mode-tabs{display:flex!important}
         setAuthStatus('This account is not active or has not been approved by the administrator.','error');return;
       }
       accessProfile=profile;
+      const assignedTheme=MF_AGENT_THEMES.includes(profile.theme)?profile.theme:null;
+      const adminLocalTheme=(()=>{try{return localStorage.getItem('mf-theme')}catch(e){return null}})();
+      document.documentElement.setAttribute('data-mf-theme',profile.role==='agent'?(assignedTheme||'pearl-gold'):(MF_AGENT_THEMES.includes(adminLocalTheme)?adminLocalTheme:'pearl-gold'));
       isMortgageAdmin=profile.role==='admin';
       document.body.classList.toggle('mf-admin-authorized',isMortgageAdmin);
       $('mf-admin-tab').hidden=!isMortgageAdmin;
@@ -2373,16 +2381,42 @@ body.mf-admin-authorized .mf-mode-tabs{display:flex!important}
       toast('Premium access approved. Agent can sign in again to refresh access.');
     }catch(e){console.error(e);toast('Could not approve upgrade.');}
   }
+  const MF_AGENT_THEMES=['pearl-gold','ocean-mist','sage-stone','professional-navy','emerald-ledger','royal-burgundy','midnight-black'];
+  function formatAgentPhone(value){
+    let digits=String(value||'').replace(/\D/g,'').slice(0,11);
+    if(digits.length===11&&digits[0]!=='1')digits=digits.slice(0,10);
+    const intl=digits.length===11&&digits[0]==='1';
+    const d=intl?digits.slice(1):digits;
+    if(!d)return '';
+    const formatted=d.length<3?'('+d:d.length===3?'('+d+')':d.length<7?'('+d.slice(0,3)+') '+d.slice(3):'('+d.slice(0,3)+') '+d.slice(3,6)+'-'+d.slice(6,10);
+    return (intl?'+1 ':'')+formatted;
+  }
+  function wireAgentPhone(formId){
+    const field=$(formId).elements.phone;
+    field.addEventListener('input',()=>{field.value=formatAgentPhone(field.value);field.setCustomValidity('');});
+    field.addEventListener('paste',()=>{setTimeout(()=>{field.value=formatAgentPhone(field.value);},0);});
+  }
+  function checkAgentPhone(field){
+    if(!field.value.trim()){field.setCustomValidity('');return true;}
+    const digits=field.value.replace(/\D/g,'');
+    const valid=/^(?:1)?[2-9]\d{2}[2-9]\d{6}$/.test(digits);
+    field.setCustomValidity(valid?'':'Enter a valid Canada/US phone number, e.g. (416) 555-0123.');
+    return valid;
+  }
   function closeAddAgent(){
     const modal=$('mf-add-agent-modal');
     modal.hidden=true;
     modal.style.display='none';
     $('mf-add-agent-form').reset();
+    $('mf-new-agent-password').type='password';
+    $('mf-new-agent-eye').textContent='Show';
+    $('mf-new-agent-eye').setAttribute('aria-pressed','false');
     $('mf-agent-feedback').textContent='';
   }
   function openAddAgent(){
     if(!isMortgageAdmin)return toast('Administrator access required.');
     $('mf-add-agent-form').reset();$('mf-agent-feedback').textContent='';
+    $('mf-add-agent-form').elements.theme.value='pearl-gold';
     $('mf-add-agent-modal').style.removeProperty('display');
     $('mf-add-agent-modal').hidden=false;
   }
@@ -2390,13 +2424,23 @@ body.mf-admin-authorized .mf-mode-tabs{display:flex!important}
     event.preventDefault();
     if(!isMortgageAdmin)return;
     const form=event.currentTarget, data=Object.fromEntries(new FormData(form));
+    if(!checkAgentPhone(form.elements.phone)){form.elements.phone.reportValidity();return;}
     if(data.password.length<12)return $('mf-agent-feedback').textContent='Use a temporary password with at least 12 characters.';
     const button=$('mf-agent-create');button.disabled=true;$('mf-agent-feedback').textContent='Creating account securely…';
     try{
       if(!firebase.functions)throw new Error('Firebase Functions library is unavailable.');
       const callable=firebase.functions().httpsCallable('mortgagefitCreateAgent');
-      await callable({name:data.name.trim(),email:data.email.trim().toLowerCase(),company:data.company.trim(),phone:data.phone.trim(),license:data.license.trim(),password:data.password,plan:data.plan,status:data.status});
-      closeAddAgent();toast('Agent account created. Share the temporary password securely.');
+      const result=await callable({name:data.name.trim(),email:data.email.trim().toLowerCase(),company:data.company.trim(),phone:data.phone.trim(),license:data.license.trim(),password:data.password,plan:data.plan,status:data.status});
+      // The deployed function returns the new UID; save the agent's theme separately using admin-only Firestore rules.
+      const newUid=result?.data?.uid;
+      if(!newUid)throw new Error('Agent created, but its ID was not returned. Check the agent list before trying again.');
+      try{
+        await db.collection('mortgagefit_agents').doc(newUid).update({theme:MF_AGENT_THEMES.includes(data.theme)?data.theme:'pearl-gold'});
+        closeAddAgent();toast('Agent created with selected theme. Share the temporary password securely.');
+      }catch(themeError){
+        console.error('Agent created but theme could not be saved',themeError);
+        $('mf-agent-feedback').textContent='Agent account was created, but the theme could not be saved. Edit this agent to set the theme. Do not click Create Agent again.';
+      }
     }catch(err){console.error(err);$('mf-agent-feedback').textContent='Account was not created: '+(err.message||'Check Cloud Function deployment.');}
     finally{button.disabled=false;}
   }
@@ -2405,7 +2449,7 @@ body.mf-admin-authorized .mf-mode-tabs{display:flex!important}
     const a=agentDirectory.find(x=>x.uid===agentUid);if(!a)return;
     editAgentUid=agentUid;
     const f=$('mf-edit-agent-form');
-    for(const key of ['name','email','company','phone','license','plan','status'])if(f.elements[key])f.elements[key].value=a[key]||(key==='plan'?'free':key==='status'?'active':'');
+    for(const key of ['name','email','company','phone','license','theme','plan','status'])if(f.elements[key])f.elements[key].value=a[key]||(key==='plan'?'free':key==='status'?'active':'');
     f.elements.plan.disabled=a.role==='admin';f.elements.status.disabled=a.role==='admin';
     $('mf-edit-agent-feedback').textContent='';$('mf-edit-agent-modal').hidden=false;
   }
@@ -2413,9 +2457,10 @@ body.mf-admin-authorized .mf-mode-tabs{display:flex!important}
     event.preventDefault();if(!isMortgageAdmin||!editAgentUid)return;
     const a=agentDirectory.find(x=>x.uid===editAgentUid);if(!a)return;
     const f=event.currentTarget,data=Object.fromEntries(new FormData(f));
+    if(!checkAgentPhone(f.elements.phone)){f.elements.phone.reportValidity();return;}
     const button=$('mf-edit-agent-save');button.disabled=true;$('mf-edit-agent-feedback').textContent='Saving changes…';
     try{
-      const changes={name:data.name.trim(),company:data.company.trim(),phone:data.phone.trim(),license:data.license.trim(),updatedAt:firebase.firestore.FieldValue.serverTimestamp()};
+      const changes={name:data.name.trim(),company:data.company.trim(),phone:data.phone.trim(),license:data.license.trim(),theme:MF_AGENT_THEMES.includes(data.theme)?data.theme:'pearl-gold',updatedAt:firebase.firestore.FieldValue.serverTimestamp()};
       if(a.role!=='admin'){changes.plan=data.plan;changes.status=data.status;}
       await db.collection('mortgagefit_agents').doc(editAgentUid).update(changes);
       $('mf-edit-agent-modal').hidden=true;toast('Agent details updated.');
@@ -2564,6 +2609,13 @@ body.mf-admin-authorized .mf-mode-tabs{display:flex!important}
     $('mf-add-agent-open').onclick=openAddAgent;
     $('mf-add-agent-close').onclick=$('mf-agent-cancel').onclick=closeAddAgent;
     $('mf-add-agent-form').onsubmit=submitAddAgent;
+    wireAgentPhone('mf-add-agent-form');wireAgentPhone('mf-edit-agent-form');
+    $('mf-new-agent-eye').onclick=()=>{
+      const input=$('mf-new-agent-password'),btn=$('mf-new-agent-eye'),visible=input.type==='password';
+      input.type=visible?'text':'password';btn.textContent=visible?'Hide':'Show';
+      btn.setAttribute('aria-label',visible?'Hide password':'Show password');
+      btn.setAttribute('aria-pressed',String(visible));
+    };
     $('mf-edit-agent-close').onclick=$('mf-edit-agent-cancel').onclick=()=>{$('mf-edit-agent-modal').hidden=true;};
     $('mf-edit-agent-form').onsubmit=submitEditAgent;
     $('mf-premium-close').onclick=$('mf-premium-later').onclick=()=>{$('mf-premium-modal').hidden=true;};
