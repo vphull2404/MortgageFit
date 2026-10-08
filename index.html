@@ -1267,6 +1267,25 @@ body.mf-auth-locked .mf-login-gate{
 }
 </style>
 
+<style id="mf-agent-branding-pdf-v1">
+.mf-branding-entry{display:block;width:100%;text-align:left;margin:12px 0 10px;padding:11px 12px;border:1px solid var(--mf-field-edge);border-radius:10px;background:var(--mf-fill);color:var(--mf-head);font:700 11px var(--mf-sans);cursor:pointer}
+.mf-branding-entry:hover{border-color:var(--mf-acc);background:var(--mf-fill-2)}
+.mf-branding-modal-card{width:min(740px,calc(100vw - 28px));max-height:min(90vh,850px);overflow:auto}
+.mf-branding-layout{display:grid;grid-template-columns:210px minmax(0,1fr);gap:22px;margin-top:18px}
+.mf-branding-logo-panel{display:flex;flex-direction:column;gap:9px;align-items:stretch}
+.mf-branding-logo-box{height:122px;border:1px dashed var(--mf-field-edge);background:var(--mf-fill);border-radius:13px;display:flex;align-items:center;justify-content:center;padding:12px;overflow:hidden}
+.mf-branding-logo-box span{font:800 13px var(--mf-sans);letter-spacing:.06em;color:var(--mf-muted)}
+.mf-branding-logo-box img{width:100%;height:100%;object-fit:contain}
+.mf-branding-logo-panel small,.mf-branding-footnote{font-size:10px;line-height:1.5;color:var(--mf-muted)}
+.mf-branding-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.mf-branding-fields label{display:flex;flex-direction:column;gap:6px;font-size:11px;font-weight:750;color:var(--mf-head)}
+.mf-branding-fields input{min-width:0;width:100%;box-sizing:border-box;border:1px solid var(--mf-field-edge);border-radius:9px;padding:10px 11px;background:var(--mf-fill);color:var(--mf-text);font:12px var(--mf-sans)}
+.mf-branding-fields input:focus{outline:2px solid var(--mf-acc);outline-offset:1px}
+.mf-branding-actions{display:flex;gap:10px;align-items:center;justify-content:flex-end;margin-top:20px;flex-wrap:wrap}
+#mf-branding-status{font-size:11px;color:var(--mf-muted);margin-right:auto;flex:1 1 180px}
+.mf-branding-footnote{margin:14px 0 0}
+@media(max-width:620px){.mf-branding-layout{grid-template-columns:1fr}.mf-branding-logo-panel{max-width:250px}.mf-branding-fields{grid-template-columns:1fr}}
+</style>
 </head>
 <body class="mf-auth-locked">
 
@@ -1362,12 +1381,15 @@ body.mf-auth-locked .mf-login-gate{
                     <div><span>Last sign-in</span><strong id="mf-account-last-login">—</strong></div>
                   </div>
 
+                  <button type="button" class="mf-branding-entry" id="mf-branding-open">Agent Branding &amp; PDF</button>
+
                   <button type="button" class="mf-account-signout" id="mf-signout" hidden>
                     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 5H5.8A1.8 1.8 0 0 0 4 6.8v10.4A1.8 1.8 0 0 0 5.8 19H10M15 8l4 4-4 4M8 12h11" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
                     Sign out
                   </button>
                 </div>
               </div>
+              <button type="button" class="mf-btn mf-btn-outline" id="mf-preview" disabled>Preview PDF</button>
               <button type="button" class="mf-btn mf-btn-outline" id="mf-download" disabled>Download Client Estimate</button>
             </div>
           </header>
@@ -1561,7 +1583,7 @@ body.mf-auth-locked .mf-login-gate{
                     </div>
                   </div>
 
-                  <div class="mf-results-actions"><button type="button" class="mf-btn mf-btn-primary" id="mf-download-results">Download Client Estimate</button><button type="button" class="mf-btn mf-btn-outline" onclick="window.print()">Print Summary</button></div>
+                  <div class="mf-results-actions"><button type="button" class="mf-btn mf-btn-outline" id="mf-preview-results">Preview PDF</button><button type="button" class="mf-btn mf-btn-primary" id="mf-download-results">Download Client Estimate</button><button type="button" class="mf-btn mf-btn-outline" onclick="window.print()">Print Summary</button></div>
                   <p class="mf-disclaimer">This calculator provides an estimate for general planning purposes only. It does not constitute mortgage approval, a commitment to lend, financial advice, or a guarantee of financing. Final qualification depends on document verification, credit history, lender and insurer requirements, property review, applicable laws, and underwriting policies.</p>
                 </div>
               </section>
@@ -1572,6 +1594,30 @@ body.mf-auth-locked .mf-login-gate{
                 <button class="mf-btn mf-btn-primary" type="button" id="mf-next">Next: Income →</button>
               </div>
             </main>
+          </div>
+
+          <div class="mf-modal" id="mf-branding-modal" hidden>
+            <div class="mf-modal-card mf-branding-modal-card" role="dialog" aria-modal="true" aria-labelledby="mf-branding-title">
+              <div class="mf-modal-head"><div><h2 id="mf-branding-title">Agent Branding &amp; PDF</h2><p>Personalize the mortgage estimate shared with your clients.</p></div><button type="button" id="mf-branding-close" aria-label="Close agent branding">×</button></div>
+              <div class="mf-branding-layout">
+                <div class="mf-branding-logo-panel">
+                  <div class="mf-branding-logo-box" id="mf-branding-logo-box"><span id="mf-branding-logo-placeholder">YOUR LOGO</span><img id="mf-branding-logo-image" alt="Your brokerage logo preview" hidden></div>
+                  <input type="file" id="mf-branding-logo-file" accept="image/png,image/jpeg,image/webp" hidden>
+                  <button type="button" class="mf-btn mf-btn-outline" id="mf-branding-upload">Upload Logo</button>
+                  <button type="button" class="mf-link-btn" id="mf-branding-remove">Remove logo</button>
+                  <small>PNG, JPG or WebP. Best with a horizontal logo. Maximum file size 5 MB.</small>
+                </div>
+                <div class="mf-branding-fields">
+                  <label>Agent name<input type="text" id="mf-branding-name" maxlength="90" placeholder="Your full name"></label>
+                  <label>Brokerage / company<input type="text" id="mf-branding-company" maxlength="100" placeholder="Your brokerage name"></label>
+                  <label>License number<input type="text" id="mf-branding-license" maxlength="55" placeholder="License or registration number"></label>
+                  <label>Business phone<input type="tel" id="mf-branding-phone" maxlength="45" placeholder="(000) 000-0000"></label>
+                  <label>Business email<input type="email" id="mf-branding-email" maxlength="120" placeholder="agent@brokerage.ca"></label>
+                </div>
+              </div>
+              <div class="mf-branding-actions"><span id="mf-branding-status" role="status"></span><button type="button" class="mf-btn mf-btn-outline" id="mf-branding-preview">Preview PDF</button><button type="button" class="mf-btn mf-btn-primary" id="mf-branding-save">Save Branding</button></div>
+              <p class="mf-branding-footnote">Your saved branding belongs to your signed-in agent account. It is stored in Firestore and used only when generating your PDFs.</p>
+            </div>
           </div>
 
           <div class="mf-modal" id="mf-cases-modal" hidden>
@@ -1688,6 +1734,9 @@ body.mf-auth-locked .mf-login-gate{
   const pct = id => num(id)/100;
   const cfg = window.MortgageFitConfig || {firebaseEnabled:false};
   let currentStep = 0, applicantSeq = 0, lastResult = null, db = null, auth = null, uid = null;
+  const emptyBranding = () => ({name:'',company:'',license:'',phone:'',email:'',logoDataUrl:''});
+  let agentBranding = emptyBranding(), brandingLogoDraft = '', brandingLoadSeq = 0;
+
 
   const stepNames = ['Income','Funds','Debt','Property','Living Costs','Results'];
   const debts = [
@@ -1859,7 +1908,7 @@ body.mf-auth-locked .mf-login-gate{
 
   function calculate(){
     const r=compute(); lastResult=r;
-    $('mf-results-empty').hidden=true; $('mf-results').hidden=false; $('mf-download').disabled=false;
+    $('mf-results-empty').hidden=true; $('mf-results').hidden=false; $('mf-download').disabled=false; $('mf-preview').disabled=false;
     $('res-eligibility').textContent=money(r.lenderMortgage); $('res-comfortable').textContent=money(r.comfortableMortgage||0); $('res-purchase').textContent=money(r.maxPurchase);
     $('res-status').textContent=r.annualIncome?'Estimate based on current assumptions':'Qualifying income required';
     $('mortgage-summary').innerHTML=dlRow('Contract rate',`${num('contractRate').toFixed(2)}%`)+dlRow('Qualifying rate',`${r.qualRate.toFixed(2)}%`)+dlRow('Amortization',`${r.years} years`)+dlRow('Estimated monthly payment',money(r.actualPayment))+dlRow('Qualifying monthly payment',money(r.qualPaymentAtMax))+dlRow('Mortgage insurance premium',money(r.mortgageAtMax.premium));
@@ -1911,11 +1960,99 @@ body.mf-auth-locked .mf-login-gate{
 
   function addCustomExpense(name='',amount=''){ const id='custom-'+Date.now()+'-'+Math.floor(Math.random()*999); $('custom-expenses').insertAdjacentHTML('beforeend',`<div class="mf-custom-row"><input type="text" value="${name}" placeholder="Expense name" aria-label="Custom expense name"><div class="mf-money"><span>$</span><input id="${id}" data-expense type="number" min="0" step="10"></div><input type="checkbox" id="${id}-on" data-toggle="${id}" checked hidden><button type="button" data-remove-custom>Remove</button></div>`); liveUpdate(); }
 
-  function pdf(){ if(!lastResult) calculate(); const r=lastResult; if(!window.jspdf) return toast('PDF library could not be loaded.'); const {jsPDF}=window.jspdf, doc=new jsPDF({unit:'pt',format:'letter'}), ref=$('clientRef').value.trim()||'Client-Estimate'; let y=48;
-    doc.setTextColor(16,42,67); doc.setFontSize(22); doc.setFont('helvetica','bold'); doc.text('MortgageFit Client Estimate',42,y); y+=22; doc.setFontSize(9); doc.setFont('helvetica','normal'); doc.setTextColor(107,124,147); doc.text(`Client reference: ${ref}   |   Date: ${new Date().toLocaleDateString('en-CA')}`,42,y); y+=28;
-    const rows=[['Estimated lender qualification',money(r.lenderMortgage)],['Comfortable mortgage',money(r.comfortableMortgage||0)],['Estimated maximum purchase price',money(r.maxPurchase)],['Estimated monthly payment',money(r.actualPayment)],['Annual qualifying income',money(r.annualIncome)],['Down payment',money(r.down)],['Qualifying rate',`${r.qualRate.toFixed(2)}%`],['GDS / TDS',`${r.gds.toFixed(2)}% / ${r.tds.toFixed(2)}%`],['Monthly debts',money(r.debtsMonthly)],['Selected living expenses',money(r.living)],['Qualification driver',r.qualificationDriver],['Cash to close',money(r.cashToClose)],['Funding gap',money(r.fundingGap)],['Savings timeline',r.fundingGap<=0?'Ready':(r.savingsMonths===null?'0 months':`${r.savingsMonths} months`)]];
-    rows.forEach(([k,v],i)=>{ if(i%2===0){doc.setFillColor(247,250,252);doc.rect(42,y-13,528,24,'F');} doc.setTextColor(51,78,104); doc.setFont('helvetica','normal'); doc.text(k,50,y); doc.setTextColor(16,42,67); doc.setFont('helvetica','bold'); doc.text(v,560,y,{align:'right'}); y+=24; });
-    y+=18; doc.setFontSize(9); doc.setFont('helvetica','normal'); doc.setTextColor(51,78,104); doc.text(doc.splitTextToSize($('mf-narrative').textContent,520),42,y); y+=62; doc.setFontSize(7.5); doc.setTextColor(107,124,147); const disclaimer='This report provides an estimate for general planning purposes only. It does not constitute mortgage approval, a commitment to lend, financial advice, or a guarantee of financing. Final qualification depends on verification, credit history, property review, lender and insurer requirements, and underwriting policies.'; doc.text(doc.splitTextToSize(disclaimer,520),42,y); doc.save(`MortgageFit-${ref.replace(/[^a-z0-9-_]/gi,'-')}-${new Date().toISOString().slice(0,10)}.pdf`); }
+  function buildEstimatePdf(){
+    if(!lastResult) calculate();
+    if(!window.jspdf){toast('PDF library could not be loaded.');return null;}
+    const r=lastResult, {jsPDF}=window.jspdf, doc=new jsPDF({unit:'pt',format:'letter'});
+    const left=42, right=570, width=528, navy=[16,42,67], muted=[96,115,134], teal=[13,116,144], pale=[244,249,251], edge=[221,231,238];
+    const brand=agentBranding||emptyBranding();
+    const ref=$('clientRef').value.trim()||'Client-Estimate';
+    const date=new Date().toLocaleDateString('en-CA',{year:'numeric',month:'long',day:'numeric'});
+    const clean=(value,max=150)=>String(value??'').replace(/[\r\n\t]+/g,' ').trim().slice(0,max);
+    const drawText=(value,x,y,size=9,bold=false,color=navy)=>{
+      doc.setFont('helvetica',bold?'bold':'normal');doc.setFontSize(size);doc.setTextColor(...color);doc.text(clean(value,500),x,y);
+    };
+    let y=40;
+    const ensure=(h)=>{if(y+h>725){doc.addPage();y=43;}};
+    doc.setFillColor(...teal);doc.rect(0,0,612,7,'F');
+    if(brand.logoDataUrl && /^data:image\/(png|jpeg|webp);base64,/i.test(brand.logoDataUrl)){
+      try{
+        const props=doc.getImageProperties(brand.logoDataUrl),scale=Math.min(118/props.width,57/props.height);
+        doc.addImage(brand.logoDataUrl,props.fileType||'PNG',left,40,props.width*scale,props.height*scale);
+      }catch(err){console.warn('Could not add agent logo to PDF',err);drawText('YOUR LOGO',left+10,65,12,true,muted);}
+    }else{
+      doc.setFillColor(...pale);doc.setDrawColor(...edge);doc.roundedRect(left,40,104,52,5,5,'FD');drawText('YOUR LOGO',left+13,69,12,true,muted);
+    }
+    const bx=178;
+    drawText(clean(brand.company||'Mortgage Advisory Team',72),bx,51,12,true,navy);
+    drawText(clean(brand.name||auth?.currentUser?.displayName||'Mortgage Professional',85),bx,68,10,true,navy);
+    const contact=[brand.license?`License: ${clean(brand.license,48)}`:'',brand.phone?clean(brand.phone,38):''].filter(Boolean).join('  |  ');
+    if(contact)drawText(contact,bx,83,8,false,muted);
+    drawText(clean(brand.email||auth?.currentUser?.email||'',90),bx,97,8,false,muted);
+    doc.setDrawColor(226,181,71);doc.setLineWidth(2);doc.line(left,115,right,115);
+    drawText('Mortgage Affordability Estimate',left,147,20,true,navy);
+    y=168;
+    const metadata=[['PREPARED FOR',clean(ref,52)],['REPORT DATE',date],['CLIENT REFERENCE',clean(ref,52)]];
+    doc.setFillColor(...pale);doc.setDrawColor(...edge);doc.roundedRect(left,y,width,57,5,5,'FD');
+    metadata.forEach(([label,value],i)=>{const x=left+12+i*176;drawText(label,x,y+18,7.3,true,muted);doc.setFontSize(9);doc.setFont('helvetica','bold');doc.setTextColor(...navy);doc.text(doc.splitTextToSize(value,154).slice(0,2),x,y+34);});
+    y+=79;
+    drawText('Your mortgage snapshot',left,y,11,true,navy);y+=13;
+    const cards=[['Estimated lender qualification',money(r.lenderMortgage)],['Comfortable mortgage',money(r.comfortableMortgage||0)],['Maximum purchase price',money(r.maxPurchase)]];
+    doc.setFillColor(...pale);doc.roundedRect(left,y,width,71,5,5,'F');
+    cards.forEach(([label,value],i)=>{const x=left+12+i*176;doc.setFontSize(7.5);doc.setFont('helvetica','normal');doc.setTextColor(...muted);doc.text(doc.splitTextToSize(label,150).slice(0,2),x,y+16);drawText(value,x,y+53,17,true,navy);});
+    y+=91;
+    const section=(title,items)=>{
+      ensure(35);drawText(title,left,y,11,true,navy);y+=12;
+      items.forEach(([key,value],i)=>{
+        ensure(25);if(i%2===0){doc.setFillColor(...pale);doc.rect(left,y,width,24,'F');}
+        drawText(key,left+10,y+16,9,false,muted);
+        doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(...navy);
+        doc.text(doc.splitTextToSize(clean(value,140),180).slice(0,1),right-10,y+16,{align:'right'});
+        y+=24;
+      });y+=17;
+    };
+    section('Qualification and monthly affordability',[
+      ['Estimated monthly mortgage payment',money(r.actualPayment)],['Annual qualifying income',money(r.annualIncome)],
+      ['Qualifying interest rate',`${r.qualRate.toFixed(2)}%`],['GDS / TDS ratios',`${r.gds.toFixed(2)}% / ${r.tds.toFixed(2)}%`],
+      ['Monthly debt payments',money(r.debtsMonthly)],['Selected living expenses',money(r.living)],
+      ['Qualification driver',r.qualificationDriver]
+    ]);
+    section('Down payment and cash requirements',[
+      ['Available down payment',money(r.down)],['Estimated cash to close',money(r.cashToClose)],
+      ['Estimated funding gap',money(r.fundingGap)],
+      ['Savings timeline',r.fundingGap<=0?'Ready':(r.savingsMonths===null?'0 months':`${r.savingsMonths} months`)]
+    ]);
+    const narrative=clean($('mf-narrative').textContent,1600);
+    if(narrative){
+      ensure(72);drawText('Advisor notes',left,y,11,true,navy);y+=14;
+      doc.setFont('helvetica','normal');doc.setFontSize(8.5);
+      const lines=doc.splitTextToSize(narrative,506);const lineHeight=12;
+      lines.forEach(line=>{ensure(lineHeight+5);doc.setTextColor(...muted);doc.text(line,left+10,y+9);y+=lineHeight;});y+=15;
+    }
+    const disclaimer='This report provides an estimate for general planning purposes only. It does not constitute mortgage approval, a commitment to lend, financial advice, or a guarantee of financing. Final qualification depends on verification, credit history, property review, lender and insurer requirements, and underwriting policies.';
+    doc.setFont('helvetica','normal');doc.setFontSize(7.5);
+    const dlines=doc.splitTextToSize(disclaimer,520);ensure(dlines.length*10+20);
+    doc.setTextColor(...muted);doc.text(dlines,left,y+8);
+    const pages=doc.getNumberOfPages();
+    for(let page=1;page<=pages;page++){
+      doc.setPage(page);doc.setDrawColor(...edge);doc.setLineWidth(.7);doc.line(left,744,right,744);
+      drawText('MortgageFit  |  Prepared by your mortgage professional',left,758,7.5,false,muted);
+      doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.setTextColor(...muted);doc.text(`Page ${page} of ${pages}`,right,758,{align:'right'});
+    }
+    return {doc,ref};
+  }
+  function pdf(preview=false){
+    const result=buildEstimatePdf();if(!result)return;
+    const {doc,ref}=result;
+    if(preview){
+      const blob=doc.output('blob'),url=URL.createObjectURL(blob),tab=window.open(url,'_blank');
+      if(!tab){URL.revokeObjectURL(url);toast('Allow pop-ups to preview your PDF.');return;}
+      setTimeout(()=>URL.revokeObjectURL(url),120000);
+    }else{
+      doc.save(`MortgageFit-${ref.replace(/[^a-z0-9-_]/gi,'-')}-${new Date().toISOString().slice(0,10)}.pdf`);
+    }
+  }
+
 
   function firebaseConfigComplete(){
     const f=cfg.firebase||{};
@@ -1955,9 +2092,85 @@ body.mf-auth-locked .mf-login-gate{
     });
   }
 
+  function setBrandingStatus(message,error=false){
+    const el=$('mf-branding-status');if(!el)return;
+    el.textContent=message;el.style.color=error?'#b54708':'';
+  }
+  function refreshBrandingLogo(){
+    const img=$('mf-branding-logo-image'),placeholder=$('mf-branding-logo-placeholder');
+    img.hidden=!brandingLogoDraft;placeholder.hidden=!!brandingLogoDraft;
+    if(brandingLogoDraft)img.src=brandingLogoDraft;else img.removeAttribute('src');
+  }
+  function fillBrandingForm(){
+    ['name','company','license','phone','email'].forEach(key=>{$('mf-branding-'+key).value=agentBranding[key]||'';});
+    brandingLogoDraft=agentBranding.logoDataUrl||'';refreshBrandingLogo();
+  }
+  function openBranding(){
+    if(!uid)return toast('Sign in to edit your branding.');
+    fillBrandingForm();setBrandingStatus('');$('mf-branding-modal').hidden=false;
+    $('mf-account-menu').classList.remove('is-open');
+    $('mf-account-trigger').setAttribute('aria-expanded','false');
+  }
+  function closeBranding(){$('mf-branding-modal').hidden=true;}
+  async function loadAgentBranding(user){
+    const seq=++brandingLoadSeq;
+    agentBranding=emptyBranding();
+    if(!user||!db)return;
+    try{
+      const snap=await db.collection('mortgagefit_agent_profiles').doc(user.uid).get();
+      if(seq!==brandingLoadSeq||auth?.currentUser?.uid!==user.uid)return;
+      if(snap.exists){const d=snap.data()||{};agentBranding={...emptyBranding(),...d};}
+      if(!$('mf-branding-modal').hidden)fillBrandingForm();
+    }catch(err){
+      console.warn('Agent branding could not load',err);
+      setBrandingStatus('Saved branding could not be loaded. Check Firestore rules.',true);
+    }
+  }
+  async function saveAgentBranding(){
+    if(!db||!uid)return setBrandingStatus('Please sign in first.',true);
+    const candidate={};
+    ['name','company','license','phone','email'].forEach(key=>candidate[key]=$('mf-branding-'+key).value.trim());
+    if(candidate.email&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(candidate.email))return setBrandingStatus('Enter a valid business email.',true);
+    candidate.logoDataUrl=brandingLogoDraft;
+    const button=$('mf-branding-save');button.disabled=true;setBrandingStatus('Saving branding…');
+    try{
+      await db.collection('mortgagefit_agent_profiles').doc(uid).set({
+        ...candidate,ownerUid:uid,updatedAt:firebase.firestore.FieldValue.serverTimestamp()
+      },{merge:true});
+      agentBranding={...emptyBranding(),...candidate};
+      setBrandingStatus('Branding saved to your account.');
+      if(auth?.currentUser)renderAgentProfile(auth.currentUser);
+    }catch(err){console.error(err);setBrandingStatus('Could not save. Allow owner-only access in Firestore rules.',true);}
+    finally{button.disabled=false;}
+  }
+  function handleLogoFile(file){
+    if(!file)return;
+    if(!['image/png','image/jpeg','image/webp'].includes(file.type))return setBrandingStatus('Choose a PNG, JPG or WebP image.',true);
+    if(file.size>5*1024*1024)return setBrandingStatus('Logo must be 5 MB or smaller.',true);
+    const reader=new FileReader();
+    reader.onerror=()=>setBrandingStatus('Could not read the logo.',true);
+    reader.onload=()=>{
+      const img=new Image();
+      img.onerror=()=>setBrandingStatus('The selected logo is not a valid image.',true);
+      img.onload=()=>{
+        const canvas=document.createElement('canvas'),scale=Math.min(1,680/img.width,260/img.height);
+        canvas.width=Math.max(1,Math.round(img.width*scale));canvas.height=Math.max(1,Math.round(img.height*scale));
+        const ctx=canvas.getContext('2d');ctx.drawImage(img,0,0,canvas.width,canvas.height);
+        let url=canvas.toDataURL('image/png');
+        if(url.length>170000){
+          ctx.globalCompositeOperation='destination-over';ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height);
+          url=canvas.toDataURL('image/jpeg',.78);
+        }
+        if(url.length>170000)return setBrandingStatus('Logo is too detailed. Please use a simpler or smaller image.',true);
+        brandingLogoDraft=url;refreshBrandingLogo();setBrandingStatus('Logo ready. Click Save Branding to keep it.');
+      };
+      img.src=reader.result;
+    };
+    reader.readAsDataURL(file);
+  }
   function renderAgentProfile(user){
     if(!user) return;
-    const name=agentDisplayName(user);
+    const name=agentBranding.name||agentDisplayName(user);
     const initials=agentInitials(name);
     $('mf-account-trigger-name').textContent=name;
     $('mf-account-name').textContent=name;
@@ -1980,9 +2193,11 @@ body.mf-auth-locked .mf-login-gate{
     $('mf-login').hidden=true;
     if(signedIn){
       renderAgentProfile(user);
+      loadAgentBranding(user).then(()=>{if(auth?.currentUser?.uid===user.uid)renderAgentProfile(user);});
       setAuthStatus('');
       $('mf-auth-password').value='';
     }else{
+      brandingLoadSeq++;agentBranding=emptyBranding();closeBranding();
       $('mf-account-menu').classList.remove('is-open');
       $('mf-cases-modal').hidden=true;
       setAuthStatus('');
@@ -2097,9 +2312,23 @@ body.mf-auth-locked .mf-login-gate{
     });
     $$('.mf-step').forEach(s=>s.addEventListener('click',()=>showStep(parseInt(s.dataset.step,10))));
     $('mf-next').onclick=()=>showStep(currentStep+1); $('mf-prev').onclick=()=>showStep(currentStep-1); $('add-applicant').onclick=addApplicant; $('add-custom-expense').onclick=()=>addCustomExpense();
-    $('mf-reset').onclick=reset; $('mf-download').onclick=pdf; $('mf-download-results').onclick=pdf; $('mf-calculate').onclick=calculate; $('runScenario').onclick=runScenario; $('clearScenario').onclick=clearScenario; $('mf-save-case').onclick=saveCase; $('mf-cases').onclick=loadCases; $('mf-cases-close').onclick=()=>{$('mf-cases-modal').hidden=true;};
+    $('mf-reset').onclick=reset; $('mf-download').onclick=()=>pdf(false); $('mf-download-results').onclick=()=>pdf(false); $('mf-preview').onclick=()=>pdf(true); $('mf-preview-results').onclick=()=>pdf(true); $('mf-calculate').onclick=calculate; $('runScenario').onclick=runScenario; $('clearScenario').onclick=clearScenario; $('mf-save-case').onclick=saveCase; $('mf-cases').onclick=loadCases; $('mf-cases-close').onclick=()=>{$('mf-cases-modal').hidden=true;};
     $('mf-login').onclick=()=>{};
     $('mf-signout').onclick=signOutAgent;
+    $('mf-branding-open').onclick=openBranding;
+    $('mf-branding-close').onclick=closeBranding;
+    $('mf-branding-modal').addEventListener('click',e=>{if(e.target===$('mf-branding-modal'))closeBranding();});
+    $('mf-branding-upload').onclick=()=>$('mf-branding-logo-file').click();
+    $('mf-branding-logo-file').onchange=e=>{handleLogoFile(e.target.files?.[0]);e.target.value='';};
+    $('mf-branding-remove').onclick=()=>{brandingLogoDraft='';refreshBrandingLogo();setBrandingStatus('Logo removed from preview. Save to apply.');};
+    $('mf-branding-save').onclick=saveAgentBranding;
+    $('mf-branding-preview').onclick=()=>{
+      const temp=agentBranding;
+      const draft={};['name','company','license','phone','email'].forEach(k=>draft[k]=$('mf-branding-'+k).value.trim());
+      agentBranding={...temp,...draft,logoDataUrl:brandingLogoDraft};
+      try{pdf(true);}finally{agentBranding=temp;}
+    };
+
     $('mf-account-trigger').onclick=(e)=>{
       e.stopPropagation();
       const menu=$('mf-account-menu');
