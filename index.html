@@ -572,7 +572,10 @@ body{margin:0;min-height:100vh;color:var(--mf-text);font-family:var(--mf-sans);-
 .mf-stepper{border-radius:20px;padding:10px;align-self:start;position:sticky;top:16px}
 .mf-step{font-family:inherit;width:100%;border:0;background:transparent;display:flex;align-items:center;gap:11px;text-align:left;padding:9px;border-radius:12px;color:var(--mf-muted);font-weight:600;font-size:13.5px;cursor:pointer;transition:background .18s,color .18s}
 .mf-step b{width:28px;height:28px;border-radius:9px;background:var(--mf-fill);border:1px solid var(--mf-line);display:grid;place-items:center;font-size:11.5px;font-weight:700;flex:0 0 28px;transition:.18s}
-.mf-step:hover{background:var(--mf-fill);color:var(--mf-head)}
+.mf-step:hover{background:rgba(var(--mf-acc-rgb),.18);color:var(--mf-head);box-shadow:inset 0 0 0 1px rgba(var(--mf-acc-rgb),.45)}
+.mf-step:hover b{background:rgba(var(--mf-acc-rgb),.22);border-color:rgba(var(--mf-acc-rgb),.55);color:var(--mf-head)}
+.mf-step.active:hover{background:var(--mf-step-on);box-shadow:inset 0 0 0 1px var(--mf-on-edge)}
+.mf-step.active:hover b{background:linear-gradient(135deg,var(--mf-btn-1),var(--mf-btn-2));border-color:transparent;color:var(--mf-btn-ink)}
 .mf-step.done{color:var(--mf-soft)}
 .mf-step.done b{background:var(--mf-done-bg);border-color:var(--mf-done-edge);color:var(--mf-done)}
 .mf-step.active{background:var(--mf-step-on);color:var(--mf-head);box-shadow:inset 0 0 0 1px var(--mf-on-edge)}
@@ -703,6 +706,15 @@ body{margin:0;min-height:100vh;color:var(--mf-text);font-family:var(--mf-sans);-
 .mf-scenario-table td{color:var(--mf-text)}
 .mf-scenario-table th:first-child,.mf-scenario-table td:first-child{text-align:left}
 .mf-scenario-table tbody tr:hover td{background:var(--mf-fill)}
+
+
+/* ---------- Agent info hover card ---------- */
+.mf-agent-tip{position:fixed;z-index:100001;width:280px;padding:14px 16px;border-radius:16px;background:var(--mf-modal);border:1px solid var(--mf-edge-hi);box-shadow:0 24px 60px var(--mf-modal-shadow),inset 0 1px 0 var(--mf-hl);color:var(--mf-head);opacity:0;visibility:hidden;transform:translateY(-4px);transition:opacity .15s,transform .15s,visibility .15s;pointer-events:none}
+.mf-agent-tip.is-open{opacity:1;visibility:visible;transform:none}
+.mf-agent-tip h4{margin:0 0 10px;font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--mf-acc)}
+.mf-agent-tip dl{margin:0;display:grid;grid-template-columns:78px 1fr;gap:8px 10px;align-items:end}
+.mf-agent-tip dt{font-size:11.5px;font-weight:700;color:var(--mf-muted)}
+.mf-agent-tip dd{margin:0;min-height:18px;font-size:13px;font-weight:600;color:var(--mf-head);border-bottom:1px solid var(--mf-line);overflow-wrap:anywhere}
 
 /* ---------- Modals, auth, toast ---------- */
 .mf-modal{position:fixed;inset:0;background:var(--mf-scrim);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);z-index:99999;display:grid;place-items:center;padding:20px}
@@ -1097,6 +1109,17 @@ html.mf-custom-photo .mf-header:before{left:auto;width:auto;max-width:60%;aspect
           </div>
 
 
+          <div class="mf-agent-tip" id="mf-agent-tip" role="tooltip">
+            <h4>Agent Details</h4>
+            <dl>
+              <dt>Name</dt><dd id="mf-agent-name"></dd>
+              <dt>Email</dt><dd id="mf-agent-email"></dd>
+              <dt>Phone</dt><dd id="mf-agent-phone"></dd>
+              <dt>Brokerage</dt><dd id="mf-agent-brokerage"></dd>
+              <dt>License #</dt><dd id="mf-agent-license"></dd>
+              <dt>Agent ID</dt><dd id="mf-agent-id"></dd>
+            </dl>
+          </div>
           <div class="mf-modal" id="mf-auth-modal" hidden>
             <div class="mf-modal-card mf-auth-card">
               <div class="mf-modal-head">
@@ -1543,6 +1566,11 @@ html.mf-custom-photo .mf-header:before{left:auto;width:auto;max-width:60%;aspect
     $('mf-auth-signin').onclick=signInAgent;
     $('mf-auth-create').onclick=createAgentAccount;
     $('mf-auth-reset').onclick=resetAgentPassword;
+    (function(){ const btn=$('mf-login'), tip=$('mf-agent-tip'); if(!btn||!tip) return;
+      const show=()=>{ const r=btn.getBoundingClientRect(); const w=tip.offsetWidth||280; tip.style.top=(r.bottom+8)+'px'; tip.style.left=Math.max(8,Math.min(r.right-w,window.innerWidth-w-8))+'px'; tip.classList.add('is-open'); };
+      const hide=()=>tip.classList.remove('is-open');
+      btn.addEventListener('mouseenter',show); btn.addEventListener('mouseleave',hide); btn.addEventListener('focus',show); btn.addEventListener('blur',hide); btn.addEventListener('click',hide);
+      window.addEventListener('scroll',hide,{passive:true}); })();
     liveUpdate(); showStep(0); initFirebase();
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',bind); else bind();
