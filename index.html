@@ -1313,6 +1313,8 @@ body.mf-admin-authorized .mf-mode-tabs{display:flex!important}
 .mf-agent-list-controls{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:10px}
 .mf-agent-list-controls .mf-admin-note{flex:1 1 160px;margin:0}
 .mf-agent-collapse-btn{white-space:nowrap;display:inline-flex;align-items:center;gap:7px}
+#mf-agent-management{overflow-anchor:none}
+#mf-agent-list-container{overflow-anchor:none}
 #mf-agent-list-container[hidden]{display:none!important}
 .mf-password-eye{width:36px;height:34px;display:flex;align-items:center;justify-content:center;padding:6px}
 .mf-password-eye svg{width:19px;height:19px;display:block}
@@ -2621,11 +2623,20 @@ body.mf-admin-authorized .mf-mode-tabs{display:flex!important}
     $('mf-auth-unapproved-signout').onclick=signOutAgent;
     $('mf-agent-list-toggle').onclick=()=>{
       const list=$('mf-agent-list-container'),button=$('mf-agent-list-toggle');
+      const oldTop=button.getBoundingClientRect().top;
       const collapse=!list.hidden;
       list.hidden=collapse;
       button.setAttribute('aria-expanded',String(!collapse));
       $('mf-agent-list-toggle-label').textContent=collapse?'Expand list':'Collapse list';
       $('mf-agent-list-toggle-icon').textContent=collapse?'▾':'▴';
+      // Keep the toggle in the same viewport position even when the table
+      // changes the page height. Avoid browser scroll anchoring/smooth scroll.
+      const reposition=()=>{
+        const delta=button.getBoundingClientRect().top-oldTop;
+        if(Math.abs(delta)>1)window.scrollBy({top:delta,left:0,behavior:'instant'});
+      };
+      reposition();
+      requestAnimationFrame(reposition);
     };
     $('mf-add-agent-open').onclick=openAddAgent;
     $('mf-add-agent-close').onclick=$('mf-agent-cancel').onclick=closeAddAgent;
