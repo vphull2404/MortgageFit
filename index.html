@@ -998,6 +998,203 @@ body.mf-auth-locked .mf-login-gate{
 }
 </style>
 
+
+<style id="mf-password-toggle-v3">
+.mf-password-wrap{
+  position:relative;
+  margin-top:6px;
+}
+.mf-password-wrap input{
+  margin-top:0!important;
+  padding-right:44px!important;
+}
+.mf-password-toggle{
+  position:absolute;
+  top:50%;
+  right:10px;
+  transform:translateY(-50%);
+  width:32px;
+  height:32px;
+  display:grid;
+  place-items:center;
+  border:0;
+  border-radius:8px;
+  background:transparent;
+  color:var(--mf-muted);
+  cursor:pointer;
+  padding:0;
+}
+.mf-password-toggle:hover{
+  background:var(--mf-fill);
+  color:var(--mf-head);
+}
+.mf-password-toggle:focus-visible{
+  outline:2px solid var(--mf-acc);
+  outline-offset:2px;
+}
+.mf-eye-icon{
+  width:18px;
+  height:18px;
+}
+</style>
+
+
+<style id="mf-account-profile-v4">
+.mf-account-menu{
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+}
+.mf-account-menu[hidden]{display:none!important}
+
+.mf-account-trigger{
+  min-height:40px;
+  display:flex;
+  align-items:center;
+  gap:9px;
+  padding:5px 10px 5px 6px;
+  border:1px solid var(--mf-field-edge);
+  border-radius:12px;
+  background:var(--mf-hdr-btn);
+  color:var(--mf-head);
+  cursor:pointer;
+  font-family:var(--mf-sans);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.35);
+}
+.mf-account-trigger:hover{
+  border-color:rgba(var(--mf-acc-rgb),.45);
+  background:var(--mf-fill-2);
+}
+.mf-account-trigger > svg{
+  width:15px;height:15px;color:var(--mf-muted);
+  transition:transform .18s ease;
+}
+.mf-account-menu.is-open .mf-account-trigger > svg{transform:rotate(180deg)}
+
+.mf-account-avatar{
+  width:30px;height:30px;border-radius:50%;
+  display:grid;place-items:center;flex:0 0 auto;
+  background:linear-gradient(135deg,var(--mf-btn-1),var(--mf-btn-2));
+  color:var(--mf-btn-ink);
+  font-size:11px;font-weight:800;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.4);
+}
+.mf-account-avatar-lg{width:42px;height:42px;font-size:14px}
+
+.mf-account-trigger-copy{
+  display:flex;flex-direction:column;align-items:flex-start;
+  min-width:0;
+}
+.mf-account-trigger-copy strong{
+  max-width:130px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  font-size:11px;line-height:1.1;font-weight:800;color:var(--mf-head);
+}
+.mf-account-trigger-copy small{
+  margin-top:2px;
+  font-size:8px;line-height:1;color:var(--mf-muted);font-weight:600;
+}
+
+.mf-account-card{
+  position:absolute;
+  top:calc(100% + 10px);
+  right:0;
+  z-index:9990;
+  width:300px;
+  padding:16px;
+  border:1px solid var(--mf-edge-hi);
+  border-radius:18px;
+  background:var(--mf-modal);
+  box-shadow:0 24px 55px -20px var(--mf-modal-shadow),inset 0 1px 0 var(--mf-hl);
+  -webkit-backdrop-filter:var(--mf-blur);
+  backdrop-filter:var(--mf-blur);
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+  transform:translateY(-5px);
+  transition:opacity .16s ease,transform .16s ease,visibility .16s ease;
+}
+.mf-account-menu:hover .mf-account-card,
+.mf-account-menu:focus-within .mf-account-card,
+.mf-account-menu.is-open .mf-account-card{
+  opacity:1;
+  visibility:visible;
+  pointer-events:auto;
+  transform:translateY(0);
+}
+
+.mf-account-card-head{
+  display:flex;align-items:center;gap:11px;
+  padding-bottom:13px;margin-bottom:11px;
+  border-bottom:1px solid var(--mf-line);
+}
+.mf-account-card-head > div{min-width:0}
+.mf-account-card-head strong{
+  display:block;
+  color:var(--mf-head);
+  font-size:13px;
+  line-height:1.2;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.mf-account-card-head span:not(.mf-account-avatar){
+  display:block;margin-top:3px;
+  color:var(--mf-muted);
+  font-size:9px;
+}
+
+.mf-account-details{
+  display:grid;
+  gap:10px;
+}
+.mf-account-details > div{
+  display:grid;
+  grid-template-columns:82px minmax(0,1fr);
+  gap:10px;
+  align-items:start;
+}
+.mf-account-details span{
+  color:var(--mf-muted);
+  font-size:9px;
+  font-weight:600;
+}
+.mf-account-details strong{
+  color:var(--mf-text);
+  font-size:9px;
+  line-height:1.35;
+  font-weight:700;
+  text-align:right;
+  overflow-wrap:anywhere;
+}
+
+.mf-account-signout{
+  width:100%;
+  margin-top:14px;
+  min-height:38px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  border:1px solid var(--mf-field-edge);
+  border-radius:10px;
+  background:var(--mf-fill);
+  color:var(--mf-text);
+  font:700 10px/1 var(--mf-sans);
+  cursor:pointer;
+}
+.mf-account-signout:hover{
+  border-color:var(--mf-bad-edge);
+  background:var(--mf-bad-bg);
+  color:var(--mf-bad-text);
+}
+.mf-account-signout svg{width:16px;height:16px}
+
+@media(max-width:720px){
+  .mf-account-trigger-copy{display:none}
+  .mf-account-trigger{padding:5px 7px}
+  .mf-account-card{position:fixed;top:74px;right:14px;left:14px;width:auto}
+}
+</style>
+
 </head>
 <body class="mf-auth-locked">
 
@@ -1068,7 +1265,37 @@ body.mf-auth-locked .mf-login-gate{
               <button type="button" class="mf-btn mf-btn-outline" id="mf-login">Agent Login</button>
               <button type="button" class="mf-btn mf-btn-outline" id="mf-cases" hidden>Saved Cases</button>
               <button type="button" class="mf-btn mf-btn-outline" id="mf-save-case" hidden>Save Case</button>
-              <button type="button" class="mf-btn mf-btn-outline" id="mf-signout" hidden>Sign Out</button>
+              <div class="mf-account-menu" id="mf-account-menu" hidden>
+                <button type="button" class="mf-account-trigger" id="mf-account-trigger" aria-haspopup="true" aria-expanded="false">
+                  <span class="mf-account-avatar" id="mf-account-avatar">A</span>
+                  <span class="mf-account-trigger-copy">
+                    <strong id="mf-account-trigger-name">My Account</strong>
+                    <small>Account</small>
+                  </span>
+                  <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m6 8 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+
+                <div class="mf-account-card" id="mf-account-card" role="dialog" aria-label="Agent account details">
+                  <div class="mf-account-card-head">
+                    <span class="mf-account-avatar mf-account-avatar-lg" id="mf-account-avatar-lg">A</span>
+                    <div>
+                      <strong id="mf-account-name">Agent</strong>
+                      <span>MortgageFit account</span>
+                    </div>
+                  </div>
+
+                  <div class="mf-account-details">
+                    <div><span>Email</span><strong id="mf-account-email">—</strong></div>
+                    <div><span>Email status</span><strong id="mf-account-verified">—</strong></div>
+                    <div><span>Last sign-in</span><strong id="mf-account-last-login">—</strong></div>
+                  </div>
+
+                  <button type="button" class="mf-account-signout" id="mf-signout" hidden>
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 5H5.8A1.8 1.8 0 0 0 4 6.8v10.4A1.8 1.8 0 0 0 5.8 19H10M15 8l4 4-4 4M8 12h11" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Sign out
+                  </button>
+                </div>
+              </div>
               <button type="button" class="mf-btn mf-btn-outline" id="mf-download" disabled>Download Client Estimate</button>
             </div>
           </header>
@@ -1307,7 +1534,18 @@ body.mf-auth-locked .mf-login-gate{
                   <input id="mf-auth-email" type="email" autocomplete="email" placeholder="agent@brokerage.ca">
                 </label>
                 <label>Password
-                  <input id="mf-auth-password" type="password" autocomplete="current-password" placeholder="Minimum 6 characters">
+                  <div class="mf-password-wrap">
+                    <input id="mf-auth-password" type="password" autocomplete="current-password" placeholder="Minimum 6 characters">
+                    <button type="button" class="mf-password-toggle" id="mf-password-toggle" aria-label="Show password" aria-pressed="false">
+                      <svg class="mf-eye-icon mf-eye-open" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6S2.5 12 2.5 12Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                        <circle cx="12" cy="12" r="2.7" fill="none" stroke="currentColor" stroke-width="1.8"/>
+                      </svg>
+                      <svg class="mf-eye-icon mf-eye-closed" viewBox="0 0 24 24" aria-hidden="true" hidden>
+                        <path d="M3 3l18 18M10.6 6.2A10.7 10.7 0 0 1 12 6c6 0 9.5 6 9.5 6a16 16 0 0 1-3.1 3.8M6.1 6.1C3.8 7.8 2.5 12 2.5 12s3.5 6 9.5 6a10.8 10.8 0 0 0 4.2-.8M9.9 9.9a3 3 0 0 0 4.2 4.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </button>
+                  </div>
                 </label>
               </div>
 
@@ -1619,19 +1857,61 @@ body.mf-auth-locked .mf-login-gate{
     el.className='mf-auth-status'+(type?` is-${type}`:'');
   }
 
+  function agentDisplayName(user){
+    if(user?.displayName?.trim()) return user.displayName.trim();
+    const local=(user?.email||'Agent').split('@')[0];
+    return local
+      .replace(/[._-]+/g,' ')
+      .replace(/\b\w/g,c=>c.toUpperCase())
+      .trim() || 'Agent';
+  }
+
+  function agentInitials(name){
+    return String(name||'A')
+      .split(/\s+/)
+      .filter(Boolean)
+      .slice(0,2)
+      .map(x=>x.charAt(0).toUpperCase())
+      .join('') || 'A';
+  }
+
+  function formatFirebaseDate(value){
+    if(!value) return '—';
+    const d=new Date(value);
+    return Number.isNaN(d.getTime()) ? '—' : d.toLocaleString('en-CA',{
+      year:'numeric',month:'short',day:'numeric',hour:'numeric',minute:'2-digit'
+    });
+  }
+
+  function renderAgentProfile(user){
+    if(!user) return;
+    const name=agentDisplayName(user);
+    const initials=agentInitials(name);
+    $('mf-account-trigger-name').textContent=name;
+    $('mf-account-name').textContent=name;
+    $('mf-account-email').textContent=user.email||'—';
+    $('mf-account-verified').textContent=user.emailVerified?'Verified':'Not verified';
+    $('mf-account-last-login').textContent=formatFirebaseDate(user.metadata?.lastSignInTime);
+    $('mf-account-avatar').textContent=initials;
+    $('mf-account-avatar-lg').textContent=initials;
+  }
+
   function updateAuthUI(user){
     uid=user?.uid||null;
     const signedIn=!!user;
     document.body.classList.toggle('mf-auth-locked',!signedIn);
     $('mf-auth-modal').hidden=signedIn;
     $('mf-signout').hidden=!signedIn;
+    $('mf-account-menu').hidden=!signedIn;
     $('mf-save-case').hidden=!signedIn;
     $('mf-cases').hidden=!signedIn;
     $('mf-login').hidden=true;
     if(signedIn){
+      renderAgentProfile(user);
       setAuthStatus('');
       $('mf-auth-password').value='';
     }else{
+      $('mf-account-menu').classList.remove('is-open');
       $('mf-cases-modal').hidden=true;
       setAuthStatus('');
       window.scrollTo(0,0);
@@ -1748,10 +2028,35 @@ body.mf-auth-locked .mf-login-gate{
     $('mf-reset').onclick=reset; $('mf-download').onclick=pdf; $('mf-download-results').onclick=pdf; $('mf-calculate').onclick=calculate; $('runScenario').onclick=runScenario; $('clearScenario').onclick=clearScenario; $('mf-save-case').onclick=saveCase; $('mf-cases').onclick=loadCases; $('mf-cases-close').onclick=()=>{$('mf-cases-modal').hidden=true;};
     $('mf-login').onclick=()=>{};
     $('mf-signout').onclick=signOutAgent;
+    $('mf-account-trigger').onclick=(e)=>{
+      e.stopPropagation();
+      const menu=$('mf-account-menu');
+      const open=!menu.classList.contains('is-open');
+      menu.classList.toggle('is-open',open);
+      $('mf-account-trigger').setAttribute('aria-expanded',String(open));
+    };
+    document.addEventListener('click',e=>{
+      const menu=$('mf-account-menu');
+      if(menu && !menu.contains(e.target)){
+        menu.classList.remove('is-open');
+        $('mf-account-trigger').setAttribute('aria-expanded','false');
+      }
+    });
     $('mf-auth-signin').onclick=signInAgent;
     $('mf-auth-create').onclick=createAgentAccount;
     $('mf-auth-reset').onclick=resetAgentPassword;
     ['mf-auth-email','mf-auth-password'].forEach(id=>$(id).addEventListener('keydown',e=>{ if(e.key==='Enter') signInAgent(); }));
+    $('mf-password-toggle').onclick=()=>{
+      const input=$('mf-auth-password');
+      const btn=$('mf-password-toggle');
+      const showing=input.type==='text';
+      input.type=showing?'password':'text';
+      btn.setAttribute('aria-pressed',String(!showing));
+      btn.setAttribute('aria-label',showing?'Show password':'Hide password');
+      btn.querySelector('.mf-eye-open').hidden=!showing;
+      btn.querySelector('.mf-eye-closed').hidden=showing;
+      input.focus();
+    };
     liveUpdate(); showStep(0); initFirebase();
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',bind); else bind();
