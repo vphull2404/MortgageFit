@@ -708,6 +708,14 @@ body{margin:0;min-height:100vh;color:var(--mf-text);font-family:var(--mf-sans);-
 .mf-scenario-table tbody tr:hover td{background:var(--mf-fill)}
 
 
+
+/* ---------- Maple leaf animation ---------- */
+@keyframes mf-leaf-sway{0%,100%{transform:rotate(-9deg) translateY(0)}25%{transform:rotate(0deg) translateY(-2px)}50%{transform:rotate(9deg) translateY(0)}75%{transform:rotate(0deg) translateY(-2px)}}
+@keyframes mf-leaf-glow{0%,100%{filter:drop-shadow(0 0 0 rgba(213,43,30,0))}50%{filter:drop-shadow(0 2px 6px rgba(213,43,30,.45))}}
+.mf-tagline .mf-leaf-front,.mf-built-ca .mf-leaf{transform-origin:50% 92%;animation:mf-leaf-sway 4.5s ease-in-out infinite,mf-leaf-glow 4.5s ease-in-out infinite;will-change:transform}
+.mf-tagline:hover .mf-leaf-front{animation-duration:1.8s,1.8s}
+@media (prefers-reduced-motion:reduce){.mf-tagline .mf-leaf-front,.mf-built-ca .mf-leaf{animation:none}}
+
 /* ---------- Agent info hover card ---------- */
 .mf-agent-tip{position:fixed;z-index:100001;width:280px;padding:14px 16px;border-radius:16px;background:var(--mf-modal);border:1px solid var(--mf-edge-hi);box-shadow:0 24px 60px var(--mf-modal-shadow),inset 0 1px 0 var(--mf-hl);color:var(--mf-head);opacity:0;visibility:hidden;transform:translateY(-4px);transition:opacity .15s,transform .15s,visibility .15s;pointer-events:none}
 .mf-agent-tip.is-open{opacity:1;visibility:visible;transform:none}
@@ -905,12 +913,12 @@ html.mf-custom-photo .mf-header:before{left:auto;width:auto;max-width:60%;aspect
           <section class="mf-kpi-grid" aria-live="polite">
             <article class="mf-kpi mf-kpi-hero">
               <div class="mf-kpi-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 11.2 12 4l9 7.2v8.3a.5.5 0 0 1-.5.5H15v-6H9v6H3.5a.5.5 0 0 1-.5-.5z"/><path d="M7 8V5h3"/></svg></div><span>Estimated Lender Eligibility</span>
-              <strong id="score-eligibility">Not calculated</strong>
+              <strong id="score-eligibility">$0</strong>
               <small id="score-eligibility-note">Complete income, debt and mortgage assumptions</small>
             </article>
-            <article class="mf-kpi"><div class="mf-kpi-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v4c0 1.7 3.1 3 7 3s7-1.3 7-3V6"/><path d="M5 10v4c0 1.7 3.1 3 7 3s7-1.3 7-3v-4"/><path d="M5 14v4c0 1.7 3.1 3 7 3s7-1.3 7-3v-4"/></svg></div><span>Comfortable Mortgage</span><strong id="score-comfortable">Not calculated</strong><small id="score-comfortable-note">Uses after-tax income and household costs</small></article>
-            <article class="mf-kpi"><div class="mf-kpi-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="8.5" cy="8" r="3.2"/><circle cx="16.2" cy="8.7" r="2.7"/><path d="M2.8 20c.3-4.2 2.2-6.5 5.7-6.5s5.4 2.3 5.7 6.5z"/><path d="M13.2 14.2c.9-.7 1.9-1 3.1-1 3 0 4.6 2.1 4.9 6.8h-5.8"/></svg></div><span>Annual Qualifying Income</span><strong id="score-income">Waiting for input</strong><small id="score-income-note">Accepted income from all applicants</small></article>
-            <article class="mf-kpi"><div class="mf-kpi-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 11h8M8 15h5"/><circle cx="16.5" cy="17.5" r="1.5"/></svg></div><span>Monthly Expenses</span><strong id="score-expenses">Waiting for input</strong><small id="score-expenses-note">Debt, property and selected living costs</small></article>
+            <article class="mf-kpi"><div class="mf-kpi-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v4c0 1.7 3.1 3 7 3s7-1.3 7-3V6"/><path d="M5 10v4c0 1.7 3.1 3 7 3s7-1.3 7-3v-4"/><path d="M5 14v4c0 1.7 3.1 3 7 3s7-1.3 7-3v-4"/></svg></div><span>Comfortable Mortgage</span><strong id="score-comfortable">$0</strong><small id="score-comfortable-note">Uses after-tax income and household costs</small></article>
+            <article class="mf-kpi"><div class="mf-kpi-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="8.5" cy="8" r="3.2"/><circle cx="16.2" cy="8.7" r="2.7"/><path d="M2.8 20c.3-4.2 2.2-6.5 5.7-6.5s5.4 2.3 5.7 6.5z"/><path d="M13.2 14.2c.9-.7 1.9-1 3.1-1 3 0 4.6 2.1 4.9 6.8h-5.8"/></svg></div><span>Annual Qualifying Income</span><strong id="score-income">$0</strong><small id="score-income-note">Accepted income from all applicants</small></article>
+            <article class="mf-kpi"><div class="mf-kpi-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 11h8M8 15h5"/><circle cx="16.5" cy="17.5" r="1.5"/></svg></div><span>Monthly Expenses</span><strong id="score-expenses">$0</strong><small id="score-expenses-note">Debt, property and selected living costs</small></article>
           </section>
 
           <div class="mf-workspace">
@@ -932,105 +940,105 @@ html.mf-custom-photo .mf-header:before{left:auto;width:auto;max-width:60%;aspect
                 <div class="mf-section-title"><div><span>01</span><h2>Client &amp; Application Details</h2></div><p class="mf-tagline"><svg class="mf-leaf mf-leaf-front" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><path fill="#D52B1E" d="M50 1 L58 18 L66 13 L63 35 L75 26 L73 38 L98 34 L88 55 L93 60 L72 78 L75 88 L53 84 L53 100 L47 100 L47 84 L25 88 L28 78 L7 60 L12 55 L2 34 L27 38 L25 26 L37 35 L34 13 L42 18 Z"/></svg><span class="mf-tagtext"><span>The right numbers</span><span>lead to brighter outcomes</span></span></p></div>
                 <div class="mf-fields mf-fields-3">
                   <label>Client reference<input id="clientRef" type="text" placeholder="Example: VP-0726"></label>
-                  <label>Province<select id="province"><option>Ontario</option><option>Alberta</option><option>British Columbia</option><option>Manitoba</option><option>New Brunswick</option><option>Newfoundland and Labrador</option><option>Nova Scotia</option><option>Prince Edward Island</option><option>Quebec</option><option>Saskatchewan</option><option>Northwest Territories</option><option>Nunavut</option><option>Yukon</option></select></label>
-                  <label>Transaction<select id="transaction"><option>Purchase</option><option>Refinance</option><option>Renewal</option><option>Transfer</option></select></label>
-                  <label>Number of applicants<select id="applicantCount"><option value="1">1 applicant</option><option value="2">2 applicants</option><option value="3">3 applicants</option><option value="4">4 applicants</option></select></label>
-                  <label>First-time home buyer<select id="firstTime"><option>No</option><option>Yes</option></select></label>
-                  <label>Property type<select id="propertyType"><option>Detached</option><option>Semi-detached</option><option>Townhouse</option><option>Condominium</option><option>Duplex</option><option>Triplex</option><option>Fourplex</option><option>Rural property</option><option>New construction</option><option>Other</option></select></label>
-                  <label>Occupancy<select id="occupancy"><option>Owner occupied</option><option>Owner occupied with rental unit</option><option>Rental property</option><option>Second home</option></select></label>
-                  <label>Target purchase price>        <div class="mf-money"><span>$</span><input id="targetPrice" type="number" min="0" step="1000" value="700000"></div>
+                  <label>Province<select id="province"><option value="" selected disabled>Select</option><option>Ontario</option><option>Alberta</option><option>British Columbia</option><option>Manitoba</option><option>New Brunswick</option><option>Newfoundland and Labrador</option><option>Nova Scotia</option><option>Prince Edward Island</option><option>Quebec</option><option>Saskatchewan</option><option>Northwest Territories</option><option>Nunavut</option><option>Yukon</option></select></label>
+                  <label>Transaction<select id="transaction"><option value="" selected disabled>Select</option><option>Purchase</option><option>Refinance</option><option>Renewal</option><option>Transfer</option></select></label>
+                  <label>Number of applicants<select id="applicantCount"><option value="" selected disabled>Select</option><option value="1">1 applicant</option><option value="2">2 applicants</option><option value="3">3 applicants</option><option value="4">4 applicants</option></select></label>
+                  <label>First-time home buyer<select id="firstTime"><option value="" selected disabled>Select</option><option>No</option><option>Yes</option></select></label>
+                  <label>Property type<select id="propertyType"><option value="" selected disabled>Select</option><option>Detached</option><option>Semi-detached</option><option>Townhouse</option><option>Condominium</option><option>Duplex</option><option>Triplex</option><option>Fourplex</option><option>Rural property</option><option>New construction</option><option>Other</option></select></label>
+                  <label>Occupancy<select id="occupancy"><option value="" selected disabled>Select</option><option>Owner occupied</option><option>Owner occupied with rental unit</option><option>Rental property</option><option>Second home</option></select></label>
+                  <label>Target purchase price<div class="mf-money"><span>$</span><input id="targetPrice" type="number" min="0" step="1000"></div>
     </label>
                   <label>Expected closing date<input id="closingDate" type="date"></label>
                 </div>
               </section>
 
               <section class="mf-panel" data-panel="1">
-                <div class="mf-section-title"><div><span>02</span><h2>Applicant Income</h2></div><p>Use income reasonably expected to be accepted for qualification.</p></div>
+                <div class="mf-section-title"><div><span>02</span><h2>Applicant Income</h2></div><p class="mf-tagline"><svg class="mf-leaf mf-leaf-front" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><path fill="#D52B1E" d="M50 1 L58 18 L66 13 L63 35 L75 26 L73 38 L98 34 L88 55 L93 60 L72 78 L75 88 L53 84 L53 100 L47 100 L47 84 L25 88 L28 78 L7 60 L12 55 L2 34 L27 38 L25 26 L37 35 L34 13 L42 18 Z"/></svg><span class="mf-tagtext"><span>Use income reasonably expected</span><span>to be accepted for qualification</span></span></p></div>
                 <div id="applicant-list"></div>
                 <button type="button" class="mf-link-btn" id="add-applicant">+ Add applicant</button>
                 <div class="mf-total-line"><span>Combined annual qualifying income</span><strong id="income-total-inline">$0</strong></div>
               </section>
 
               <section class="mf-panel" data-panel="2">
-                <div class="mf-section-title"><div><span>03</span><h2>Net Household Income &amp; Available Funds</h2></div><p>Combine affordability cash flow with the client's down payment position.</p></div>
+                <div class="mf-section-title"><div><span>03</span><h2>Net Household Income &amp; Available Funds</h2></div><p class="mf-tagline"><svg class="mf-leaf mf-leaf-front" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><path fill="#D52B1E" d="M50 1 L58 18 L66 13 L63 35 L75 26 L73 38 L98 34 L88 55 L93 60 L72 78 L75 88 L53 84 L53 100 L47 100 L47 84 L25 88 L28 78 L7 60 L12 55 L2 34 L27 38 L25 26 L37 35 L34 13 L42 18 Z"/></svg><span class="mf-tagtext"><span>Combine affordability cash flow</span><span>with the client's down payment position</span></span></p></div>
                 <div class="mf-subgrid-two">
                   <div class="mf-subcard"><h3>Net Household Income</h3><div class="mf-fields">
-                    <label>Combined monthly after-tax income>        <div class="mf-money"><span>$</span><input id="netIncome" type="number" min="0" step="100" value="8500"></div>
+                    <label>Combined monthly after-tax income<div class="mf-money"><span>$</span><input id="netIncome" type="number" min="0" step="100"></div>
     <small>Required for the comfortable mortgage estimate.</small></label>
-                    <label>Other monthly cash income>        <div class="mf-money"><span>$</span><input id="otherNetIncome" type="number" min="0" step="50" value="0"></div>
+                    <label>Other monthly cash income<div class="mf-money"><span>$</span><input id="otherNetIncome" type="number" min="0" step="50"></div>
     </label>
-                    <label>Desired monthly cash cushion>        <div class="mf-money"><span>$</span><input id="cashCushion" type="number" min="0" step="50" value="1000"></div>
+                    <label>Desired monthly cash cushion<div class="mf-money"><span>$</span><input id="cashCushion" type="number" min="0" step="50"></div>
     </label>
                   </div></div>
                   <div class="mf-subcard"><h3>Available Down Payment &amp; Funds</h3><div class="mf-fields">
-                    <label>Available down payment>        <div class="mf-money"><span>$</span><input id="downPayment" type="number" min="0" step="1000" value="75000"></div>
+                    <label>Available down payment<div class="mf-money"><span>$</span><input id="downPayment" type="number" min="0" step="1000"></div>
     </label>
-                    <label>Additional closing funds>        <div class="mf-money"><span>$</span><input id="closingFunds" type="number" min="0" step="500" value="15000"></div>
+                    <label>Additional closing funds<div class="mf-money"><span>$</span><input id="closingFunds" type="number" min="0" step="500"></div>
     </label>
-                    <label>Emergency funds to retain>        <div class="mf-money"><span>$</span><input id="reserveFunds" type="number" min="0" step="500" value="10000"></div>
+                    <label>Emergency funds to retain<div class="mf-money"><span>$</span><input id="reserveFunds" type="number" min="0" step="500"></div>
     </label>
-                    <label>Down-payment source<select id="downPaymentSource"><option>Savings</option><option>TFSA</option><option>FHSA</option><option>RRSP Home Buyers’ Plan</option><option>Gift</option><option>Property sale</option><option>Multiple sources</option><option>Other</option></select></label>
+                    <label>Down-payment source<select id="downPaymentSource"><option value="" selected disabled>Select</option><option>Savings</option><option>TFSA</option><option>FHSA</option><option>RRSP Home Buyers’ Plan</option><option>Gift</option><option>Property sale</option><option>Multiple sources</option><option>Other</option></select></label>
                   </div></div>
                 </div>
                 <div class="mf-subcard" style="margin-top:12px">
                   <h3>Cash to Close &amp; Savings Plan</h3>
                   <div class="mf-fields mf-fields-3">
-                    <label>Legal / title estimate<div class="mf-money"><span>$</span><input id="legalCosts" type="number" min="0" step="100" value="2500"></div></label>
-                    <label>Inspection / appraisal<div class="mf-money"><span>$</span><input id="inspectionCosts" type="number" min="0" step="100" value="1000"></div></label>
-                    <label>Land transfer / transfer tax<div class="mf-money"><span>$</span><input id="transferTax" type="number" min="0" step="100" value="0"></div></label>
-                    <label>Other closing costs<div class="mf-money"><span>$</span><input id="otherClosingCosts" type="number" min="0" step="100" value="0"></div></label>
-                    <label>Additional reserve target<div class="mf-money"><span>$</span><input id="closingReserve" type="number" min="0" step="100" value="0"></div></label>
-                    <label>Planned monthly savings<div class="mf-money"><span>$</span><input id="plannedMonthlySavings" type="number" min="0" step="50" value="0"></div><small>Used only to estimate time to close a funding gap.</small></label>
+                    <label>Legal / title estimate<div class="mf-money"><span>$</span><input id="legalCosts" type="number" min="0" step="100"></div></label>
+                    <label>Inspection / appraisal<div class="mf-money"><span>$</span><input id="inspectionCosts" type="number" min="0" step="100"></div></label>
+                    <label>Land transfer / transfer tax<div class="mf-money"><span>$</span><input id="transferTax" type="number" min="0" step="100"></div></label>
+                    <label>Other closing costs<div class="mf-money"><span>$</span><input id="otherClosingCosts" type="number" min="0" step="100"></div></label>
+                    <label>Additional reserve target<div class="mf-money"><span>$</span><input id="closingReserve" type="number" min="0" step="100"></div></label>
+                    <label>Planned monthly savings<div class="mf-money"><span>$</span><input id="plannedMonthlySavings" type="number" min="0" step="50"></div><small>Used only to estimate time to close a funding gap.</small></label>
                   </div>
                 </div>
               </section>
 
               <section class="mf-panel" data-panel="3">
-                <div class="mf-section-title"><div><span>04</span><h2>Monthly Debt Obligations</h2></div><p>Toggle on only the obligations that apply. Enabled debts affect TDS.</p></div>
+                <div class="mf-section-title"><div><span>04</span><h2>Monthly Debt Obligations</h2></div><p class="mf-tagline"><svg class="mf-leaf mf-leaf-front" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><path fill="#D52B1E" d="M50 1 L58 18 L66 13 L63 35 L75 26 L73 38 L98 34 L88 55 L93 60 L72 78 L75 88 L53 84 L53 100 L47 100 L47 84 L25 88 L28 78 L7 60 L12 55 L2 34 L27 38 L25 26 L37 35 L34 13 L42 18 Z"/></svg><span class="mf-tagtext"><span>Toggle on only the obligations that apply</span><span>Enabled debts affect TDS</span></span></p></div>
                 <div class="mf-toggle-grid mf-toggle-grid-3" id="debt-grid"></div>
                 <div class="mf-total-line"><span>Total monthly debt obligations</span><strong id="debt-total-inline">$0</strong></div>
               </section>
 
               <section class="mf-panel" data-panel="4">
-                <div class="mf-section-title"><div><span>05</span><h2>Target Property Expenses &amp; Mortgage Assumptions</h2></div><p>Property carrying costs and qualification assumptions stay together.</p></div>
+                <div class="mf-section-title"><div><span>05</span><h2>Target Property Expenses &amp; Mortgage Assumptions</h2></div><p class="mf-tagline"><svg class="mf-leaf mf-leaf-front" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><path fill="#D52B1E" d="M50 1 L58 18 L66 13 L63 35 L75 26 L73 38 L98 34 L88 55 L93 60 L72 78 L75 88 L53 84 L53 100 L47 100 L47 84 L25 88 L28 78 L7 60 L12 55 L2 34 L27 38 L25 26 L37 35 L34 13 L42 18 Z"/></svg><span class="mf-tagtext"><span>Property carrying costs and</span><span>qualification assumptions stay together</span></span></p></div>
                 <div class="mf-subgrid-two">
                   <div class="mf-subcard"><h3>Target Property Expenses</h3><div class="mf-fields mf-fields-2">
-                    <label>Annual property taxes>        <div class="mf-money"><span>$</span><input id="annualTaxes" type="number" min="0" step="100" value="6000"></div>
+                    <label>Annual property taxes<div class="mf-money"><span>$</span><input id="annualTaxes" type="number" min="0" step="100"></div>
     </label>
-                    <label>Monthly heating>        <div class="mf-money"><span>$</span><input id="heating" type="number" min="0" step="10" value="150"></div>
+                    <label>Monthly heating<div class="mf-money"><span>$</span><input id="heating" type="number" min="0" step="10"></div>
     </label>
-                    <label>Monthly condo fee>        <div class="mf-money"><span>$</span><input id="condoFee" type="number" min="0" step="10" value="0"></div>
+                    <label>Monthly condo fee<div class="mf-money"><span>$</span><input id="condoFee" type="number" min="0" step="10"></div>
     </label>
-                    <label>Home insurance>        <div class="mf-money"><span>$</span><input id="homeInsurance" type="number" min="0" step="10" value="150"></div>
+                    <label>Home insurance<div class="mf-money"><span>$</span><input id="homeInsurance" type="number" min="0" step="10"></div>
     </label>
-                    <label>Electricity>        <div class="mf-money"><span>$</span><input id="propertyElectricity" type="number" min="0" step="10" value="0"></div>
+                    <label>Electricity<div class="mf-money"><span>$</span><input id="propertyElectricity" type="number" min="0" step="10"></div>
     </label>
-                    <label>Water>        <div class="mf-money"><span>$</span><input id="propertyWater" type="number" min="0" step="10" value="0"></div>
+                    <label>Water<div class="mf-money"><span>$</span><input id="propertyWater" type="number" min="0" step="10"></div>
     </label>
-                    <label>Other property costs>        <div class="mf-money"><span>$</span><input id="otherProperty" type="number" min="0" step="10" value="0"></div>
+                    <label>Other property costs<div class="mf-money"><span>$</span><input id="otherProperty" type="number" min="0" step="10"></div>
     </label>
-                    <label>Estimated closing cost<div class="mf-percent"><input id="closingCostPct" type="number" min="0" max="10" step="0.1" value="2"><span>%</span></div></label>
+                    <label>Estimated closing cost<div class="mf-percent"><input id="closingCostPct" type="number" min="0" max="10" step="0.1"><span>%</span></div></label>
                   </div></div>
                   <div class="mf-subcard"><h3>Mortgage Assumptions</h3><div class="mf-fields mf-fields-2">
-                    <label>Contract interest rate<div class="mf-percent"><input id="contractRate" type="number" min="0.1" max="30" step="0.01" value="4.50"><span>%</span></div></label>
-                    <label>Stress-test floor<div class="mf-percent"><input id="stressFloor" type="number" min="0" max="30" step="0.01" value="5.25"><span>%</span></div></label>
-                    <label>Rate increase<div class="mf-percent"><input id="stressIncrease" type="number" min="0" max="10" step="0.01" value="2.00"><span>%</span></div></label>
-                    <label>Amortization<select id="amortization"><option value="15">15 years</option><option value="20">20 years</option><option value="25" selected>25 years</option><option value="30">30 years</option></select></label>
-                    <label>Maximum GDS<div class="mf-percent"><input id="gdsLimit" type="number" min="1" max="100" step="0.1" value="39"><span>%</span></div></label>
-                    <label>Maximum TDS<div class="mf-percent"><input id="tdsLimit" type="number" min="1" max="100" step="0.1" value="44"><span>%</span></div></label>
-                    <label>Condo fee used in qualification<div class="mf-percent"><input id="condoPct" type="number" min="0" max="100" step="1" value="50"><span>%</span></div></label>
-                    <label>Payment frequency<select id="paymentFrequency"><option value="monthly">Monthly</option><option value="biweekly">Biweekly</option><option value="weekly">Weekly</option></select></label>
+                    <label>Contract interest rate<div class="mf-percent"><input id="contractRate" type="number" min="0.1" max="30" step="0.01"><span>%</span></div></label>
+                    <label>Stress-test floor<div class="mf-percent"><input id="stressFloor" type="number" min="0" max="30" step="0.01"><span>%</span></div></label>
+                    <label>Rate increase<div class="mf-percent"><input id="stressIncrease" type="number" min="0" max="10" step="0.01"><span>%</span></div></label>
+                    <label>Amortization<select id="amortization"><option value="" selected disabled>Select</option><option value="15">15 years</option><option value="20">20 years</option><option value="25">25 years</option><option value="30">30 years</option></select></label>
+                    <label>Maximum GDS<div class="mf-percent"><input id="gdsLimit" type="number" min="1" max="100" step="0.1"><span>%</span></div></label>
+                    <label>Maximum TDS<div class="mf-percent"><input id="tdsLimit" type="number" min="1" max="100" step="0.1"><span>%</span></div></label>
+                    <label>Condo fee used in qualification<div class="mf-percent"><input id="condoPct" type="number" min="0" max="100" step="1"><span>%</span></div></label>
+                    <label>Payment frequency<select id="paymentFrequency"><option value="" selected disabled>Select</option><option value="monthly">Monthly</option><option value="biweekly">Biweekly</option><option value="weekly">Weekly</option></select></label>
                   </div>
                   <details class="mf-advanced"><summary>Advanced assumptions</summary><div class="mf-fields mf-fields-2">
-                    <label>Credit card payment %<div class="mf-percent"><input id="ccPct" type="number" min="0" max="100" step="0.1" value="3"><span>%</span></div></label>
-                    <label>Line of credit payment %<div class="mf-percent"><input id="locPct" type="number" min="0" max="100" step="0.1" value="3"><span>%</span></div></label>
+                    <label>Credit card payment %<div class="mf-percent"><input id="ccPct" type="number" min="0" max="100" step="0.1"><span>%</span></div></label>
+                    <label>Line of credit payment %<div class="mf-percent"><input id="locPct" type="number" min="0" max="100" step="0.1"><span>%</span></div></label>
                   </div></details>
                   </div>
                 </div>
               </section>
 
               <section class="mf-panel" data-panel="5">
-                <div class="mf-section-title"><div><span>06</span><h2>Optional Household Living Expenses</h2></div><p>These affect the comfortable estimate, not standard GDS/TDS.</p></div>
+                <div class="mf-section-title"><div><span>06</span><h2>Optional Household Living Expenses</h2></div><p class="mf-tagline"><svg class="mf-leaf mf-leaf-front" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><path fill="#D52B1E" d="M50 1 L58 18 L66 13 L63 35 L75 26 L73 38 L98 34 L88 55 L93 60 L72 78 L75 88 L53 84 L53 100 L47 100 L47 84 L25 88 L28 78 L7 60 L12 55 L2 34 L27 38 L25 26 L37 35 L34 13 L42 18 Z"/></svg><span class="mf-tagtext"><span>These affect the comfortable estimate</span><span>not standard GDS/TDS</span></span></p></div>
                 <p class="mf-helper">Toggle on only the expenses that apply to this client's household budget.</p>
                 <div id="expense-categories" class="mf-expense-categories"></div>
                 <button type="button" class="mf-link-btn" id="add-custom-expense">+ Add custom expense</button>
@@ -1039,7 +1047,7 @@ html.mf-custom-photo .mf-header:before{left:auto;width:auto;max-width:60%;aspect
               </section>
 
               <section class="mf-panel" data-panel="6">
-                <div class="mf-section-title"><div><span>07</span><h2>MortgageFit Results</h2></div><p>Review the estimate, ratios, cash flow and assumptions.</p></div>
+                <div class="mf-section-title"><div><span>07</span><h2>MortgageFit Results</h2></div><p class="mf-tagline"><svg class="mf-leaf mf-leaf-front" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><path fill="#D52B1E" d="M50 1 L58 18 L66 13 L63 35 L75 26 L73 38 L98 34 L88 55 L93 60 L72 78 L75 88 L53 84 L53 100 L47 100 L47 84 L25 88 L28 78 L7 60 L12 55 L2 34 L27 38 L25 26 L37 35 L34 13 L42 18 Z"/></svg><span class="mf-tagtext"><span>Review the estimate, ratios</span><span>cash flow and assumptions</span></span></p></div>
                 <div class="mf-results-empty" id="mf-results-empty"><h3>Ready to calculate?</h3><p>Complete the relevant sections, then calculate the mortgage estimate.</p><button class="mf-btn mf-btn-primary" type="button" id="mf-calculate">Calculate Mortgage Estimate</button></div>
                 <div class="mf-results" id="mf-results" hidden>
                   <div class="mf-result-hero">
@@ -1070,8 +1078,8 @@ html.mf-custom-photo .mf-header:before{left:auto;width:auto;max-width:60%;aspect
                     <h3>Scenario Analysis</h3>
                     <p>Test common case-structuring changes without changing the base case.</p>
                     <div class="mf-scenario-controls">
-                      <label>Monthly debt payment to remove<div class="mf-money"><span>$</span><input id="scenarioDebtRemove" type="number" min="0" step="25" value="0"></div></label>
-                      <label>Additional down payment<div class="mf-money"><span>$</span><input id="scenarioDownAdd" type="number" min="0" step="1000" value="0"></div></label>
+                      <label>Monthly debt payment to remove<div class="mf-money"><span>$</span><input id="scenarioDebtRemove" type="number" min="0" step="25"></div></label>
+                      <label>Additional down payment<div class="mf-money"><span>$</span><input id="scenarioDownAdd" type="number" min="0" step="1000"></div></label>
                       <label>Scenario contract rate<div class="mf-percent"><input id="scenarioRate" type="number" min="0" max="25" step="0.01" placeholder="Current rate"><span>%</span></div></label>
                       <label>Scenario amortization<select id="scenarioAmortization"><option value="">Current</option><option value="20">20 years</option><option value="25">25 years</option><option value="30">30 years</option></select></label>
                     </div>
@@ -1098,7 +1106,7 @@ html.mf-custom-photo .mf-header:before{left:auto;width:auto;max-width:60%;aspect
 
               <div class="mf-nav-actions">
                 <button class="mf-btn mf-btn-secondary" type="button" id="mf-prev" disabled>← Previous</button>
-                <div class="mf-live-pill"><span>Live estimate</span><strong id="mf-live-estimate">Waiting for income</strong></div>
+                <div class="mf-live-pill"><span>Live estimate</span><strong id="mf-live-estimate">$0</strong></div>
                 <button class="mf-btn mf-btn-primary" type="button" id="mf-next">Next: Income →</button>
               </div>
             </main>
@@ -1225,7 +1233,7 @@ html.mf-custom-photo .mf-header:before{left:auto;width:auto;max-width:60%;aspect
   ];
 
   function toggleRow(id,label,kind='expense') {
-    return `<div class="mf-toggle-row is-off"><input type="checkbox" id="${id}-on" data-toggle="${id}"><label for="${id}-on">${label}</label><div class="mf-money"><span>$</span><input id="${id}" data-${kind} type="number" min="0" step="10" value="0" disabled></div></div>`;
+    return `<div class="mf-toggle-row is-off"><input type="checkbox" id="${id}-on" data-toggle="${id}"><label for="${id}-on">${label}</label><div class="mf-money"><span>$</span><input id="${id}" data-${kind} type="number" min="0" step="10" disabled></div></div>`;
   }
 
   function buildDebtGrid(){ $('debt-grid').innerHTML = debts.map(d=>toggleRow(d[0],d[1],'debt')).join(''); }
@@ -1238,22 +1246,22 @@ html.mf-custom-photo .mf-header:before{left:auto;width:auto;max-width:60%;aspect
     const id = applicantSeq;
     return `<div class="mf-applicant" data-applicant="${id}"><div class="mf-applicant-head"><strong>Applicant ${index}</strong><button type="button" class="mf-remove" data-remove-applicant="${id}">Remove</button></div><div class="mf-fields mf-fields-3">
       <label>Applicant label<input class="a-label" type="text" placeholder="Applicant ${index}"></label>
-      <label>Employment type<select class="a-employment"><option>Salaried</option><option>Hourly</option><option>Commission</option><option>Self-employed</option><option>Contract</option><option>Part-time</option><option>Retired</option><option>Other</option></select></label>
-      <label>Annual base salary<div class="mf-money"><span>$</span><input class="a-base" type="number" min="0" step="1000" value="${index===1?90000:0}"></div></label>
-      <label>Bonus / commission / overtime<div class="mf-money"><span>$</span><input class="a-variable" type="number" min="0" step="500" value="0"></div></label>
-      <label>Variable income accepted<div class="mf-percent"><input class="a-variable-pct" type="number" min="0" max="100" step="1" value="100"><span>%</span></div></label>
-      <label>Self-employed / pension income<div class="mf-money"><span>$</span><input class="a-other" type="number" min="0" step="500" value="0"></div></label>
-      <label>Rental income<div class="mf-money"><span>$</span><input class="a-rental" type="number" min="0" step="500" value="0"></div></label>
-      <label>Rental income accepted<div class="mf-percent"><input class="a-rental-pct" type="number" min="0" max="100" step="1" value="50"><span>%</span></div></label>
-      <label>Other qualifying income<div class="mf-money"><span>$</span><input class="a-extra" type="number" min="0" step="500" value="0"></div></label>
+      <label>Employment type<select class="a-employment"><option value="" selected disabled>Select</option><option>Salaried</option><option>Hourly</option><option>Commission</option><option>Self-employed</option><option>Contract</option><option>Part-time</option><option>Retired</option><option>Other</option></select></label>
+      <label>Annual base salary<div class="mf-money"><span>$</span><input class="a-base" type="number" min="0" step="1000"></div></label>
+      <label>Bonus / commission / overtime<div class="mf-money"><span>$</span><input class="a-variable" type="number" min="0" step="500"></div></label>
+      <label>Variable income accepted<div class="mf-percent"><input class="a-variable-pct" type="number" min="0" max="100" step="1"><span>%</span></div></label>
+      <label>Self-employed / pension income<div class="mf-money"><span>$</span><input class="a-other" type="number" min="0" step="500"></div></label>
+      <label>Rental income<div class="mf-money"><span>$</span><input class="a-rental" type="number" min="0" step="500"></div></label>
+      <label>Rental income accepted<div class="mf-percent"><input class="a-rental-pct" type="number" min="0" max="100" step="1"><span>%</span></div></label>
+      <label>Other qualifying income<div class="mf-money"><span>$</span><input class="a-extra" type="number" min="0" step="500"></div></label>
     </div><div class="mf-applicant-total">Accepted annual income <strong class="a-total">$0</strong></div></div>`;
   }
   function addApplicant(){ const list=$('applicant-list'); list.insertAdjacentHTML('beforeend', applicantTemplate(list.children.length+1)); renumberApplicants(); liveUpdate(); }
-  function renumberApplicants(){ $$('.mf-applicant').forEach((el,i)=>{ el.querySelector('.mf-applicant-head strong').textContent=`Applicant ${i+1}`; }); $('applicantCount').value=String(Math.min(4, Math.max(1,$$('.mf-applicant').length))); }
+  function renumberApplicants(){ $$('.mf-applicant').forEach((el,i)=>{ el.querySelector('.mf-applicant-head strong').textContent=`Applicant ${i+1}`; }); { const ac=$('applicantCount'), cnt=$$('.mf-applicant').length; if(ac.value!=='' || cnt>1) ac.value=String(Math.min(4, Math.max(1,cnt))); } }
 
   function setupToggles(){
     document.addEventListener('change', e=>{
-      if(e.target.matches('[data-toggle]')){ const id=e.target.dataset.toggle, input=$(id); input.disabled=!e.target.checked; e.target.closest('.mf-toggle-row').classList.toggle('is-off',!e.target.checked); if(!e.target.checked) input.value=0; liveUpdate(); }
+      if(e.target.matches('[data-toggle]')){ const id=e.target.dataset.toggle, input=$(id); input.disabled=!e.target.checked; e.target.closest('.mf-toggle-row').classList.toggle('is-off',!e.target.checked); if(!e.target.checked) input.value=''; liveUpdate(); }
       if(e.target.id==='applicantCount'){
         const desired=parseInt(e.target.value,10), current=$$('.mf-applicant').length;
         if(desired>current) for(let i=current;i<desired;i++) addApplicant();
@@ -1325,10 +1333,10 @@ html.mf-custom-photo .mf-header:before{left:auto;width:auto;max-width:60%;aspect
     const r=compute();
     $('income-total-inline').textContent=money(r.annualIncome); $('debt-total-inline').textContent=money(r.debtsMonthly); $('living-total-inline').textContent=money(r.living);
     if(r.annualIncome>0){ $('score-income').textContent=money(r.annualIncome); $('score-income-note').textContent=`${$$('.mf-applicant').length} applicant${$$('.mf-applicant').length===1?'':'s'}`; $('score-eligibility').textContent=money(r.lenderMortgage); $('score-eligibility-note').textContent=`Qualifying rate ${r.qualRate.toFixed(2)}%`; $('mf-live-estimate').textContent=money(r.lenderMortgage); }
-    else { $('score-income').textContent='Waiting for input'; $('score-eligibility').textContent='Not calculated'; $('mf-live-estimate').textContent='Waiting for income'; }
-    if(r.netMonthly>0 && r.annualIncome>0){ $('score-comfortable').textContent=money(r.comfortableMortgage||0); $('score-comfortable-note').textContent=r.lenderMortgage?`${Math.round((r.comfortableMortgage/r.lenderMortgage)*100)}% of lender estimate`:'Waiting for qualification'; }
-    else {$('score-comfortable').textContent='Not calculated'; $('score-comfortable-note').textContent='Enter monthly after-tax income';}
-    if(r.totalMonthlyExpenses>0){$('score-expenses').textContent=money(r.totalMonthlyExpenses);$('score-expenses-note').textContent=`Debt ${money(r.debtsMonthly)} · Living ${money(r.living)}`;} else $('score-expenses').textContent='Waiting for input';
+    else { $('score-income').textContent=money(0); $('score-eligibility').textContent=money(0); $('mf-live-estimate').textContent=money(0); }
+    if(r.netMonthly>0 && r.annualIncome>0){ $('score-comfortable').textContent=money(r.comfortableMortgage||0); $('score-comfortable-note').textContent=r.lenderMortgage?`${Math.round((r.comfortableMortgage/r.lenderMortgage)*100)}% of lender estimate`:'0% of lender estimate'; }
+    else {$('score-comfortable').textContent=money(0); $('score-comfortable-note').textContent='Enter monthly after-tax income';}
+    if(r.totalMonthlyExpenses>0){$('score-expenses').textContent=money(r.totalMonthlyExpenses);$('score-expenses-note').textContent=`Debt ${money(r.debtsMonthly)} · Living ${money(r.living)}`;} else $('score-expenses').textContent=money(0);
     updateSnapshotStatuses(r);
   }
 
@@ -1371,20 +1379,20 @@ html.mf-custom-photo .mf-header:before{left:auto;width:auto;max-width:60%;aspect
     });
   }
 
-  function ratioBlock(label,val,limit){ const ratio=Math.min(130,val/limit*100), cls=val>limit?'bad':val>limit*.9?'warn':''; return `<div class="mf-ratio"><div class="mf-ratio-head"><span>${label}</span><strong>${val.toFixed(2)}% / ${limit.toFixed(2)}%</strong></div><div class="mf-progress"><i class="${cls}" style="width:${ratio}%"></i></div></div>`; }
+  function ratioBlock(label,val,limit){ const ratio=limit>0?Math.min(130,val/limit*100):0, cls=val>limit?'bad':val>limit*.9?'warn':''; return `<div class="mf-ratio"><div class="mf-ratio-head"><span>${label}</span><strong>${val.toFixed(2)}% / ${limit.toFixed(2)}%</strong></div><div class="mf-progress"><i class="${cls}" style="width:${ratio}%"></i></div></div>`; }
   function dlRow(k,v){ return `<div><dt>${k}</dt><dd>${v}</dd></div>`; }
 
   function calculate(){
     const r=compute(); lastResult=r;
     $('mf-results-empty').hidden=true; $('mf-results').hidden=false; $('mf-download').disabled=false;
-    $('res-eligibility').textContent=money(r.lenderMortgage); $('res-comfortable').textContent=r.comfortableMortgage===null?'Needs net income':money(r.comfortableMortgage); $('res-purchase').textContent=money(r.maxPurchase);
+    $('res-eligibility').textContent=money(r.lenderMortgage); $('res-comfortable').textContent=money(r.comfortableMortgage||0); $('res-purchase').textContent=money(r.maxPurchase);
     $('res-status').textContent=r.annualIncome?'Estimate based on current assumptions':'Qualifying income required';
     $('mortgage-summary').innerHTML=dlRow('Contract rate',`${num('contractRate').toFixed(2)}%`)+dlRow('Qualifying rate',`${r.qualRate.toFixed(2)}%`)+dlRow('Amortization',`${r.years} years`)+dlRow('Estimated monthly payment',money(r.actualPayment))+dlRow('Qualifying monthly payment',money(r.qualPaymentAtMax))+dlRow('Mortgage insurance premium',money(r.mortgageAtMax.premium));
     $('ratio-summary').innerHTML=ratioBlock('GDS',r.gds,num('gdsLimit'))+ratioBlock('TDS',r.tds,num('tdsLimit'));
-    $('cashflow-summary').innerHTML=dlRow('After-tax monthly income',r.netMonthly?money(r.netMonthly):'Not entered')+dlRow('Monthly debts',money(r.debtsMonthly))+dlRow('Living expenses',money(r.living))+dlRow('Property costs',money(monthlyPropertyBudget()))+dlRow('Mortgage payment',money(r.actualPayment))+dlRow('Desired cash cushion',money(num('cashCushion')))+dlRow('Cash remaining',r.cashRemaining===null?'Not calculated':money(r.cashRemaining));
+    $('cashflow-summary').innerHTML=dlRow('After-tax monthly income',money(r.netMonthly))+dlRow('Monthly debts',money(r.debtsMonthly))+dlRow('Living expenses',money(r.living))+dlRow('Property costs',money(monthlyPropertyBudget()))+dlRow('Mortgage payment',money(r.actualPayment))+dlRow('Desired cash cushion',money(num('cashCushion')))+dlRow('Cash remaining',money(r.cashRemaining||0));
     $('closing-summary').innerHTML=dlRow('Down payment',money(r.down))+dlRow('Down payment %',r.maxPurchase?`${(r.down/r.maxPurchase*100).toFixed(2)}%`:'0%')+dlRow('Insurance premium',money(r.mortgageAtMax.premium))+dlRow('Estimated closing costs',money(r.closingCost))+dlRow('Additional closing funds',money(r.closingAvailable));
     $('mf-narrative').textContent = r.comfortableMortgage===null ? `Based on the information entered, the client may qualify for an estimated mortgage of ${money(r.lenderMortgage)} and an estimated maximum purchase price of ${money(r.maxPurchase)}. Enter after-tax household income to calculate the comfortable mortgage estimate.` : `Based on the information entered, the client may qualify for an estimated mortgage of ${money(r.lenderMortgage)}. With the available down payment, the estimated maximum purchase price is ${money(r.maxPurchase)}. After considering selected household expenses and the desired cash cushion, a mortgage around ${money(r.comfortableMortgage)} may provide a more comfortable monthly budget.`;
-    const warnings=[]; if(!r.annualIncome) warnings.push('Qualifying income has not been entered.'); if(r.gds>num('gdsLimit')+.05) warnings.push('The calculated GDS is above the selected guideline.'); if(r.tds>num('tdsLimit')+.05) warnings.push('The calculated TDS is above the selected guideline.'); if(r.down<minDownPayment(r.maxPurchase)) warnings.push('The available down payment may not satisfy the minimum down-payment requirement.'); if(r.closingAvailable<r.closingCost) warnings.push('Additional closing funds are below the estimated closing-cost amount.'); if(r.cashRemaining!==null && r.cashRemaining<0) warnings.push('The selected household budget produces negative monthly cash flow at the estimated maximum purchase price.'); if(num('amortization')===30) warnings.push('Review whether the selected 30-year amortization is permitted for this borrower and mortgage type.');
+    const warnings=[]; if(!r.annualIncome) warnings.push('Qualifying income has not been entered.'); if(r.gds>num('gdsLimit')+.05) warnings.push('The calculated GDS is above the selected guideline.'); if(r.tds>num('tdsLimit')+.05) warnings.push('The calculated TDS is above the selected guideline.'); if(r.down<minDownPayment(r.maxPurchase)) warnings.push('The available down payment may not satisfy the minimum down-payment requirement.'); if(r.closingAvailable<r.closingCost) warnings.push('Additional closing funds are below the estimated closing-cost amount.'); if(r.cashRemaining!==null && r.cashRemaining<0) warnings.push('The selected household budget produces negative monthly cash flow at the estimated maximum purchase price.'); if(!num('contractRate')) warnings.push('Contract interest rate has not been entered.'); if(!num('gdsLimit')||!num('tdsLimit')) warnings.push('Maximum GDS and TDS limits have not been entered.'); if(!$('amortization').value) warnings.push('Amortization has not been selected; 25 years was used for this estimate.'); if(num('amortization')===30) warnings.push('Review whether the selected 30-year amortization is permitted for this borrower and mortgage type.');
     $('mf-warnings').innerHTML=warnings.map(w=>`<div class="mf-warning-item">${w}</div>`).join('');
     $('qualification-driver').innerHTML=`<strong>Qualification Driver: ${r.qualificationDriver}</strong><br>${r.qualificationDriver==='TDS'?'Total debt obligations are currently the controlling qualification factor.':'Housing costs are currently the controlling qualification factor.'}<br><span style="color:var(--mf-muted)">GDS-supported payment: ${money(r.gdsPayment)} / month · TDS-supported payment: ${money(r.tdsPayment)} / month</span>`;
     $('cash-to-close-result').textContent=money(r.cashToClose);
@@ -1423,14 +1431,14 @@ html.mf-custom-photo .mf-header:before{left:auto;width:auto;max-width:60%;aspect
   }
 
   function collectForm(){ const data={}; $$('#mortgagefit-app input,#mortgagefit-app select').forEach(el=>{ if(el.type==='checkbox') data[el.id]=el.checked; else data[el.id]=el.value; }); data.applicants=$$('.mf-applicant').map(a=>({label:a.querySelector('.a-label').value,employment:a.querySelector('.a-employment').value,base:a.querySelector('.a-base').value,variable:a.querySelector('.a-variable').value,variablePct:a.querySelector('.a-variable-pct').value,other:a.querySelector('.a-other').value,rental:a.querySelector('.a-rental').value,rentalPct:a.querySelector('.a-rental-pct').value,extra:a.querySelector('.a-extra').value})); return data; }
-  function applyForm(data){ if(!data) return; if(Array.isArray(data.applicants)){ $('applicant-list').innerHTML=''; data.applicants.forEach((a,i)=>{addApplicant(); const el=$$('.mf-applicant')[i]; el.querySelector('.a-label').value=a.label||''; el.querySelector('.a-employment').value=a.employment||'Salaried'; el.querySelector('.a-base').value=a.base||0; el.querySelector('.a-variable').value=a.variable||0; el.querySelector('.a-variable-pct').value=a.variablePct||100; el.querySelector('.a-other').value=a.other||0; el.querySelector('.a-rental').value=a.rental||0; el.querySelector('.a-rental-pct').value=a.rentalPct||50; el.querySelector('.a-extra').value=a.extra||0; }); }
+  function applyForm(data){ if(!data) return; if(Array.isArray(data.applicants)){ $('applicant-list').innerHTML=''; data.applicants.forEach((a,i)=>{addApplicant(); const el=$$('.mf-applicant')[i]; el.querySelector('.a-label').value=a.label||''; el.querySelector('.a-employment').value=a.employment||''; el.querySelector('.a-base').value=a.base||''; el.querySelector('.a-variable').value=a.variable||''; el.querySelector('.a-variable-pct').value=a.variablePct||''; el.querySelector('.a-other').value=a.other||''; el.querySelector('.a-rental').value=a.rental||''; el.querySelector('.a-rental-pct').value=a.rentalPct||''; el.querySelector('.a-extra').value=a.extra||''; }); }
     Object.entries(data).forEach(([id,val])=>{ const el=$(id); if(!el || id==='applicants') return; if(el.type==='checkbox'){el.checked=!!val; const target=$(el.dataset.toggle||''); if(target){target.disabled=!el.checked; el.closest('.mf-toggle-row')?.classList.toggle('is-off',!el.checked);}} else el.value=val; }); renumberApplicants(); liveUpdate(); calculate(); }
 
-  function addCustomExpense(name='Custom expense',amount=0){ const id='custom-'+Date.now()+'-'+Math.floor(Math.random()*999); $('custom-expenses').insertAdjacentHTML('beforeend',`<div class="mf-custom-row"><input type="text" value="${name}" aria-label="Custom expense name"><div class="mf-money"><span>$</span><input id="${id}" data-expense type="number" min="0" step="10" value="${amount}"></div><input type="checkbox" id="${id}-on" data-toggle="${id}" checked hidden><button type="button" data-remove-custom>Remove</button></div>`); liveUpdate(); }
+  function addCustomExpense(name='',amount=''){ const id='custom-'+Date.now()+'-'+Math.floor(Math.random()*999); $('custom-expenses').insertAdjacentHTML('beforeend',`<div class="mf-custom-row"><input type="text" value="${name}" placeholder="Expense name" aria-label="Custom expense name"><div class="mf-money"><span>$</span><input id="${id}" data-expense type="number" min="0" step="10"></div><input type="checkbox" id="${id}-on" data-toggle="${id}" checked hidden><button type="button" data-remove-custom>Remove</button></div>`); liveUpdate(); }
 
   function pdf(){ if(!lastResult) calculate(); const r=lastResult; if(!window.jspdf) return toast('PDF library could not be loaded.'); const {jsPDF}=window.jspdf, doc=new jsPDF({unit:'pt',format:'letter'}), ref=$('clientRef').value.trim()||'Client-Estimate'; let y=48;
     doc.setTextColor(16,42,67); doc.setFontSize(22); doc.setFont('helvetica','bold'); doc.text('MortgageFit Client Estimate',42,y); y+=22; doc.setFontSize(9); doc.setFont('helvetica','normal'); doc.setTextColor(107,124,147); doc.text(`Client reference: ${ref}   |   Date: ${new Date().toLocaleDateString('en-CA')}`,42,y); y+=28;
-    const rows=[['Estimated lender qualification',money(r.lenderMortgage)],['Comfortable mortgage',r.comfortableMortgage===null?'Not calculated':money(r.comfortableMortgage)],['Estimated maximum purchase price',money(r.maxPurchase)],['Estimated monthly payment',money(r.actualPayment)],['Annual qualifying income',money(r.annualIncome)],['Down payment',money(r.down)],['Qualifying rate',`${r.qualRate.toFixed(2)}%`],['GDS / TDS',`${r.gds.toFixed(2)}% / ${r.tds.toFixed(2)}%`],['Monthly debts',money(r.debtsMonthly)],['Selected living expenses',money(r.living)],['Qualification driver',r.qualificationDriver],['Cash to close',money(r.cashToClose)],['Funding gap',money(r.fundingGap)],['Savings timeline',r.fundingGap<=0?'Ready':(r.savingsMonths===null?'Not calculated':`${r.savingsMonths} months`)]];
+    const rows=[['Estimated lender qualification',money(r.lenderMortgage)],['Comfortable mortgage',money(r.comfortableMortgage||0)],['Estimated maximum purchase price',money(r.maxPurchase)],['Estimated monthly payment',money(r.actualPayment)],['Annual qualifying income',money(r.annualIncome)],['Down payment',money(r.down)],['Qualifying rate',`${r.qualRate.toFixed(2)}%`],['GDS / TDS',`${r.gds.toFixed(2)}% / ${r.tds.toFixed(2)}%`],['Monthly debts',money(r.debtsMonthly)],['Selected living expenses',money(r.living)],['Qualification driver',r.qualificationDriver],['Cash to close',money(r.cashToClose)],['Funding gap',money(r.fundingGap)],['Savings timeline',r.fundingGap<=0?'Ready':(r.savingsMonths===null?'0 months':`${r.savingsMonths} months`)]];
     rows.forEach(([k,v],i)=>{ if(i%2===0){doc.setFillColor(247,250,252);doc.rect(42,y-13,528,24,'F');} doc.setTextColor(51,78,104); doc.setFont('helvetica','normal'); doc.text(k,50,y); doc.setTextColor(16,42,67); doc.setFont('helvetica','bold'); doc.text(v,560,y,{align:'right'}); y+=24; });
     y+=18; doc.setFontSize(9); doc.setFont('helvetica','normal'); doc.setTextColor(51,78,104); doc.text(doc.splitTextToSize($('mf-narrative').textContent,520),42,y); y+=62; doc.setFontSize(7.5); doc.setTextColor(107,124,147); const disclaimer='This report provides an estimate for general planning purposes only. It does not constitute mortgage approval, a commitment to lend, financial advice, or a guarantee of financing. Final qualification depends on verification, credit history, property review, lender and insurer requirements, and underwriting policies.'; doc.text(doc.splitTextToSize(disclaimer,520),42,y); doc.save(`MortgageFit-${ref.replace(/[^a-z0-9-_]/gi,'-')}-${new Date().toISOString().slice(0,10)}.pdf`); }
 
