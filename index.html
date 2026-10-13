@@ -1289,6 +1289,86 @@ body.mf-auth-locked .mf-login-gate{
 }
 </style>
 
+
+<style id="mf-modal-close-svg-v8">
+#mf-cases-close{
+  width:32px!important;
+  height:32px!important;
+  min-width:32px!important;
+  min-height:32px!important;
+  padding:0!important;
+  margin:0!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  border-radius:50%!important;
+  line-height:0!important;
+  transform:none!important;
+}
+#mf-cases-close svg{
+  width:14px!important;
+  height:14px!important;
+  display:block!important;
+  flex:0 0 14px!important;
+  margin:0!important;
+  padding:0!important;
+  transform:none!important;
+}
+</style>
+
+
+<style id="mf-reset-modal-v9">
+.mf-reset-modal{
+  position:fixed!important;
+  inset:0!important;
+  z-index:100000!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  padding:20px!important;
+  background:var(--mf-scrim)!important;
+  -webkit-backdrop-filter:blur(6px)!important;
+  backdrop-filter:blur(6px)!important;
+}
+.mf-reset-modal[hidden]{display:none!important}
+.mf-reset-card{
+  width:min(430px,100%)!important;
+  padding:26px!important;
+  text-align:center!important;
+  border-radius:22px!important;
+}
+.mf-reset-icon{
+  width:46px;height:46px;margin:0 auto 14px;
+  display:grid;place-items:center;border-radius:50%;
+  background:var(--mf-on-bg);color:var(--mf-acc);
+  border:1px solid var(--mf-on-edge);
+}
+.mf-reset-icon svg{width:22px;height:22px}
+.mf-reset-card h2{
+  margin:0 0 8px!important;
+  color:var(--mf-head)!important;
+  font-size:20px!important;
+}
+.mf-reset-card p{
+  margin:0 auto!important;
+  max-width:350px!important;
+  color:var(--mf-muted)!important;
+  font-size:11.5px!important;
+  line-height:1.55!important;
+}
+.mf-reset-actions{
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  margin-top:20px;
+}
+.mf-reset-actions .mf-btn{min-width:130px}
+@media(max-width:520px){
+  .mf-reset-actions{flex-direction:column-reverse}
+  .mf-reset-actions .mf-btn{width:100%}
+}
+</style>
+
 </head>
 <body class="mf-auth-locked">
 
@@ -1597,7 +1677,11 @@ body.mf-auth-locked .mf-login-gate{
           </div>
 
           <div class="mf-modal" id="mf-cases-modal" hidden>
-            <div class="mf-modal-card"><div class="mf-modal-head"><div><h2>Saved Cases</h2><p>Cases saved to your signed-in MortgageFit account.</p></div><button type="button" id="mf-cases-close">×</button></div><div id="mf-case-status" class="mf-case-status"></div><div id="mf-case-list"></div></div>
+            <div class="mf-modal-card"><div class="mf-modal-head"><div><h2>Saved Cases</h2><p>Cases saved to your signed-in MortgageFit account.</p></div><button type="button" id="mf-cases-close">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M7 7l10 10M17 7 7 17" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/>
+      </svg>
+    </button></div><div id="mf-case-status" class="mf-case-status"></div><div id="mf-case-list"></div></div>
           </div>
 
 
@@ -1651,6 +1735,24 @@ body.mf-auth-locked .mf-login-gate{
                 <button type="button" class="mf-link-btn" id="mf-auth-reset">Forgot password?</button>
               </div>
               <p class="mf-login-security">Your MortgageFit workspace and saved cases are available only after successful authentication.</p>
+            </div>
+          </div>
+
+
+          <div class="mf-modal mf-reset-modal" id="mf-reset-modal" hidden>
+            <div class="mf-modal-card mf-reset-card" role="dialog" aria-modal="true" aria-labelledby="mf-reset-title">
+              <div class="mf-reset-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M4.5 8.5A8 8 0 1 1 4 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                  <path d="M4.5 4.5v4h4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <h2 id="mf-reset-title">Reset calculator?</h2>
+              <p>This will clear the information entered in the calculator and return you to the Agent Workspace. Your login, saved cases, theme, and admin settings will not be affected.</p>
+              <div class="mf-reset-actions">
+                <button type="button" class="mf-btn mf-btn-outline" id="mf-reset-cancel">Cancel</button>
+                <button type="button" class="mf-btn mf-btn-primary" id="mf-reset-confirm">Reset Calculator</button>
+              </div>
             </div>
           </div>
 
@@ -2107,28 +2209,32 @@ body.mf-auth-locked .mf-login-gate{
   function toast(msg){ const t=$('mf-toast'); t.textContent=msg;t.hidden=false;clearTimeout(t._timer);t._timer=setTimeout(()=>t.hidden=true,3200); }
 
   function reset(){
-    if(!confirm('Reset all calculator values?')) return;
+    const modal=$('mf-reset-modal');
+    if(modal) modal.hidden=false;
+  }
 
-    // Clear all editable calculator fields without reloading the page.
-    const app=$('mortgagefit-app');
-    if(!app) return;
+  function closeResetModal(){
+    const modal=$('mf-reset-modal');
+    if(modal) modal.hidden=true;
+  }
 
-    app.querySelectorAll('input, select, textarea').forEach(el=>{
-      // Preserve authentication/login controls and admin/theme controls.
-      if(el.closest('#mf-auth-modal')) return;
-      if(el.closest('#mf-admin-panel')) return;
-      if(el.id==='mf-photo-file') return;
+  function performCalculatorReset(){
+    // Never sign out, reload the page, or touch Firebase authentication.
+    // Only calculator fields inside the calculator panels are reset.
+    const calculatorControls=$$('.mf-panel input, .mf-panel select, .mf-panel textarea');
 
+    calculatorControls.forEach(el=>{
       if(el.type==='checkbox' || el.type==='radio'){
-        el.checked = el.defaultChecked;
+        el.checked=el.defaultChecked;
       }else if(el.tagName==='SELECT'){
-        el.selectedIndex = 0;
+        const defaultOption=Array.from(el.options).findIndex(o=>o.defaultSelected);
+        el.selectedIndex=defaultOption>=0?defaultOption:0;
       }else{
-        el.value = el.defaultValue || '';
+        el.value=el.defaultValue || '';
       }
     });
 
-    // Rebuild dynamic sections to their initial state.
+    // Reset dynamic applicant rows to one fresh applicant.
     const applicantList=$('applicant-list');
     if(applicantList){
       applicantList.innerHTML='';
@@ -2136,13 +2242,11 @@ body.mf-auth-locked .mf-login-gate{
       addApplicant();
     }
 
+    // Remove user-added custom expenses only.
     const customExpenses=$('custom-expenses');
     if(customExpenses) customExpenses.innerHTML='';
 
-    // Restore toggle-enabled/disabled states.
     setupToggles();
-
-    // Clear scenario output and calculated state.
     clearScenario();
     lastResult=null;
 
@@ -2150,12 +2254,40 @@ body.mf-auth-locked .mf-login-gate{
     if($('mf-results')) $('mf-results').hidden=true;
     if($('mf-download')) $('mf-download').disabled=true;
 
-    // Return to the first calculator step without affecting the Firebase session.
+    // Always return to the Agent Workspace, not the Admin Panel.
+    const app=$('mortgagefit-app');
+    if(app) app.classList.remove('mf-admin-mode');
+    const agentTab=$('mf-agent-tab');
+    const adminTab=$('mf-admin-tab');
+    if(agentTab){
+      agentTab.classList.add('is-active');
+      agentTab.setAttribute('aria-selected','true');
+    }
+    if(adminTab){
+      adminTab.classList.remove('is-active');
+      adminTab.setAttribute('aria-selected','false');
+    }
+    try{sessionStorage.setItem('mf-workspace-mode','agent');}catch(e){}
+
     currentStep=0;
     showStep(0);
     liveUpdate();
 
-    toast('Calculator fields have been reset.');
+    // If Firebase already has a signed-in user, explicitly keep the workspace unlocked.
+    // No authentication method is called here.
+    if(auth?.currentUser){
+      uid=auth.currentUser.uid;
+      document.body.classList.remove('mf-auth-locked');
+      if($('mf-auth-modal')) $('mf-auth-modal').hidden=true;
+      if($('mf-account-menu')) $('mf-account-menu').hidden=false;
+      if($('mf-signout')) $('mf-signout').hidden=false;
+      if($('mf-save-case')) $('mf-save-case').hidden=false;
+      if($('mf-cases')) $('mf-cases').hidden=false;
+    }
+
+    closeResetModal();
+    window.scrollTo({top:0,behavior:'auto'});
+    toast('Calculator cleared. You are still signed in.');
   }
 
   function bind(){
@@ -2169,7 +2301,12 @@ body.mf-auth-locked .mf-login-gate{
     });
     $$('.mf-step').forEach(s=>s.addEventListener('click',()=>showStep(parseInt(s.dataset.step,10))));
     $('mf-next').onclick=()=>showStep(currentStep+1); $('mf-prev').onclick=()=>showStep(currentStep-1); $('add-applicant').onclick=addApplicant; $('add-custom-expense').onclick=()=>addCustomExpense();
-    $('mf-reset').onclick=reset; $('mf-download').onclick=pdf; $('mf-download-results').onclick=pdf; $('mf-calculate').onclick=calculate; $('runScenario').onclick=runScenario; $('clearScenario').onclick=clearScenario; $('mf-save-case').onclick=saveCase; $('mf-cases').onclick=loadCases; $('mf-cases-close').onclick=()=>{$('mf-cases-modal').hidden=true;};
+    $('mf-reset').onclick=reset;
+    $('mf-reset-cancel').onclick=closeResetModal;
+    $('mf-reset-confirm').onclick=performCalculatorReset;
+    $('mf-reset-modal').addEventListener('click',e=>{ if(e.target===$('mf-reset-modal')) closeResetModal(); });
+    document.addEventListener('keydown',e=>{ if(e.key==='Escape' && !$('mf-reset-modal').hidden) closeResetModal(); });
+    $('mf-download').onclick=pdf; $('mf-download-results').onclick=pdf; $('mf-calculate').onclick=calculate; $('runScenario').onclick=runScenario; $('clearScenario').onclick=clearScenario; $('mf-save-case').onclick=saveCase; $('mf-cases').onclick=loadCases; $('mf-cases-close').onclick=()=>{$('mf-cases-modal').hidden=true;};
     $('mf-login').onclick=()=>{};
     $('mf-signout').onclick=signOutAgent;
     $('mf-account-trigger').onclick=(e)=>{
