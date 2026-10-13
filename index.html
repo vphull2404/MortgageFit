@@ -6,11 +6,9 @@
 <title>MortgageFit | Free Canadian Mortgage Affordability Calculator for Mortgage Professionals</title>
 <meta name="description" content="MortgageFit is a free Canadian mortgage eligibility and affordability calculator. Go Pro for $50 a year to save client cases and add your own logo, name and details to branded PDFs.">
 <script>
-/* Apply the theme chosen in the calculator (shared setting) before first paint. */
+/* Home page theme is display-only. Theme selection is controlled from the Admin Panel. */
 (function(){var ok=["pearl-gold","ocean-mist","sage-stone","professional-navy"],t="pearl-gold";
-try{var q=new URLSearchParams(location.search).get("theme");
-if(q&&ok.indexOf(q)>-1){t=q;try{localStorage.setItem("mf-theme",q)}catch(e){}}
-else{var s=localStorage.getItem("mf-theme");if(s&&ok.indexOf(s)>-1)t=s}}catch(e){}
+try{var s=localStorage.getItem("mf-theme");if(s&&ok.indexOf(s)>-1)t=s}catch(e){}
 document.documentElement.setAttribute("data-mf-theme",t)})();
 </script>
 <style>
@@ -546,12 +544,6 @@ footer{margin-top:92px;padding:34px 0 46px;border-top:1px solid var(--mf-line)}
       <a href="#faq">FAQ</a>
     </nav>
     <div class="nav-right">
-      <div class="dots" role="radiogroup" aria-label="Color theme">
-        <button class="dot" type="button" role="radio" data-theme="pearl-gold" title="Pearl &amp; Gold" aria-label="Pearl and Gold theme"></button>
-        <button class="dot" type="button" role="radio" data-theme="ocean-mist" title="Ocean Mist" aria-label="Ocean Mist theme"></button>
-        <button class="dot" type="button" role="radio" data-theme="sage-stone" title="Sage &amp; Stone" aria-label="Sage and Stone theme"></button>
-        <button class="dot" type="button" role="radio" data-theme="professional-navy" title="Professional Navy" aria-label="Professional Navy theme"></button>
-      </div>
       <div class="nav-actions">
         <a class="btn btn-ghost" href="calculator.html?login=1" data-link="login">Login</a>
         <a class="btn btn-primary" href="calculator.html" data-link="calculator">Open calculator</a>
@@ -791,26 +783,6 @@ footer{margin-top:92px;padding:34px 0 46px;border-top:1px solid var(--mf-line)}
   Array.prototype.forEach.call(document.querySelectorAll("[data-link]"),function(a){var u=cfg[a.dataset.link]; if(u) a.setAttribute("href",u);});
   var yr=document.getElementById("yr"); if(yr) yr.textContent=new Date().getFullYear();
 
-  /* Theme dots (same four themes, same saved choice as the calculator) */
-  var root=document.documentElement, dots=document.querySelectorAll(".dot");
-  var ALLOWED=["pearl-gold","ocean-mist","sage-stone","professional-navy"];
-  function withTheme(u,id){ var h=u.split("#")[0].replace(/([?&])theme=[^&]*&?/,"$1").replace(/[?&]$/,""); return h+(h.indexOf("?")>-1?"&":"?")+"theme="+id; }
-  function syncLinks(t){ /* links into the calculator carry the chosen theme */
-    Array.prototype.forEach.call(document.querySelectorAll("[data-link]"),function(a){
-      var u=cfg[a.dataset.link]; if(u && u.indexOf("mailto:")!==0) a.setAttribute("href",withTheme(u,t));
-    });
-  }
-  function mark(t){
-    root.setAttribute("data-mf-theme",t);
-    Array.prototype.forEach.call(dots,function(d){d.setAttribute("aria-checked",d.dataset.theme===t?"true":"false");});
-    syncLinks(t);
-    try{ var cur=new URL(location.href); if(cur.searchParams.has("theme")){ cur.searchParams.set("theme",t); history.replaceState(null,"",cur.toString()); } }catch(e){}
-  }
-  window.addEventListener("storage",function(e){ if(e.key==="mf-theme"&&e.newValue&&ALLOWED.indexOf(e.newValue)>-1) mark(e.newValue); });
-  window.addEventListener("pageshow",function(e){ if(e.persisted){ try{ var v=localStorage.getItem("mf-theme"); if(v&&ALLOWED.indexOf(v)>-1) mark(v); }catch(x){} } });
-  Array.prototype.forEach.call(dots,function(d){ d.addEventListener("click",function(){ mark(d.dataset.theme); try{localStorage.setItem("mf-theme",d.dataset.theme);}catch(e){} }); });
-  mark(root.getAttribute("data-mf-theme")||"pearl-gold");
-})();
 </script>
 </body>
 </html>
