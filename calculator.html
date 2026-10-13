@@ -2814,6 +2814,10 @@ body:not(.mf-auth-resolving) #mf-session-loader{
     if(modal) modal.hidden=true;
   }
 
+  // Expose reset controls for the independent safety handler at the end of the file.
+  window.MortgageFitOpenResetModal = reset;
+  window.MortgageFitCloseResetModal = closeResetModal;
+
   function performCalculatorReset(){
     // IMPORTANT: This function does not reload the document and does not call
     // Firebase sign-out/sign-in. It only clears calculator data.
@@ -2876,6 +2880,7 @@ body:not(.mf-auth-resolving) #mf-session-loader{
     toast('Calculator cleared. Your session is unchanged.');
   }
 
+  window.MortgageFitPerformCalculatorReset = performCalculatorReset;
 
   function bind(){
     buildDebtGrid(); buildExpenses(); addApplicant(); setupToggles();
@@ -3082,6 +3087,76 @@ body:not(.mf-auth-resolving) #mf-session-loader{
   var saved='agent';
   try{saved=sessionStorage.getItem('mf-workspace-mode')||'agent';}catch(e){}
   setMode(saved==='admin'?'admin':'agent');
+})();
+</script>
+
+
+<script id="mf-reset-safety-handler-v11">
+(function(){
+  function byId(id){ return document.getElementById(id); }
+
+  function openReset(){
+    var modal=byId('mf-reset-modal');
+    if(modal) modal.hidden=false;
+  }
+
+  function closeReset(){
+    var modal=byId('mf-reset-modal');
+    if(modal) modal.hidden=true;
+  }
+
+  document.addEventListener('click', function(e){
+    var target=e.target && e.target.closest ? e.target.closest('#mf-reset,#mf-reset-cancel,#mf-reset-confirm') : null;
+    if(!target) return;
+
+    // Handle reset controls before any other merged listeners can interfere.
+    e.preventDefault();
+    e.stopPropagation();
+
+    if(target.id==='mf-reset'){
+      if(typeof window.MortgageFitOpenResetModal==='function'){
+        window.MortgageFitOpenResetModal();
+      }else{
+        openReset();
+      }
+      return;
+    }
+
+    if(target.id==='mf-reset-cancel'){
+      if(typeof window.MortgageFitCloseResetModal==='function'){
+        window.MortgageFitCloseResetModal();
+      }else{
+        closeReset();
+      }
+      return;
+    }
+
+    if(target.id==='mf-reset-confirm'){
+      if(typeof window.MortgageFitPerformCalculatorReset==='function'){
+        try{
+          window.MortgageFitPerformCalculatorReset();
+        }catch(err){
+          console.error('MortgageFit reset failed:',err);
+          closeReset();
+          var toast=byId('mf-toast');
+          if(toast){
+            toast.textContent='The calculator could not be fully reset. Please refresh and try again.';
+            toast.hidden=false;
+          }
+        }
+      }else{
+        closeReset();
+      }
+    }
+  }, true);
+
+  document.addEventListener('click', function(e){
+    var modal=byId('mf-reset-modal');
+    if(modal && !modal.hidden && e.target===modal){
+      e.preventDefault();
+      closeReset();
+    }
+  }, true);
 })();
 </script>
 
