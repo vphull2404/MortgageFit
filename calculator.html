@@ -2497,7 +2497,15 @@ body:not(.mf-auth-resolving) #mf-session-loader{
 
     // During an intentional sign-out, keep the current workspace visible until
     // navigation to the public home page completes. This prevents a login-screen flash.
-    if(signingOutToHome && !user) return;
+    if(!user){
+      let logoutRedirect=false;
+      try{ logoutRedirect=sessionStorage.getItem('mf-logout-to-home')==='1'; }catch(e){}
+      if(signingOutToHome || logoutRedirect){
+        try{ sessionStorage.removeItem('mf-logout-to-home'); }catch(e){}
+        window.location.replace('./index.html');
+        return;
+      }
+    }
 
     const preferredWorkspace=(()=>{try{return sessionStorage.getItem('mf-workspace-mode')||'agent'}catch(e){return 'agent'}})();
 
@@ -2770,17 +2778,22 @@ body:not(.mf-auth-resolving) #mf-session-loader{
   }
 
   async function signOutAgent(){
-    if(!auth) return;
+    // Every logout from MortgageFit must finish on the public home page.
+    const homeUrl='./index.html';
     signingOutToHome=true;
+    try{ sessionStorage.setItem('mf-logout-to-home','1'); }catch(e){}
+
     try{
-      // Sign out of Firebase, then leave the protected calculator entirely.
-      // index.html is the public MortgageFit home page in the same folder.
-      await auth.signOut();
-      window.location.replace('index.html');
+      if(auth?.currentUser){
+        await auth.signOut();
+      }
+      try{ sessionStorage.removeItem('mf-logout-to-home'); }catch(e){}
+      window.location.replace(homeUrl);
     }catch(err){
-      signingOutToHome=false;
       console.error(err);
-      toast('Could not sign out. Please try again.');
+      // Even if Firebase reports an error after the logout action has started,
+      // do not send the user to the calculator login gate.
+      window.location.replace(homeUrl);
     }
   }
   async function saveCase(){ if(!db||!uid) return toast('Please sign in before saving a case.'); const ref=$('clientRef').value.trim() || `Case-${new Date().toISOString().slice(0,10)}`; try{ await db.collection('mortgagefit_cases').add({ownerUid:uid,ownerEmail:auth?.currentUser?.email||'',clientRef:ref,form:collectForm(),result:compute(),createdAt:firebase.firestore.FieldValue.serverTimestamp(),updatedAt:firebase.firestore.FieldValue.serverTimestamp(),pluginVersion:cfg.version||'1.1.0'}); toast('Case saved to Firebase.'); }catch(e){console.error(e);toast('Could not save the case. Check Firebase settings and security rules.');} }
