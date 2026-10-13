@@ -2009,6 +2009,7 @@ body:not(.mf-auth-resolving) #mf-session-loader{
   const pct = id => num(id)/100;
   const cfg = window.MortgageFitConfig || {firebaseEnabled:false};
   let currentStep = 0, applicantSeq = 0, lastResult = null, db = null, auth = null, uid = null;
+  let signingOutToHome = false;
   const emptyBranding = () => ({name:'',company:'',license:'',phone:'',email:'',logoDataUrl:''});
   let agentBranding = emptyBranding(), brandingLogoDraft = '', brandingLoadSeq = 0;
   let accessProfile=null, isMortgageAdmin=false, agentDirectory=[], editAgentUid='', brandingTargetUid='', brandingTargetData=emptyBranding(), agentUnsubscribe=null, requestUnsubscribe=null, authCheckSeq=0;
@@ -2494,6 +2495,10 @@ body:not(.mf-auth-resolving) #mf-session-loader{
     const seq=++authCheckSeq;
     uid=user?.uid||null;
 
+    // During an intentional sign-out, keep the current workspace visible until
+    // navigation to the public home page completes. This prevents a login-screen flash.
+    if(signingOutToHome && !user) return;
+
     const preferredWorkspace=(()=>{try{return sessionStorage.getItem('mf-workspace-mode')||'agent'}catch(e){return 'agent'}})();
 
     // Firebase has now resolved the persisted session. Remove the neutral loader
@@ -2766,12 +2771,14 @@ body:not(.mf-auth-resolving) #mf-session-loader{
 
   async function signOutAgent(){
     if(!auth) return;
+    signingOutToHome=true;
     try{
+      // Sign out of Firebase, then leave the protected calculator entirely.
+      // index.html is the public MortgageFit home page in the same folder.
       await auth.signOut();
-
-      updateAuthUI(null);
-
+      window.location.replace('index.html');
     }catch(err){
+      signingOutToHome=false;
       console.error(err);
       toast('Could not sign out. Please try again.');
     }
