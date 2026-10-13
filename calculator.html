@@ -2570,10 +2570,13 @@ body:not(.mf-auth-resolving) #mf-session-loader{
       isMortgageAdmin=profile.role==='admin';
       document.body.classList.toggle('mf-admin-authorized',isMortgageAdmin);
       $('mf-admin-tab').hidden=!isMortgageAdmin;
-      // Restore the workspace that was open before a normal browser refresh.
-      // A direct ?workspace=admin link still takes precedence for administrators.
-      const requestedAdmin=new URLSearchParams(window.location.search).get('workspace')==='admin';
-      const restoreMode=(isMortgageAdmin && (requestedAdmin || preferredWorkspace==='admin'))?'admin':'agent';
+      // Administrators always retain full Admin Panel access after authentication.
+      // Restore Admin Panel by default for admins, while they can still switch to
+      // Agent Workspace at any time using the workspace tabs.
+      const requestedWorkspace=new URLSearchParams(window.location.search).get('workspace');
+      const restoreMode=isMortgageAdmin
+        ? (requestedWorkspace==='agent' ? 'agent' : 'admin')
+        : 'agent';
       requestAnimationFrame(()=>{
         if(auth?.currentUser?.uid!==user.uid)return;
         if(typeof window.MortgageFitSetWorkspaceMode==='function')window.MortgageFitSetWorkspaceMode(restoreMode);
