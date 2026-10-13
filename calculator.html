@@ -1369,14 +1369,82 @@ body.mf-auth-locked .mf-login-gate{
 }
 </style>
 
-<style id="mf-auth-pending-v1">html.mf-auth-pending .mf-login-gate{display:none!important}</style>
+
+<style id="mf-auth-refresh-state-v10">
+/* While Firebase restores the existing session, show neither login nor workspace. */
+body.mf-auth-resolving{
+  overflow:hidden!important;
+}
+body.mf-auth-resolving #mortgagefit-app{
+  display:none!important;
+}
+body.mf-auth-resolving #mf-session-loader{
+  display:flex!important;
+}
+
+/* After Firebase resolves, remove the restoring screen. */
+body:not(.mf-auth-resolving) #mf-session-loader{
+  display:none!important;
+}
+
+.mf-session-loader{
+  position:fixed;
+  inset:0;
+  z-index:200000;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+  background:var(--mf-page);
+}
+.mf-session-loader-card{
+  width:min(330px,100%);
+  padding:28px 26px;
+  border:1px solid var(--mf-edge);
+  border-radius:22px;
+  background:var(--mf-modal);
+  box-shadow:var(--mf-shadow);
+  text-align:center;
+}
+.mf-session-loader-brand{
+  font-family:var(--mf-sans);
+  font-size:27px;
+  font-weight:800;
+  letter-spacing:-1.2px;
+  color:var(--mf-head);
+}
+.mf-session-loader-brand em{
+  color:var(--mf-acc);
+  font-style:normal;
+}
+.mf-session-spinner{
+  width:27px;
+  height:27px;
+  margin:20px auto 13px;
+  border:3px solid var(--mf-track);
+  border-top-color:var(--mf-acc);
+  border-radius:50%;
+  animation:mfSessionSpin .75s linear infinite;
+}
+.mf-session-loader p{
+  margin:0;
+  color:var(--mf-muted);
+  font-size:11px;
+  font-weight:600;
+}
+@keyframes mfSessionSpin{to{transform:rotate(360deg)}}
+</style>
+
 </head>
-<body class="mf-auth-locked">
-<script>
-/* Avoid flashing the login page on browser refresh for an already signed-in agent.
-   Firebase re-checks the real session right after load and locks the page if needed. */
-(function(){try{if(localStorage.getItem('mf-was-signed-in')==='1'){document.documentElement.classList.add('mf-auth-pending');document.body.classList.remove('mf-auth-locked');}}catch(e){}})();
-</script>
+<body class="mf-auth-resolving">
+
+  <div class="mf-session-loader" id="mf-session-loader" aria-live="polite">
+    <div class="mf-session-loader-card">
+      <div class="mf-session-loader-brand"><span>Mortgage</span><em>Fit</em></div>
+      <div class="mf-session-spinner" aria-hidden="true"></div>
+      <p>Restoring your session…</p>
+    </div>
+  </div>
+
 
         <div class="mf-app" id="mortgagefit-app">
           <nav class="mf-mode-tabs" aria-label="MortgageFit workspace">
@@ -1702,7 +1770,7 @@ body.mf-auth-locked .mf-login-gate{
               <dt>Agent ID</dt><dd id="mf-agent-id"></dd>
             </dl>
           </div>
-          <div class="mf-modal mf-login-gate" id="mf-auth-modal">
+          <div class="mf-modal mf-login-gate" id="mf-auth-modal" hidden>
             <div class="mf-modal-card mf-auth-card">
               <div class="mf-login-brand">
                 <div class="mf-login-wordmark"><span>Mortgage</span><em>Fit</em></div>
@@ -1961,6 +2029,7 @@ body.mf-auth-locked .mf-login-gate{
     if (panels[nextStep]) panels[nextStep].classList.add('active');
 
     currentStep = nextStep;
+    try{sessionStorage.setItem('mf-current-step',String(currentStep));}catch(e){}
 
     panels.forEach((p,i)=>{
       if(i !== currentStep) p.classList.remove('active');
@@ -2101,15 +2170,18 @@ body.mf-auth-locked .mf-login-gate{
   function updateAuthUI(user){
     uid=user?.uid||null;
     const signedIn=!!user;
-    document.documentElement.classList.remove('mf-auth-pending');
-    try{localStorage.setItem('mf-was-signed-in',signedIn?'1':'0');}catch(e){}
+
+    // Firebase has now resolved the persisted session.
+    document.body.classList.remove('mf-auth-resolving');
     document.body.classList.toggle('mf-auth-locked',!signedIn);
+
     $('mf-auth-modal').hidden=signedIn;
     $('mf-signout').hidden=!signedIn;
     $('mf-account-menu').hidden=!signedIn;
     $('mf-save-case').hidden=!signedIn;
     $('mf-cases').hidden=!signedIn;
     $('mf-login').hidden=true;
+
     if(signedIn){
       renderAgentProfile(user);
       setAuthStatus('');
@@ -2148,6 +2220,10 @@ body.mf-auth-locked .mf-login-gate{
       if(!firebase.apps.length) firebase.initializeApp(cfg.firebase);
       auth=firebase.auth();
       db=firebase.firestore();
+
+      // Keep the signed-in session across normal browser refreshes.
+      await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+
       auth.onAuthStateChanged(user=>updateAuthUI(user));
     }catch(err){
       console.error(err);
@@ -2204,8 +2280,6 @@ body.mf-auth-locked .mf-login-gate{
     try{
       await auth.signOut();
       updateAuthUI(null);
-      // After logging out, send the agent to the home page instead of the login screen.
-      window.location.replace('index.html');
     }catch(err){
       console.error(err);
       toast('Could not sign out. Please try again.');
@@ -2229,34 +2303,38 @@ body.mf-auth-locked .mf-login-gate{
   }
 
   function performCalculatorReset(){
-    // Never sign out, reload the page, or touch Firebase authentication.
-    // Only calculator fields inside the calculator panels are reset.
-    const calculatorControls=$$('.mf-panel input, .mf-panel select, .mf-panel textarea');
-
-    calculatorControls.forEach(el=>{
+    // IMPORTANT: This function does not reload the document and does not call
+    // Firebase sign-out/sign-in. It only clears calculator data.
+    $$('.mf-panel input, .mf-panel select, .mf-panel textarea').forEach(el=>{
       if(el.type==='checkbox' || el.type==='radio'){
         el.checked=el.defaultChecked;
       }else if(el.tagName==='SELECT'){
-        const defaultOption=Array.from(el.options).findIndex(o=>o.defaultSelected);
-        el.selectedIndex=defaultOption>=0?defaultOption:0;
+        const defaultIndex=Array.from(el.options).findIndex(o=>o.defaultSelected);
+        el.selectedIndex=defaultIndex>=0?defaultIndex:0;
       }else{
         el.value=el.defaultValue || '';
       }
     });
 
-    // Reset dynamic applicant rows to one fresh applicant.
-    const applicantList=$('applicant-list');
-    if(applicantList){
-      applicantList.innerHTML='';
+    // Recreate a single clean applicant.
+    if($('applicant-list')){
+      $('applicant-list').innerHTML='';
       applicantSeq=0;
       addApplicant();
     }
 
-    // Remove user-added custom expenses only.
-    const customExpenses=$('custom-expenses');
-    if(customExpenses) customExpenses.innerHTML='';
+    // Remove only user-added custom expense rows.
+    if($('custom-expenses')) $('custom-expenses').innerHTML='';
 
-    setupToggles();
+    // Synchronize enabled/disabled state without attaching duplicate listeners.
+    $$('[data-toggle]').forEach(toggle=>{
+      const target=$(toggle.dataset.toggle||'');
+      if(!target) return;
+      target.disabled=!toggle.checked;
+      toggle.closest('.mf-toggle-row')?.classList.toggle('is-off',!toggle.checked);
+      if(!toggle.checked) target.value='';
+    });
+
     clearScenario();
     lastResult=null;
 
@@ -2264,27 +2342,25 @@ body.mf-auth-locked .mf-login-gate{
     if($('mf-results')) $('mf-results').hidden=true;
     if($('mf-download')) $('mf-download').disabled=true;
 
-    // Stay on whichever workspace (Agent Workspace / Admin Panel) is currently open.
-
+    // Reset only the calculator navigation.
     currentStep=0;
+    try{sessionStorage.setItem('mf-current-step','0');}catch(e){}
     showStep(0);
     liveUpdate();
 
-    // If Firebase already has a signed-in user, explicitly keep the workspace unlocked.
-    // No authentication method is called here.
-    if(auth?.currentUser){
-      uid=auth.currentUser.uid;
-      document.body.classList.remove('mf-auth-locked');
-      if($('mf-auth-modal')) $('mf-auth-modal').hidden=true;
-      if($('mf-account-menu')) $('mf-account-menu').hidden=false;
-      if($('mf-signout')) $('mf-signout').hidden=false;
-      if($('mf-save-case')) $('mf-save-case').hidden=false;
-      if($('mf-cases')) $('mf-cases').hidden=false;
+    // Reset is available in the Agent Workspace, so keep/return to that workspace
+    // without touching authentication.
+    if(typeof window.MortgageFitSetWorkspaceMode==='function'){
+      window.MortgageFitSetWorkspaceMode('agent');
+    }else{
+      const app=$('mortgagefit-app');
+      if(app) app.classList.remove('mf-admin-mode');
+      try{sessionStorage.setItem('mf-workspace-mode','agent');}catch(e){}
     }
 
     closeResetModal();
     window.scrollTo({top:0,behavior:'auto'});
-    toast('Calculator cleared. You are still signed in.');
+    toast('Calculator cleared. Your session is unchanged.');
   }
 
   function bind(){
@@ -2335,7 +2411,12 @@ body.mf-auth-locked .mf-login-gate{
       btn.querySelector('.mf-eye-closed').hidden=showing;
       input.focus();
     };
-    liveUpdate(); showStep(0); initFirebase();
+    let restoredStep=0;
+    try{
+      const savedStep=parseInt(sessionStorage.getItem('mf-current-step')||'0',10);
+      if(Number.isInteger(savedStep) && savedStep>=0 && savedStep<=6) restoredStep=savedStep;
+    }catch(e){}
+    liveUpdate(); showStep(restoredStep); initFirebase();
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',bind); else bind();
 })();
@@ -2421,6 +2502,7 @@ body.mf-auth-locked .mf-login-gate{
     try{sessionStorage.setItem('mf-workspace-mode',isAdmin?'admin':'agent');}catch(e){}
     window.scrollTo({top:0,behavior:'auto'});
   }
+  window.MortgageFitSetWorkspaceMode=setMode;
   agent.addEventListener('click',function(){setMode('agent');});
   admin.addEventListener('click',function(){setMode('admin');});
   var saved='agent';
