@@ -1369,8 +1369,14 @@ body.mf-auth-locked .mf-login-gate{
 }
 </style>
 
+<style id="mf-auth-pending-v1">html.mf-auth-pending .mf-login-gate{display:none!important}</style>
 </head>
 <body class="mf-auth-locked">
+<script>
+/* Avoid flashing the login page on browser refresh for an already signed-in agent.
+   Firebase re-checks the real session right after load and locks the page if needed. */
+(function(){try{if(localStorage.getItem('mf-was-signed-in')==='1'){document.documentElement.classList.add('mf-auth-pending');document.body.classList.remove('mf-auth-locked');}}catch(e){}})();
+</script>
 
         <div class="mf-app" id="mortgagefit-app">
           <nav class="mf-mode-tabs" aria-label="MortgageFit workspace">
@@ -2095,6 +2101,8 @@ body.mf-auth-locked .mf-login-gate{
   function updateAuthUI(user){
     uid=user?.uid||null;
     const signedIn=!!user;
+    document.documentElement.classList.remove('mf-auth-pending');
+    try{localStorage.setItem('mf-was-signed-in',signedIn?'1':'0');}catch(e){}
     document.body.classList.toggle('mf-auth-locked',!signedIn);
     $('mf-auth-modal').hidden=signedIn;
     $('mf-signout').hidden=!signedIn;
@@ -2254,20 +2262,7 @@ body.mf-auth-locked .mf-login-gate{
     if($('mf-results')) $('mf-results').hidden=true;
     if($('mf-download')) $('mf-download').disabled=true;
 
-    // Always return to the Agent Workspace, not the Admin Panel.
-    const app=$('mortgagefit-app');
-    if(app) app.classList.remove('mf-admin-mode');
-    const agentTab=$('mf-agent-tab');
-    const adminTab=$('mf-admin-tab');
-    if(agentTab){
-      agentTab.classList.add('is-active');
-      agentTab.setAttribute('aria-selected','true');
-    }
-    if(adminTab){
-      adminTab.classList.remove('is-active');
-      adminTab.setAttribute('aria-selected','false');
-    }
-    try{sessionStorage.setItem('mf-workspace-mode','agent');}catch(e){}
+    // Stay on whichever workspace (Agent Workspace / Admin Panel) is currently open.
 
     currentStep=0;
     showStep(0);
