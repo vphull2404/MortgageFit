@@ -2204,8 +2204,6 @@ body.mf-auth-locked .mf-login-gate{
     try{
       await auth.signOut();
       updateAuthUI(null);
-      // After logging out, send the agent to the home page instead of the login screen.
-      window.location.replace('index.html');
     }catch(err){
       console.error(err);
       toast('Could not sign out. Please try again.');
