@@ -2106,7 +2106,57 @@ body.mf-auth-locked .mf-login-gate{
   async function deleteCase(id){ if(!db||!uid) return toast('Please sign in first.'); if(!confirm('Delete this saved case?')) return; await db.collection('mortgagefit_cases').doc(id).delete(); loadCases(); }
   function toast(msg){ const t=$('mf-toast'); t.textContent=msg;t.hidden=false;clearTimeout(t._timer);t._timer=setTimeout(()=>t.hidden=true,3200); }
 
-  function reset(){ if(confirm('Reset all calculator values?')) location.reload(); }
+  function reset(){
+    if(!confirm('Reset all calculator values?')) return;
+
+    // Clear all editable calculator fields without reloading the page.
+    const app=$('mortgagefit-app');
+    if(!app) return;
+
+    app.querySelectorAll('input, select, textarea').forEach(el=>{
+      // Preserve authentication/login controls and admin/theme controls.
+      if(el.closest('#mf-auth-modal')) return;
+      if(el.closest('#mf-admin-panel')) return;
+      if(el.id==='mf-photo-file') return;
+
+      if(el.type==='checkbox' || el.type==='radio'){
+        el.checked = el.defaultChecked;
+      }else if(el.tagName==='SELECT'){
+        el.selectedIndex = 0;
+      }else{
+        el.value = el.defaultValue || '';
+      }
+    });
+
+    // Rebuild dynamic sections to their initial state.
+    const applicantList=$('applicant-list');
+    if(applicantList){
+      applicantList.innerHTML='';
+      applicantSeq=0;
+      addApplicant();
+    }
+
+    const customExpenses=$('custom-expenses');
+    if(customExpenses) customExpenses.innerHTML='';
+
+    // Restore toggle-enabled/disabled states.
+    setupToggles();
+
+    // Clear scenario output and calculated state.
+    clearScenario();
+    lastResult=null;
+
+    if($('mf-results-empty')) $('mf-results-empty').hidden=false;
+    if($('mf-results')) $('mf-results').hidden=true;
+    if($('mf-download')) $('mf-download').disabled=true;
+
+    // Return to the first calculator step without affecting the Firebase session.
+    currentStep=0;
+    showStep(0);
+    liveUpdate();
+
+    toast('Calculator fields have been reset.');
+  }
 
   function bind(){
     buildDebtGrid(); buildExpenses(); addApplicant(); setupToggles();
