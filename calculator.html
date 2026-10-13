@@ -2888,7 +2888,13 @@ body:not(.mf-auth-resolving) #mf-session-loader{
     });
     $$('.mf-step').forEach(s=>s.addEventListener('click',()=>showStep(parseInt(s.dataset.step,10))));
     $('mf-next').onclick=()=>showStep(currentStep+1); $('mf-prev').onclick=()=>showStep(currentStep-1); $('add-applicant').onclick=addApplicant; $('add-custom-expense').onclick=()=>addCustomExpense();
-    $('mf-reset').onclick=reset; $('mf-download').onclick=()=>pdf(false); $('mf-download-results').onclick=()=>pdf(false); $('mf-preview').onclick=()=>pdf(true); $('mf-preview-results').onclick=()=>pdf(true); $('mf-calculate').onclick=calculate; $('runScenario').onclick=runScenario; $('clearScenario').onclick=clearScenario; $('mf-save-case').onclick=saveCase; $('mf-cases').onclick=loadCases; $('mf-cases-close').onclick=()=>{$('mf-cases-modal').hidden=true;};
+    $('mf-reset').onclick=reset;
+    $('mf-reset-cancel').onclick=closeResetModal;
+    $('mf-reset-confirm').onclick=performCalculatorReset;
+    $('mf-reset-modal').addEventListener('click',e=>{
+      if(e.target===$('mf-reset-modal')) closeResetModal();
+    });
+    $('mf-download').onclick=()=>pdf(false); $('mf-download-results').onclick=()=>pdf(false); $('mf-preview').onclick=()=>pdf(true); $('mf-preview-results').onclick=()=>pdf(true); $('mf-calculate').onclick=calculate; $('runScenario').onclick=runScenario; $('clearScenario').onclick=clearScenario; $('mf-save-case').onclick=saveCase; $('mf-cases').onclick=loadCases; $('mf-cases-close').onclick=()=>{$('mf-cases-modal').hidden=true;};
     $('mf-login').onclick=()=>{};
     $('mf-signout').onclick=signOutAgent;
     $('mf-branding-open').onclick=()=>openBranding();
