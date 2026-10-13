@@ -1854,7 +1854,7 @@ body:not(.mf-auth-resolving) #mf-session-loader{
               <div class="mf-modal-head"><div><h2 id="mf-edit-agent-title">Edit Agent</h2><p>Manage this agent's plan, status and contact information.</p></div><button type="button" id="mf-edit-agent-close" aria-label="Close">×</button></div>
               <form id="mf-edit-agent-form"><div class="mf-agent-fields">
                 <label>Full name <input name="name" required maxlength="90"></label>
-                <label>Email (read-only) <input name="email" readonly></label>
+                <label>Email address <input name="email" type="email" required maxlength="120" autocomplete="off" placeholder="agent@example.com"></label>
                 <label>Company <input name="company" required maxlength="100"></label>
                 <label>Phone (Canada/US) <input name="phone" type="tel" inputmode="numeric" maxlength="17" placeholder="(416) 555-0123" pattern="(?:\+1 )?\([2-9][0-9]{2}\) [2-9][0-9]{2}-[0-9]{4}" title="Enter a valid Canada/US phone number"></label>
                 <label>License <input name="license" maxlength="55"></label>
@@ -2692,15 +2692,84 @@ body:not(.mf-auth-resolving) #mf-session-loader{
     event.preventDefault();if(!isMortgageAdmin||!editAgentUid)return;
     const a=agentDirectory.find(x=>x.uid===editAgentUid);if(!a)return;
     const f=event.currentTarget,data=Object.fromEntries(new FormData(f));
+
     if(!checkAgentPhone(f.elements.phone)){f.elements.phone.reportValidity();return;}
-    const button=$('mf-edit-agent-save');button.disabled=true;$('mf-edit-agent-feedback').textContent='Saving changes…';
+
+    const newEmail=(data.email||'').trim().toLowerCase();
+    const oldEmail=(a.email||'').trim().toLowerCase();
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail)){
+      f.elements.email.setCustomValidity('Enter a valid email address.');
+      f.elements.email.reportValidity();
+      f.elements.email.setCustomValidity('');
+      return;
+    }
+
+    const button=$('mf-edit-agent-save');
+    button.disabled=true;
+    $('mf-edit-agent-feedback').textContent='Saving changes…';
+
     try{
-      const changes={name:data.name.trim(),company:data.company.trim(),phone:data.phone.trim(),license:data.license.trim(),theme:MF_AGENT_THEMES.includes(data.theme)?data.theme:'pearl-gold',updatedAt:firebase.firestore.FieldValue.serverTimestamp()};
-      if(a.role!=='admin'){changes.plan=data.plan;changes.status=data.status;}
+      // Changing another user's Firebase Authentication email cannot be done
+      // securely from the browser. Use the admin Cloud Function for that step.
+      if(newEmail!==oldEmail){
+        $('mf-edit-agent-feedback').textContent='Updating sign-in email…';
+
+        if(editAgentUid===uid && auth?.currentUser){
+          // Admin is editing their own account.
+          await auth.currentUser.updateEmail(newEmail);
+        }else{
+          if(!firebase.functions) throw new Error('Firebase Functions library is unavailable.');
+          const updateEmail=firebase.functions().httpsCallable('mortgagefitUpdateAgentEmail');
+          await updateEmail({uid:editAgentUid,email:newEmail});
+        }
+      }
+
+      const changes={
+        name:data.name.trim(),
+        email:newEmail,
+        company:data.company.trim(),
+        phone:data.phone.trim(),
+        license:data.license.trim(),
+        theme:MF_AGENT_THEMES.includes(data.theme)?data.theme:'pearl-gold',
+        updatedAt:firebase.firestore.FieldValue.serverTimestamp()
+      };
+
+      if(a.role!=='admin'){
+        changes.plan=data.plan;
+        changes.status=data.status;
+      }
+
       await db.collection('mortgagefit_agents').doc(editAgentUid).update(changes);
-      $('mf-edit-agent-modal').hidden=true;toast('Agent details updated.');
-    }catch(e){console.error(e);$('mf-edit-agent-feedback').textContent='Could not save changes. Check administrator permissions.';}
-    finally{button.disabled=false;}
+
+      // Keep the separate branding/profile contact email aligned when a profile exists.
+      try{
+        await db.collection('mortgagefit_agent_profiles').doc(editAgentUid).set(
+          {email:newEmail,updatedAt:firebase.firestore.FieldValue.serverTimestamp()},
+          {merge:true}
+        );
+      }catch(profileErr){
+        console.warn('Agent profile email could not be synchronized:',profileErr);
+      }
+
+      $('mf-edit-agent-modal').hidden=true;
+      toast(newEmail!==oldEmail?'Agent details and sign-in email updated.':'Agent details updated.');
+    }catch(e){
+      console.error(e);
+      const code=e?.code||'';
+      let message='Could not save changes. Check administrator permissions.';
+      if(code==='functions/not-found' || String(e?.message||'').toLowerCase().includes('not found')){
+        message='Email editing is enabled, but the secure mortgagefitUpdateAgentEmail Cloud Function still needs to be deployed.';
+      }else if(code==='functions/already-exists' || code==='auth/email-already-exists' || code==='auth/email-already-in-use'){
+        message='That email address is already being used by another account.';
+      }else if(code==='auth/requires-recent-login'){
+        message='For security, sign in again before changing your own administrator email.';
+      }else if(code==='auth/invalid-email'){
+        message='Enter a valid email address.';
+      }
+      $('mf-edit-agent-feedback').textContent=message;
+    }finally{
+      button.disabled=false;
+    }
   }
   async function requestPremium(){
     if(!uid||!db)return;
