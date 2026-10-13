@@ -2320,6 +2320,11 @@ body:not(.mf-auth-resolving) #mf-session-loader{
     return {doc,ref};
   }
   function pdf(preview=false){
+    if(!auth?.currentUser){
+      $('mf-auth-modal').hidden=false;
+      setAuthStatus('Sign in with a Premium account to preview or download the PDF.','error');
+      return;
+    }
     if(!accessProfile||accessProfile.status!=='active')return toast('Your account is not active.');
     if(!isMortgageAdmin&&accessProfile.plan!=='premium'){$('mf-premium-modal').hidden=false;return;}
     const result=buildEstimatePdf();if(!result)return;
@@ -2530,7 +2535,23 @@ body:not(.mf-auth-resolving) #mf-session-loader{
       $('mf-account-menu').classList.remove('is-open');
       $('mf-cases-modal').hidden=true;
       $('mf-auth-unapproved-signout').hidden=true;
-      setAuthStatus('');return;
+
+      // Public/free calculator access:
+      // calculator.html opens without login.
+      // calculator.html?login=1 intentionally opens the login screen.
+      const loginRequested=new URLSearchParams(window.location.search).get('login')==='1';
+      if(!loginRequested){
+        document.body.classList.remove('mf-auth-locked');
+        $('mf-auth-modal').hidden=true;
+        $('mf-login').hidden=false;
+        setAuthStatus('');
+        return;
+      }
+
+      document.body.classList.add('mf-auth-locked');
+      $('mf-auth-modal').hidden=false;
+      setAuthStatus('');
+      return;
     }
     setAuthStatus('Checking account access…');
     try{
@@ -2969,7 +2990,7 @@ body:not(.mf-auth-resolving) #mf-session-loader{
       if(e.target===$('mf-reset-modal')) closeResetModal();
     });
     $('mf-download').onclick=()=>pdf(false); $('mf-download-results').onclick=()=>pdf(false); $('mf-preview').onclick=()=>pdf(true); $('mf-preview-results').onclick=()=>pdf(true); $('mf-calculate').onclick=calculate; $('runScenario').onclick=runScenario; $('clearScenario').onclick=clearScenario; $('mf-save-case').onclick=saveCase; $('mf-cases').onclick=loadCases; $('mf-cases-close').onclick=()=>{$('mf-cases-modal').hidden=true;};
-    $('mf-login').onclick=()=>{};
+    $('mf-login').onclick=()=>{window.location.href='calculator.html?login=1';};
     $('mf-signout').onclick=signOutAgent;
     $('mf-branding-open').onclick=()=>openBranding();
     $('mf-branding-agent-select').onchange=e=>selectBrandingAgent(e.target.value);
