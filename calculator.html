@@ -1822,6 +1822,7 @@ body:not(.mf-auth-resolving) #mf-session-loader{
                   <label>License number<input type="text" id="mf-branding-license" maxlength="55" placeholder="License or registration number"></label>
                   <label>Business phone<input type="tel" id="mf-branding-phone" maxlength="45" placeholder="(000) 000-0000"></label>
                   <label>Business email<input type="email" id="mf-branding-email" maxlength="120" placeholder="agent@brokerage.ca"></label>
+                  <label>Website<input type="text" id="mf-branding-website" maxlength="120" placeholder="www.yourbrokerage.ca"></label>
                 </div>
               </div>
               <div class="mf-branding-actions"><span id="mf-branding-status" role="status"></span><button type="button" class="mf-btn mf-btn-outline" id="mf-branding-preview">Preview PDF</button><button type="button" class="mf-btn mf-btn-primary" id="mf-branding-save">Save Branding</button></div>
@@ -2010,7 +2011,7 @@ body:not(.mf-auth-resolving) #mf-session-loader{
   const cfg = window.MortgageFitConfig || {firebaseEnabled:false};
   let currentStep = 0, applicantSeq = 0, lastResult = null, db = null, auth = null, uid = null;
   let signingOutToHome = false;
-  const emptyBranding = () => ({name:'',company:'',license:'',phone:'',email:'',logoDataUrl:''});
+  const emptyBranding = () => ({name:'',company:'',license:'',phone:'',email:'',website:'',logoDataUrl:''});
   let agentBranding = emptyBranding(), brandingLogoDraft = '', brandingLoadSeq = 0;
   let accessProfile=null, isMortgageAdmin=false, agentDirectory=[], editAgentUid='', brandingTargetUid='', brandingTargetData=emptyBranding(), agentUnsubscribe=null, requestUnsubscribe=null, authCheckSeq=0;
 
@@ -2242,80 +2243,349 @@ body:not(.mf-auth-resolving) #mf-session-loader{
     if(!lastResult) calculate();
     if(!window.jspdf){toast('PDF library could not be loaded.');return null;}
     const r=lastResult, {jsPDF}=window.jspdf, doc=new jsPDF({unit:'pt',format:'letter'});
-    const left=42, right=570, width=528, navy=[16,42,67], muted=[96,115,134], teal=[13,116,144], pale=[244,249,251], edge=[221,231,238];
-    const brand=agentBranding||emptyBranding();
+    const W=612,H=792,L=42,R=570,CW=528,TOP=106,BOTTOM=722;
+    const C={navy:[9,26,52],navy2:[24,66,108],gold:[201,162,76],goldD:[143,100,22],goldL:[240,222,176],teal:[22,150,138],ink:[27,37,56],muted:[98,111,130],pale:[246,247,250],edge:[223,228,236],ok:[31,157,92],warn:[224,142,11],bad:[224,69,95]};
+    const brand={...emptyBranding(),...(agentBranding||{})};
+    const clean=(v,max=150)=>String(v??'').replace(/[\r\n\t]+/g,' ').replace(/[\u2018\u2019]/g,"'").replace(/[\u201C\u201D]/g,'"').replace(/[\u2013\u2014]/g,'-').replace(/\u00B7/g,'|').replace(/\u2192/g,'>').replace(/[^\x20-\x7E\u00A0-\u00FF]/g,'').trim().slice(0,max);
+    const agentName=clean(brand.name||auth?.currentUser?.displayName||'Your Mortgage Professional',85);
+    const company=clean(brand.company||'Mortgage Advisory Team',90);
+    const phone=clean(brand.phone,45), email=clean(brand.email||auth?.currentUser?.email||'',90), license=clean(brand.license,55);
+    const siteRaw=clean(brand.website||(/^https?:/i.test(location.protocol)?location.origin:''),120);
+    const website=siteRaw.replace(/^https?:\/\//i,'').replace(/\/$/,'');
     const ref=$('clientRef').value.trim()||'Client-Estimate';
     const date=new Date().toLocaleDateString('en-CA',{year:'numeric',month:'long',day:'numeric'});
-    const clean=(value,max=150)=>String(value??'').replace(/[\r\n\t]+/g,' ').trim().slice(0,max);
-    const drawText=(value,x,y,size=9,bold=false,color=navy)=>{
-      doc.setFont('helvetica',bold?'bold':'normal');doc.setFontSize(size);doc.setTextColor(...color);doc.text(clean(value,500),x,y);
+    const hasLogo=!!(brand.logoDataUrl && /^data:image\/(png|jpeg|webp);base64,/i.test(brand.logoDataUrl));
+    doc.setProperties({title:`Mortgage Affordability Estimate - ${clean(ref,60)}`,subject:'Tentative mortgage estimate',author:agentName,creator:'MortgageFit'});
+
+    /* ---------- drawing helpers ---------- */
+    const alpha=(a,s=a)=>doc.setGState(new doc.GState({opacity:a,'stroke-opacity':s}));
+    const solid=()=>alpha(1);
+    const fill=c=>doc.setFillColor(...c), stroke=c=>doc.setDrawColor(...c);
+    const fit=(s,w,size,bold)=>{s=clean(s,220);doc.setFont('helvetica',bold?'bold':'normal');doc.setFontSize(size);if(doc.getTextWidth(s)<=w)return s;while(s.length>1&&doc.getTextWidth(s+'...')>w)s=s.slice(0,-1);return s+'...';};
+    const T=(s,x,yy,o={})=>{
+      const {size=9,bold=false,italic=false,color=C.ink,align='left',space=0,max}=o;
+      doc.setFont('helvetica',bold?(italic?'bolditalic':'bold'):(italic?'italic':'normal'));doc.setFontSize(size);doc.setTextColor(...color);
+      if(space)doc.setCharSpace(space);
+      doc.text(max?fit(s,max,size,bold):clean(s,600),x,yy,{align});
+      if(space)doc.setCharSpace(0);
     };
-    let y=40;
-    const ensure=(h)=>{if(y+h>725){doc.addPage();y=43;}};
-    doc.setFillColor(...teal);doc.rect(0,0,612,7,'F');
-    if(brand.logoDataUrl && /^data:image\/(png|jpeg|webp);base64,/i.test(brand.logoDataUrl)){
+    const para=(s,x,yy,w,o={})=>{
+      doc.setFont('helvetica',o.bold?'bold':(o.italic?'italic':'normal'));doc.setFontSize(o.size||9);
+      const lines=doc.splitTextToSize(clean(s,2000),w);
+      lines.forEach((ln,i)=>T(ln,x,yy+i*(o.lh||12),o));
+      return lines.length;
+    };
+    const grad=(x,yy,w,h,c1,c2,vertical=false,n=64)=>{
+      for(let i=0;i<n;i++){
+        const t=i/(n-1),col=c1.map((v,k)=>Math.round(v+(c2[k]-v)*t));fill(col);
+        if(vertical)doc.rect(x,yy+h*i/n,w,h/n+.6,'F');else doc.rect(x+w*i/n,yy,w/n+.6,h,'F');
+      }
+    };
+    const glass=(x,yy,w,h,rad,a=.16)=>{
+      alpha(a);fill([255,255,255]);doc.roundedRect(x,yy,w,h,rad,rad,'F');
+      alpha(.5,.5);stroke([255,255,255]);doc.setLineWidth(.8);doc.roundedRect(x,yy,w,h,rad,rad,'S');
+      alpha(.10);fill([255,255,255]);doc.roundedRect(x+3,yy+1.5,w-6,h*.38,rad-2,rad-2,'F');
+      solid();
+    };
+    const orb=(x,yy,rad,col,a)=>{alpha(a);fill(col);doc.circle(x,yy,rad,'F');solid();};
+    const logoFit=(x,yy,w,h)=>{
+      if(!hasLogo)return false;
       try{
-        const props=doc.getImageProperties(brand.logoDataUrl),scale=Math.min(118/props.width,57/props.height);
-        doc.addImage(brand.logoDataUrl,props.fileType||'PNG',left,40,props.width*scale,props.height*scale);
-      }catch(err){console.warn('Could not add agent logo to PDF',err);drawText('YOUR LOGO',left+10,65,12,true,muted);}
-    }else{
-      doc.setFillColor(...pale);doc.setDrawColor(...edge);doc.roundedRect(left,40,104,52,5,5,'FD');drawText('YOUR LOGO',left+13,69,12,true,muted);
-    }
-    const bx=178;
-    drawText(clean(brand.company||'Mortgage Advisory Team',72),bx,51,12,true,navy);
-    drawText(clean(brand.name||auth?.currentUser?.displayName||'Mortgage Professional',85),bx,68,10,true,navy);
-    const contact=[brand.license?`License: ${clean(brand.license,48)}`:'',brand.phone?clean(brand.phone,38):''].filter(Boolean).join('  |  ');
-    if(contact)drawText(contact,bx,83,8,false,muted);
-    drawText(clean(brand.email||auth?.currentUser?.email||'',90),bx,97,8,false,muted);
-    doc.setDrawColor(226,181,71);doc.setLineWidth(2);doc.line(left,115,right,115);
-    drawText('Mortgage Affordability Estimate',left,147,20,true,navy);
-    y=168;
-    const metadata=[['PREPARED FOR',clean(ref,52)],['REPORT DATE',date],['CLIENT REFERENCE',clean(ref,52)]];
-    doc.setFillColor(...pale);doc.setDrawColor(...edge);doc.roundedRect(left,y,width,57,5,5,'FD');
-    metadata.forEach(([label,value],i)=>{const x=left+12+i*176;drawText(label,x,y+18,7.3,true,muted);doc.setFontSize(9);doc.setFont('helvetica','bold');doc.setTextColor(...navy);doc.text(doc.splitTextToSize(value,154).slice(0,2),x,y+34);});
-    y+=79;
-    drawText('Your mortgage snapshot',left,y,11,true,navy);y+=13;
-    const cards=[['Estimated lender qualification',money(r.lenderMortgage)],['Comfortable mortgage',money(r.comfortableMortgage||0)],['Maximum purchase price',money(r.maxPurchase)]];
-    doc.setFillColor(...pale);doc.roundedRect(left,y,width,71,5,5,'F');
-    cards.forEach(([label,value],i)=>{const x=left+12+i*176;doc.setFontSize(7.5);doc.setFont('helvetica','normal');doc.setTextColor(...muted);doc.text(doc.splitTextToSize(label,150).slice(0,2),x,y+16);drawText(value,x,y+53,17,true,navy);});
-    y+=91;
-    const section=(title,items)=>{
-      ensure(35);drawText(title,left,y,11,true,navy);y+=12;
-      items.forEach(([key,value],i)=>{
-        ensure(25);if(i%2===0){doc.setFillColor(...pale);doc.rect(left,y,width,24,'F');}
-        drawText(key,left+10,y+16,9,false,muted);
-        doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(...navy);
-        doc.text(doc.splitTextToSize(clean(value,140),180).slice(0,1),right-10,y+16,{align:'right'});
-        y+=24;
-      });y+=17;
+        const p=doc.getImageProperties(brand.logoDataUrl),s=Math.min(w/p.width,h/p.height),dw=p.width*s,dh=p.height*s;
+        doc.addImage(brand.logoDataUrl,p.fileType||'PNG',x+(w-dw)/2,yy+(h-dh)/2,dw,dh,'agentlogo');return true;
+      }catch(err){console.warn('Could not add agent logo to PDF',err);return false;}
     };
-    section('Qualification and monthly affordability',[
-      ['Estimated monthly mortgage payment',money(r.actualPayment)],['Annual qualifying income',money(r.annualIncome)],
-      ['Qualifying interest rate',`${r.qualRate.toFixed(2)}%`],['GDS / TDS ratios',`${r.gds.toFixed(2)}% / ${r.tds.toFixed(2)}%`],
-      ['Monthly debt payments',money(r.debtsMonthly)],['Selected living expenses',money(r.living)],
-      ['Qualification driver',r.qualificationDriver]
-    ]);
-    section('Down payment and cash requirements',[
-      ['Available down payment',money(r.down)],['Estimated cash to close',money(r.cashToClose)],
-      ['Estimated funding gap',money(r.fundingGap)],
-      ['Savings timeline',r.fundingGap<=0?'Ready':(r.savingsMonths===null?'0 months':`${r.savingsMonths} months`)]
-    ]);
-    const narrative=clean($('mf-narrative').textContent,1600);
-    if(narrative){
-      ensure(72);drawText('Advisor notes',left,y,11,true,navy);y+=14;
-      doc.setFont('helvetica','normal');doc.setFontSize(8.5);
-      const lines=doc.splitTextToSize(narrative,506);const lineHeight=12;
-      lines.forEach(line=>{ensure(lineHeight+5);doc.setTextColor(...muted);doc.text(line,left+10,y+9);y+=lineHeight;});y+=15;
+    const monogram=(cx,cy,rad)=>{
+      fill(C.gold);doc.circle(cx,cy,rad,'F');
+      const ini=company.split(/\s+/).filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase()||'M';
+      T(ini,cx,cy+rad*.32,{size:rad*.95,bold:true,color:C.navy,align:'center'});
+    };
+
+    /* ---------- page flow ---------- */
+    let y=TOP;
+    const ensure=h=>{if(y+h>BOTTOM){doc.addPage();y=TOP;}};
+    const sectionTitle=(t,keep=70)=>{
+      ensure(keep);y+=(y>TOP?8:0);fill(C.gold);doc.roundedRect(L,y-10,3.6,14,1.8,1.8,'F');
+      T(t,L+11,y,{size:12,bold:true,color:C.navy});
+      const tw=doc.getTextWidth(clean(t,200));stroke(C.edge);doc.setLineWidth(.8);doc.line(L+11+tw+10,y-3,R,y-3);y+=16;
+    };
+    const kv=(items,cols=1)=>{
+      const rows=items.filter(Boolean);if(!rows.length)return;
+      const rh=21,gap=12,cw=cols===2?(CW-gap)/2:CW;
+      for(let i=0;i<rows.length;i+=cols){
+        ensure(rh+2);
+        for(let c=0;c<cols&&i+c<rows.length;c++){
+          const [k,v,hl]=rows[i+c],x=L+c*(cw+gap),zebra=(Math.floor(i/cols)%2===0);
+          if(zebra||hl){fill(hl?[250,243,226]:C.pale);doc.rect(x,y,cw,rh,'F');}
+          if(hl){fill(C.gold);doc.rect(x,y,2.4,rh,'F');}
+          T(k,x+10,y+14,{size:8.6,color:C.muted,max:cw*.58});
+          T(v,x+cw-10,y+14,{size:9,bold:true,color:C.ink,align:'right',max:cw*.5});
+        }
+        y+=rh;
+      }
+      y+=16;
+    };
+    const val=id=>($(id)?.value||'').toString().trim();
+    const amt=id=>Math.max(0,parseFloat($(id)?.value||0));
+    const opt=(label,id,fmt)=>{const v=val(id);return v?[label,fmt?fmt(v):v]:null;};
+    const dateFmt=v=>{try{return new Date(v+'T00:00:00').toLocaleDateString('en-CA',{year:'numeric',month:'long',day:'numeric'});}catch(e){return v;}};
+
+    /* ================= PAGE 1 ================= */
+    T('MORTGAGE AFFORDABILITY ESTIMATE',L,y+2,{size:7.8,bold:true,color:C.goldD,space:1.6});
+    T('Your Personalised Mortgage Estimate',L,y+26,{size:22,bold:true,color:C.navy});
+    T(`Prepared for ${clean(ref,52)}   |   ${date}`,L,y+43,{size:9.5,color:C.muted});
+    y+=60;
+
+    /* tentative notice */
+    const noticeText='The figures in this report are indicative only. They are based on the information provided and the assumptions shown, and are not a mortgage approval, pre-approval or commitment to lend. The final qualification, interest rate and mortgage amount are determined solely by the bank or lender after their own review.';
+    doc.setFont('helvetica','normal');doc.setFontSize(8.6);
+    const nLines=doc.splitTextToSize(noticeText,CW-40),nH=34+nLines.length*11.2;
+    fill([253,246,229]);stroke(C.goldL);doc.setLineWidth(.9);doc.roundedRect(L,y,CW,nH,8,8,'FD');
+    fill(C.gold);doc.roundedRect(L,y,5,nH,2.5,2.5,'F');
+    fill(C.gold);doc.circle(L+24,y+19,8,'F');T('!',L+24,y+22.6,{size:11,bold:true,color:[255,255,255],align:'center'});
+    T('Please note: this is a tentative estimate',L+40,y+21,{size:10.2,bold:true,color:[110,74,8]});
+    nLines.forEach((ln,i)=>T(ln,L+40-14+14,y+36+i*11.2,{size:8.6,color:[88,66,24]}));
+    y+=nH+16;
+
+    /* agent card */
+    const aH=112;
+    fill([255,255,255]);stroke(C.edge);doc.setLineWidth(.9);doc.roundedRect(L,y,CW,aH,10,10,'FD');
+    fill(C.navy);doc.roundedRect(L,y,CW,24,10,10,'F');doc.rect(L,y+12,CW,12,'F');
+    T('YOUR MORTGAGE PROFESSIONAL',L+16,y+16,{size:7.4,bold:true,color:C.goldL,space:1.5});
+    T(date,R-14,y+16,{size:7.4,color:[200,212,230],align:'right'});
+    fill([250,251,253]);stroke(C.edge);doc.setLineWidth(.7);doc.roundedRect(L+14,y+36,112,64,7,7,'FD');
+    if(!logoFit(L+20,y+41,100,54)){monogram(L+70,y+68,20);}
+    const ax=L+144;
+    T(agentName,ax,y+50,{size:14.5,bold:true,color:C.navy,max:CW-160});
+    T(company,ax,y+64,{size:10,color:C.muted,max:CW-160});
+    const contacts=[['PHONE',phone],['EMAIL',email],['WEBSITE',website],['LICENSE',license]].filter(c=>c[1]);
+    contacts.forEach((c,i)=>{
+      const cx=ax+(i%2)*(CW-160)/2,cy=y+78+Math.floor(i/2)*21;
+      T(c[0],cx,cy,{size:6.4,bold:true,color:C.goldD,space:1.1});
+      T(c[1],cx,cy+9.5,{size:8.6,bold:true,color:C.ink,max:(CW-160)/2-8});
+    });
+    y+=aH+22;
+
+    /* snapshot */
+    sectionTitle('Your mortgage snapshot',120);
+    const cw3=(CW-24)/3,cardH=82;
+    const snap=[
+      ['LENDER QUALIFICATION',money(r.lenderMortgage),`Qualifying rate ${r.qualRate.toFixed(2)}%`],
+      ['COMFORTABLE MORTGAGE',money(r.comfortableMortgage||0),r.comfortableMortgage!==null&&r.lenderMortgage?`${Math.round(r.comfortableMortgage/r.lenderMortgage*100)}% of lender estimate`:'Add after-tax income'],
+      ['MAXIMUM PURCHASE PRICE',money(r.maxPurchase),r.maxPurchase?`Down payment ${(r.down/r.maxPurchase*100).toFixed(1)}%`:'Down payment required']
+    ];
+    snap.forEach((s,i)=>{
+      const x=L+i*(cw3+12),hero=i===0;
+      if(hero){fill(C.navy2);doc.roundedRect(x,y,cw3,cardH,9,9,'F');alpha(.07);fill([255,255,255]);doc.roundedRect(x+3,y+2,cw3-6,cardH*.4,7,7,'F');solid();}
+      else{fill(C.pale);stroke(C.edge);doc.setLineWidth(.8);doc.roundedRect(x,y,cw3,cardH,9,9,'FD');fill(i===1?C.teal:C.gold);doc.roundedRect(x+14,y,cw3-28,2.6,1.3,1.3,'F');}
+      T(s[0],x+14,y+19,{size:6.8,bold:true,color:hero?C.goldL:C.muted,space:.6,max:cw3-24});
+      T(s[1],x+14,y+49,{size:19,bold:true,color:hero?[255,255,255]:C.navy,max:cw3-24});
+      T(s[2],x+14,y+68,{size:7.8,color:hero?[205,218,236]:C.muted,max:cw3-24});
+    });
+    y+=cardH+12;
+    const chips=[
+      ['MONTHLY PAYMENT',money(r.actualPayment)],['GDS / TDS',`${r.gds.toFixed(1)}% / ${r.tds.toFixed(1)}%`],
+      ['CASH TO CLOSE',money(r.cashToClose)],['FUNDING GAP',r.fundingGap>0?money(r.fundingGap):'None']
+    ];
+    const cw4=(CW-30)/4;
+    chips.forEach((c,i)=>{
+      const x=L+i*(cw4+10);fill([255,255,255]);stroke(C.edge);doc.setLineWidth(.8);doc.roundedRect(x,y,cw4,48,8,8,'FD');
+      T(c[0],x+11,y+17,{size:6.4,bold:true,color:C.muted,space:.8,max:cw4-16});
+      T(c[1],x+11,y+36,{size:12.6,bold:true,color:C.navy,max:cw4-16});
+    });
+    y+=48+28;
+
+    /* ================= DETAIL SECTIONS ================= */
+    sectionTitle('Client & application details');
+    kv([
+      opt('Client reference','clientRef'),opt('Transaction','transaction'),opt('Province','province'),opt('Property type','propertyType'),
+      opt('Occupancy','occupancy'),opt('Number of applicants','applicantCount',v=>`${v}`),opt('First-time home buyer','firstTime'),
+      opt('Target purchase price','targetPrice',v=>money(v)),opt('Expected closing date','closingDate',dateFmt)
+    ],2);
+
+    /* applicants */
+    const apps=$$('.mf-applicant').map((a,i)=>{
+      const g=c=>Math.max(0,parseFloat(a.querySelector(c)?.value||0));
+      const base=g('.a-base'),variable=g('.a-variable')*g('.a-variable-pct')/100,other=g('.a-other')+g('.a-rental')*g('.a-rental-pct')/100+g('.a-extra');
+      return {name:a.querySelector('.a-label')?.value.trim()||`Applicant ${i+1}`,emp:a.querySelector('.a-employment')?.value||'-',base,extra:variable+other,total:base+variable+other};
+    }).filter(a=>a.total>0||a.emp!=='-');
+    if(apps.length){
+      sectionTitle('Applicant income (accepted by lender)',90);
+      const cols=[[L+10,'APPLICANT','left'],[L+170,'EMPLOYMENT','left'],[L+345,'BASE SALARY','right'],[L+435,'OTHER INCOME','right'],[R-10,'ACCEPTED TOTAL','right']];
+      fill(C.navy);doc.roundedRect(L,y,CW,22,5,5,'F');
+      cols.forEach(c=>T(c[1],c[0],y+14.5,{size:6.6,bold:true,color:C.goldL,align:c[2]}));
+      y+=22;
+      apps.forEach((a,i)=>{
+        ensure(23);if(i%2===0){fill(C.pale);doc.rect(L,y,CW,23,'F');}
+        T(a.name,L+10,y+15,{size:9,bold:true,max:150});T(a.emp,L+170,y+15,{size:8.8,color:C.muted,max:150});
+        T(money(a.base),L+345,y+15,{size:8.8,align:'right'});T(money(a.extra),L+435,y+15,{size:8.8,align:'right'});T(money(a.total),R-10,y+15,{size:9,bold:true,align:'right'});
+        y+=23;
+      });
+      ensure(26);fill([250,243,226]);doc.rect(L,y,CW,25,'F');fill(C.gold);doc.rect(L,y,2.4,25,'F');
+      T('Total qualifying household income',L+10,y+16,{size:9,bold:true,color:C.goldD});T(money(r.annualIncome),R-10,y+16,{size:10.5,bold:true,color:C.navy,align:'right'});
+      y+=25+18;
     }
-    const disclaimer='This report provides an estimate for general planning purposes only. It does not constitute mortgage approval, a commitment to lend, financial advice, or a guarantee of financing. Final qualification depends on verification, credit history, property review, lender and insurer requirements, and underwriting policies.';
-    doc.setFont('helvetica','normal');doc.setFontSize(7.5);
-    const dlines=doc.splitTextToSize(disclaimer,520);ensure(dlines.length*10+20);
-    doc.setTextColor(...muted);doc.text(dlines,left,y+8);
+
+    sectionTitle('Qualification & monthly affordability');
+    kv([
+      ['Estimated monthly mortgage payment',money(r.actualPayment),true],['Stress-test monthly payment',money(r.qualPaymentAtMax)],
+      ['Contract interest rate',`${num('contractRate').toFixed(2)}%`],['Qualifying interest rate',`${r.qualRate.toFixed(2)}%`],
+      ['Amortization',`${r.years} years`],['Mortgage insurance premium',money(r.mortgageAtMax.premium)],
+      ['Total mortgage incl. premium',money(r.mortgageAtMax.total)],['Qualification driver',r.qualificationDriver]
+    ],2);
+    /* ratio bars */
+    ensure(78);
+    [['GDS - Gross Debt Service',r.gds,num('gdsLimit')],['TDS - Total Debt Service',r.tds,num('tdsLimit')]].forEach(([label,v,lim])=>{
+      ensure(34);const ratio=lim>0?Math.min(1,v/(lim*1.15)):0,col=v>lim?C.bad:v>lim*.9?C.warn:C.ok;
+      T(label,L+2,y+8,{size:8.8,bold:true,color:C.navy});T(`${v.toFixed(2)}%  of  ${lim.toFixed(2)}% limit`,R-2,y+8,{size:8.6,bold:true,color:col,align:'right'});
+      fill([232,236,242]);doc.roundedRect(L+2,y+15,CW-4,7,3.5,3.5,'F');
+      fill(col);doc.roundedRect(L+2,y+15,Math.max(7,(CW-4)*ratio),7,3.5,3.5,'F');
+      const mx=L+2+(CW-4)*(lim/(lim*1.15));stroke(C.navy);doc.setLineWidth(1);doc.line(mx,y+12,mx,y+25);
+      y+=36;
+    });
+    y+=4;
+
+    /* cash flow */
+    sectionTitle('Monthly cash flow');
+    kv([
+      ['After-tax monthly income',money(r.netMonthly)],['Monthly debt payments',money(r.debtsMonthly)],
+      ['Living expenses',money(r.living)],['Property costs',money(monthlyPropertyBudget())],
+      ['Mortgage payment',money(r.actualPayment)],['Desired cash cushion',money(num('cashCushion'))],
+      ['Cash remaining each month',r.cashRemaining===null?'-':money(r.cashRemaining),true]
+    ],2);
+
+    /* debts */
+    const debtItems=debts.filter(d=>$(`${d[0]}-on`)?.checked&&amt(d[0])>0).map(d=>[d[1],money(amt(d[0]))]);
+    if(debtItems.length){sectionTitle('Monthly debts included');kv([...debtItems,['Total monthly debts',money(r.debtsMonthly),true]],2);}
+
+    /* expenses */
+    const groups=expenseCategories.map(([name,items])=>({name,items:items.filter(i=>$(`${i[0]}-on`)?.checked&&amt(i[0])>0).map(i=>[i[1],money(amt(i[0]))]),total:items.reduce((s,i)=>s+($(`${i[0]}-on`)?.checked?amt(i[0]):0),0)})).filter(g=>g.items.length);
+    const custom=$$('#custom-expenses .mf-custom-row').map(row=>{const nm=row.querySelector('input[type="text"]')?.value.trim()||'Custom expense',inp=row.querySelector('input[type="number"]');const v=Math.max(0,parseFloat(inp?.value||0));return v>0?[nm,money(v)]:null;}).filter(Boolean);
+    if(custom.length)groups.push({name:'Custom Expenses',items:custom,total:custom.reduce((s,c)=>s+parseFloat(c[1].replace(/[^0-9.]/g,'')||0),0)});
+    if(groups.length){
+      sectionTitle('Living expenses included',80);
+      groups.forEach(g=>{
+        ensure(60);fill([250,243,226]);doc.rect(L,y,CW,20,'F');fill(C.gold);doc.rect(L,y,2.4,20,'F');
+        T(g.name,L+10,y+13.5,{size:8.8,bold:true,color:C.goldD});T(money(g.total)+' / mo',R-10,y+13.5,{size:8.8,bold:true,color:C.navy,align:'right'});y+=20;
+        const cwid=(CW-12)/2;
+        for(let i=0;i<g.items.length;i+=2){
+          ensure(19);
+          [0,1].forEach(c=>{const it=g.items[i+c];if(!it)return;const x=L+c*(cwid+12);
+            T(it[0],x+10,y+13,{size:8.4,color:C.muted,max:cwid*.62});T(it[1],x+cwid-10,y+13,{size:8.6,bold:true,align:'right'});
+            stroke(C.edge);doc.setLineWidth(.5);doc.line(x,y+19,x+cwid,y+19);});
+          y+=19;
+        }
+        y+=7;
+      });
+      kv([['Total living expenses',money(r.living),true]]);
+    }
+
+    /* property costs */
+    const pc=[['Property taxes (annual)','annualTaxes'],['Heating (monthly)','heating'],['Condo fee (monthly)','condoFee'],['Home insurance (monthly)','homeInsurance'],['Electricity (monthly)','propertyElectricity'],['Water (monthly)','propertyWater'],['Other property costs (monthly)','otherProperty']].filter(p=>amt(p[1])>0).map(p=>[p[0],money(amt(p[1]))]);
+    if(pc.length){sectionTitle('Property costs');kv([...pc,['Total monthly property costs',money(monthlyPropertyBudget()),true]],2);}
+
+    /* funds & closing */
+    const fundRows=[['Available down payment',money(r.down)],['Down payment %',r.maxPurchase?`${(r.down/r.maxPurchase*100).toFixed(2)}%`:'-']];
+    [['Additional closing funds','closingFunds'],['Emergency funds retained','reserveFunds'],['Legal / title estimate','legalCosts'],['Inspection / appraisal','inspectionCosts'],['Land transfer tax','transferTax'],['Other closing costs','otherClosingCosts'],['Additional reserve target','closingReserve'],['Planned monthly savings','plannedMonthlySavings']].forEach(([l,id])=>{if(amt(id)>0)fundRows.push([l,money(amt(id))]);});
+    fundRows.push(['Estimated closing costs',money(r.closingCost)],['Total available funds',money(r.totalAvailableFunds)],['Estimated cash to close',money(r.cashToClose),true],['Estimated funding gap',money(r.fundingGap),true],['Time to close the gap',r.fundingGap<=0?'Ready':(r.savingsMonths===null?'Add monthly savings':`${r.savingsMonths} month${r.savingsMonths===1?'':'s'}`)]);
+    sectionTitle('Down payment, closing costs & funds');kv(fundRows,2);
+
+    /* scenario */
+    if($('scNewMortgage') && !['-','\u2014',''].includes($('scNewMortgage').textContent.trim())){
+      sectionTitle('What-if scenario',100);
+      const sc=[['Maximum mortgage','scBaseMortgage','scNewMortgage','scDiffMortgage'],['Maximum purchase price','scBasePrice','scNewPrice','scDiffPrice'],['Qualifying payment','scBasePayment','scNewPayment','scDiffPayment']];
+      fill(C.navy);doc.roundedRect(L,y,CW,22,5,5,'F');
+      [[L+10,'MEASURE','left'],[L+280,'CURRENT','right'],[L+400,'SCENARIO','right'],[R-10,'CHANGE','right']].forEach(c=>T(c[1],c[0],y+14.5,{size:6.6,bold:true,color:C.goldL,align:c[2]}));y+=22;
+      sc.forEach((s,i)=>{ensure(23);if(i%2===0){fill(C.pale);doc.rect(L,y,CW,23,'F');}
+        const t=id=>($(id)?.textContent||'').trim(),d=t(s[3]);
+        T(s[0],L+10,y+15,{size:9,bold:true});T(t(s[1]),L+280,y+15,{size:8.8,align:'right'});T(t(s[2]),L+400,y+15,{size:8.8,bold:true,align:'right'});
+        T(d,R-10,y+15,{size:8.8,bold:true,align:'right',color:d.startsWith('-')?C.bad:C.ok});y+=23;});
+      y+=18;
+    }
+
+    /* assumptions */
+    sectionTitle('Assumptions used');
+    kv([['Stress-test floor',`${num('stressFloor').toFixed(2)}%`],['Stress-test rate increase',`${num('stressIncrease').toFixed(2)}%`],['Maximum GDS',`${num('gdsLimit').toFixed(1)}%`],['Maximum TDS',`${num('tdsLimit').toFixed(1)}%`],['Condo fee counted for qualification',`${num('condoPct').toFixed(0)}%`],['GDS-supported payment',money(r.gdsPayment)+' / mo'],['TDS-supported payment',money(r.tdsPayment)+' / mo'],['Estimated closing cost (if no detail)',`${num('closingCostPct').toFixed(1)}%`]],2);
+
+    /* advisor notes + warnings */
+    const narrative=clean($('mf-narrative')?.textContent,1800);
+    if(narrative){
+      doc.setFont('helvetica','normal');doc.setFontSize(8.8);const nl=doc.splitTextToSize(narrative,CW-34),h=30+nl.length*12.4;
+      ensure(h+8);fill([247,249,252]);stroke(C.edge);doc.setLineWidth(.8);doc.roundedRect(L,y,CW,h,8,8,'FD');fill(C.navy2);doc.roundedRect(L,y,4,h,2,2,'F');
+      T('ADVISOR NOTES',L+18,y+18,{size:7.2,bold:true,color:C.goldD,space:1.4});
+      nl.forEach((ln,i)=>T(ln,L+18,y+34+i*12.4,{size:8.8,color:C.ink}));
+      y+=h+14;
+    }
+    const warns=$$('#mf-warnings .mf-warning-item').map(w=>clean(w.textContent,200)).filter(Boolean);
+    if(warns.length){
+      const h=30+warns.length*14;ensure(h+8);fill([253,246,229]);stroke(C.goldL);doc.setLineWidth(.8);doc.roundedRect(L,y,CW,h,8,8,'FD');
+      T('THINGS TO REVIEW',L+18,y+18,{size:7.2,bold:true,color:C.goldD,space:1.4});
+      warns.forEach((w,i)=>{fill(C.warn);doc.circle(L+22,y+32+i*14,2.2,'F');T(w,L+32,y+35+i*14,{size:8.6,color:[88,66,24],max:CW-50});});
+      y+=h+14;
+    }
+
+    /* ================= THANK-YOU PAGE ================= */
+    doc.addPage();
+    const cx=W/2;
+    orb(cx,168,50,C.gold,.12);orb(cx,168,38,C.gold,.22);fill(C.gold);doc.circle(cx,168,28,'F');
+    stroke([255,255,255]);doc.setLineWidth(4.2);doc.setLineCap('round');doc.setLineJoin('round');doc.lines([[8,9],[17,-17]],cx-13,169,[1,1],'S');doc.setLineCap('butt');
+    T('Thank You',cx,248,{size:42,bold:true,color:C.navy,align:'center'});
+    fill(C.gold);doc.roundedRect(cx-26,260,52,3,1.5,1.5,'F');
+    T(`for considering ${company}`,cx,284,{size:13,color:C.muted,align:'center',max:460});
+    para('We appreciate the opportunity to help you plan your home purchase. This estimate is a starting point - our team is here to answer your questions, review your options and guide you through every step toward your new home.',cx,312,400,{size:9.6,color:C.muted,align:'center',lh:14.5});
+
+    const pY=368,pH=158;
+    grad(L,pY,CW,pH,C.navy,C.navy2);
+    orb(L+60,pY+44,30,C.gold,.5);orb(L+CW-70,pY+pH-40,34,C.teal,.4);orb(L+CW/2+30,pY+14,16,[120,150,235],.35);
+    glass(L+16,pY+14,CW-32,pH-28,14,.13);
+    T('Let us know if you need any help',cx,pY+44,{size:16.5,bold:true,color:[255,255,255],align:'center'});
+    T('Questions about this estimate, your numbers or next steps? We are happy to help.',cx,pY+60,{size:8.8,color:C.goldL,align:'center'});
+    const ct=[['CALL OR TEXT',phone],['EMAIL',email],['WEBSITE',website]].filter(c=>c[1]);
+    if(ct.length){
+      const gw=Math.min(158,(CW-64-(ct.length-1)*10)/ct.length),tot=ct.length*gw+(ct.length-1)*10,sx=cx-tot/2;
+      ct.forEach((c,i)=>{const x=sx+i*(gw+10);glass(x,pY+78,gw,52,9,.14);
+        T(c[0],x+gw/2,pY+95,{size:6.4,bold:true,color:C.goldL,align:'center',space:1});
+        T(c[1],x+gw/2,pY+113,{size:8.6,bold:true,color:[255,255,255],align:'center',max:gw-14});});
+    }else T('Please contact your mortgage professional directly.',cx,pY+108,{size:9.4,color:[255,255,255],align:'center'});
+
+    T('WHAT HAPPENS NEXT',cx,pY+pH+34,{size:7.6,bold:true,color:C.goldD,align:'center',space:1.6});
+    const steps=[['Review','Go through the figures and assumptions in this report with us.'],['Plan','We can compare rates, terms and strategies that fit your goals.'],['Get approved','The bank or lender gives the final word on what you qualify for.']];
+    const sw=(CW-24)/3;
+    steps.forEach((s,i)=>{const x=L+i*(sw+12);
+      fill(C.pale);stroke(C.edge);doc.setLineWidth(.8);doc.roundedRect(x,pY+pH+48,sw,92,9,9,'FD');
+      fill(C.gold);doc.circle(x+22,pY+pH+71,10,'F');T(String(i+1),x+22,pY+pH+75,{size:10.5,bold:true,color:C.navy,align:'center'});
+      T(s[0],x+40,pY+pH+75,{size:10.5,bold:true,color:C.navy});
+      para(s[1],x+14,pY+pH+98,sw-28,{size:8.3,color:C.muted,lh:11.4});});
+    T('Wishing you every success on your home journey.',cx,pY+pH+170,{size:11,bold:true,italic:true,color:C.goldD,align:'center'});
+    T(`${agentName}  |  ${company}`,cx,pY+pH+186,{size:8.8,color:C.muted,align:'center',max:460});
+
+    /* ================= HEADER & FOOTER ON EVERY PAGE ================= */
     const pages=doc.getNumberOfPages();
-    for(let page=1;page<=pages;page++){
-      doc.setPage(page);doc.setDrawColor(...edge);doc.setLineWidth(.7);doc.line(left,744,right,744);
-      drawText('MortgageFit  |  Prepared by your mortgage professional',left,758,7.5,false,muted);
-      doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.setTextColor(...muted);doc.text(`Page ${page} of ${pages}`,right,758,{align:'right'});
+    const disc='This report is an estimate for general planning purposes only. Final mortgage approval, interest rate and amount are determined solely by the bank or lender after verification of income, credit, property and their underwriting policies. It is not financial advice or a commitment to lend.';
+    for(let p=1;p<=pages;p++){
+      doc.setPage(p);
+      /* header */
+      grad(0,0,W,88,C.navy,C.navy2);
+      orb(64,42,32,C.gold,.55);orb(318,50,34,C.teal,.38);orb(532,30,30,[120,150,235],.48);orb(430,16,12,C.gold,.4);
+      fill(C.gold);doc.rect(0,88,W,2.2,'F');
+      glass(28,12,W-56,64,13,.17);
+      fill([255,255,255]);alpha(.96);doc.roundedRect(40,20,96,48,8,8,'F');solid();
+      if(!logoFit(46,24,84,40)){monogram(88,44,15);}
+      T(company,152,42,{size:13.5,bold:true,color:[255,255,255],max:240});
+      T('MORTGAGE AFFORDABILITY ESTIMATE',152,57,{size:6.8,bold:true,color:C.goldL,space:1.3});
+      T('PREPARED FOR',R-14,32,{size:6,bold:true,color:C.goldL,align:'right'});
+      T(clean(ref,36),R-14,45,{size:9.4,bold:true,color:[255,255,255],align:'right',max:150});
+      T(date,R-14,58,{size:7.6,color:[205,218,236],align:'right'});
+      /* footer */
+      grad(0,730,W,62,C.navy2,C.navy);
+      fill(C.gold);doc.rect(0,730,W,1.8,'F');
+      orb(112,768,26,C.teal,.38);orb(548,758,28,C.gold,.42);orb(330,790,16,[120,150,235],.4);
+      glass(28,737,W-56,49,10,.15);
+      T('TENTATIVE ESTIMATE ONLY - NOT A MORTGAGE APPROVAL',42,749,{size:6.9,bold:true,color:C.goldL,space:.7});
+      doc.setFont('helvetica','normal');doc.setFontSize(6.8);
+      doc.splitTextToSize(disc,400).slice(0,3).forEach((ln,i)=>T(ln,42,757.5+i*7.8,{size:6.8,color:[236,241,248]}));
+      T(`Page ${p} of ${pages}`,R-12,752,{size:8.4,bold:true,color:[255,255,255],align:'right'});
+      [agentName,phone,website].filter(Boolean).forEach((t,i)=>T(t,R-12,762+i*8,{size:6.5,color:C.goldL,align:'right',max:140}));
     }
     return {doc,ref};
   }
@@ -2387,7 +2657,7 @@ body:not(.mf-auth-resolving) #mf-session-loader{
     if(brandingLogoDraft)img.src=brandingLogoDraft;else img.removeAttribute('src');
   }
   function fillBrandingForm(){
-    ['name','company','license','phone','email'].forEach(key=>{$('mf-branding-'+key).value=brandingTargetData[key]||'';});
+    ['name','company','license','phone','email','website'].forEach(key=>{$('mf-branding-'+key).value=brandingTargetData[key]||'';});
     brandingLogoDraft=brandingTargetData.logoDataUrl||'';refreshBrandingLogo();
   }
   async function selectBrandingAgent(agentUid){
@@ -2434,7 +2704,7 @@ body:not(.mf-auth-resolving) #mf-session-loader{
   async function saveAgentBranding(){
     if(!db||!isMortgageAdmin||!brandingTargetUid)return setBrandingStatus('Administrator access required.',true);
     const candidate={};
-    ['name','company','license','phone','email'].forEach(key=>candidate[key]=$('mf-branding-'+key).value.trim());
+    ['name','company','license','phone','email','website'].forEach(key=>candidate[key]=$('mf-branding-'+key).value.trim());
     if(candidate.email&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(candidate.email))return setBrandingStatus('Enter a valid business email.',true);
     candidate.logoDataUrl=brandingLogoDraft;
     const button=$('mf-branding-save');button.disabled=true;setBrandingStatus('Saving branding…');
@@ -3008,7 +3278,7 @@ body:not(.mf-auth-resolving) #mf-session-loader{
     $('mf-branding-preview').onclick=()=>{
       if(!isMortgageAdmin)return;
       const temp=agentBranding;
-      const draft={};['name','company','license','phone','email'].forEach(k=>draft[k]=$('mf-branding-'+k).value.trim());
+      const draft={};['name','company','license','phone','email','website'].forEach(k=>draft[k]=$('mf-branding-'+k).value.trim());
       agentBranding={...temp,...draft,logoDataUrl:brandingLogoDraft};
       try{pdf(true);}finally{agentBranding=temp;}
     };
