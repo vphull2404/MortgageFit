@@ -1597,8 +1597,8 @@ body:not(.mf-auth-resolving) #mf-session-loader{
                   </button>
                 </div>
               </div>
-              <button type="button" class="mf-btn mf-btn-outline" id="mf-preview" disabled>Preview PDF</button>
-              <button type="button" class="mf-btn mf-btn-outline" id="mf-download" disabled>Download Client Estimate</button>
+              <button type="button" class="mf-btn mf-btn-outline" id="mf-preview">Preview PDF</button>
+              <button type="button" class="mf-btn mf-btn-outline" id="mf-download">Download Client Estimate</button>
             </div>
           </header>
 
@@ -2597,14 +2597,20 @@ body:not(.mf-auth-resolving) #mf-session-loader{
     }
     if(!accessProfile||accessProfile.status!=='active')return toast('Your account is not active.');
     if(!isMortgageAdmin&&accessProfile.plan!=='premium'){$('mf-premium-modal').hidden=false;return;}
-    const result=buildEstimatePdf();if(!result)return;
-    const {doc,ref}=result;
-    if(preview){
-      const blob=doc.output('blob'),url=URL.createObjectURL(blob),tab=window.open(url,'_blank');
-      if(!tab){URL.revokeObjectURL(url);toast('Allow pop-ups to preview your PDF.');return;}
-      setTimeout(()=>URL.revokeObjectURL(url),120000);
-    }else{
-      doc.save(`MortgageFit-${ref.replace(/[^a-z0-9-_]/gi,'-')}-${new Date().toISOString().slice(0,10)}.pdf`);
+    try{
+      const result=buildEstimatePdf();if(!result)return;
+      const {doc,ref}=result;
+      if(preview){
+        const blob=doc.output('blob'),url=URL.createObjectURL(blob),tab=window.open(url,'_blank');
+        if(!tab){URL.revokeObjectURL(url);toast('Allow pop-ups to preview your PDF.');return;}
+        setTimeout(()=>URL.revokeObjectURL(url),120000);
+      }else{
+        doc.save(`MortgageFit-${ref.replace(/[^a-z0-9-_]/gi,'-')}-${new Date().toISOString().slice(0,10)}.pdf`);
+        toast('Your client estimate PDF is downloading.');
+      }
+    }catch(err){
+      console.error('PDF generation failed',err);
+      toast('PDF could not be created: '+(err&&err.message?err.message:'unknown error'));
     }
   }
 
@@ -3219,8 +3225,8 @@ body:not(.mf-auth-resolving) #mf-session-loader{
 
     if($('mf-results-empty')) $('mf-results-empty').hidden=false;
     if($('mf-results')) $('mf-results').hidden=true;
-    if($('mf-download')) $('mf-download').disabled=true;
-    if($('mf-preview')) $('mf-preview').disabled=true;
+    
+    
 
     // Reset only the calculator navigation.
     currentStep=0;
