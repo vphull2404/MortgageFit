@@ -2435,12 +2435,12 @@ body:not(.mf-auth-resolving) #mf-session-loader{
     ],2);
     /* ratio bars */
     ensure(78);
-    [['GDS - Gross Debt Service',r.gds,num('gdsLimit')],['TDS - Total Debt Service',r.tds,num('tdsLimit')]].forEach(([label,v,lim])=>{
-      ensure(34);const ratio=lim>0?Math.min(1,v/(lim*1.15)):0,col=v>lim?C.bad:v>lim*.9?C.warn:C.ok;
+    [['GDS - Gross Debt Service',r.gds||0,num('gdsLimit')],['TDS - Total Debt Service',r.tds||0,num('tdsLimit')]].forEach(([label,v,lim])=>{
+      ensure(34);const ratio=lim>0&&isFinite(v)?Math.min(1,v/(lim*1.15)):0,col=v>lim?C.bad:v>lim*.9?C.warn:C.ok;
       T(label,L+2,y+8,{size:8.8,bold:true,color:C.navy});T(`${v.toFixed(2)}%  of  ${lim.toFixed(2)}% limit`,R-2,y+8,{size:8.6,bold:true,color:col,align:'right'});
       fill([232,236,242]);doc.roundedRect(L+2,y+15,CW-4,7,3.5,3.5,'F');
       fill(col);doc.roundedRect(L+2,y+15,Math.max(7,(CW-4)*ratio),7,3.5,3.5,'F');
-      const mx=L+2+(CW-4)*(lim/(lim*1.15));stroke(C.navy);doc.setLineWidth(1);doc.line(mx,y+12,mx,y+25);
+      if(lim>0){const mx=L+2+(CW-4)/1.15;stroke(C.navy);doc.setLineWidth(1);doc.line(mx,y+12,mx,y+25);}
       y+=36;
     });
     y+=4;
