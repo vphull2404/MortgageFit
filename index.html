@@ -432,10 +432,10 @@ h3{font-size:17px;line-height:1.3;margin:0 0 7px;color:var(--mf-head);font-weigh
 .quote em{font-style:normal;color:var(--mf-acc)}
 
 /* pricing */
-.plans{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px;max-width:940px;margin:0 auto}
-.plan{position:relative;padding:36px;border-radius:30px;display:flex;flex-direction:column}
+.plans{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px;max-width:1240px;margin:0 auto}
+.plan{position:relative;padding:30px 26px;border-radius:30px;display:flex;flex-direction:column}
 .plan h3{font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--mf-acc);margin-bottom:14px}
-.price{display:flex;align-items:flex-end;gap:8px;font-family:var(--mf-serif);font-size:76px;line-height:.9;font-weight:700;color:var(--mf-head);letter-spacing:-.02em}
+.price{display:flex;align-items:flex-end;gap:8px;font-family:var(--mf-serif);font-size:60px;line-height:.9;font-weight:700;color:var(--mf-head);letter-spacing:-.02em}
 .price small{font-family:var(--mf-sans);font-size:15px;font-weight:700;color:var(--mf-muted);letter-spacing:0;padding-bottom:8px}
 .plan .desc{margin:14px 0 0;font-size:14.5px;color:var(--mf-soft);min-height:46px}
 .plan ul{list-style:none;margin:24px 0 30px;padding:24px 0 0;border-top:1px solid var(--mf-line);display:grid;gap:13px}
@@ -473,6 +473,7 @@ footer{margin-top:92px;padding:34px 0 46px;border-top:1px solid var(--mf-line)}
 
 /* ---------- Responsive ---------- */
 @media(max-width:1100px){
+  .plans{grid-template-columns:repeat(2,minmax(0,1fr));max-width:940px}
   .hero{grid-template-columns:1fr;gap:40px;padding-top:48px}
   .float{left:14px}
   .steps{grid-template-columns:repeat(4,minmax(0,1fr))}
@@ -494,7 +495,7 @@ footer{margin-top:92px;padding:34px 0 46px;border-top:1px solid var(--mf-line)}
   .paper-wrap{padding:30px 6px 34px}
   .paper{padding:22px 16px 16px}
   .plan{padding:28px}
-  .price{font-size:64px}
+  .price{font-size:60px}
   .mini strong{font-size:16px}
   .float{top:26px;padding:11px 14px 11px 11px}
   .float strong{font-size:20px}
@@ -703,7 +704,7 @@ footer{margin-top:92px;padding:34px 0 46px;border-top:1px solid var(--mf-line)}
     <div class="sec-head">
       <span class="pill"><span class="num-badge" style="min-width:26px;height:26px;border-radius:8px">05</span>Pricing</span>
       <h2>Simple pricing. Start free, upgrade when it pays off.</h2>
-      <p>The calculator costs nothing. Pro is one flat price for a full year.</p>
+      <p>The calculator costs nothing. Pick a one-time pass, 6 months, or a full year of Pro.</p>
     </div>
     <div class="plans">
       <div class="plan glass">
@@ -718,6 +719,33 @@ footer{margin-top:92px;padding:34px 0 46px;border-top:1px solid var(--mf-line)}
           <li><svg class="ic"><use href="#i-check"/></svg>Four colour themes, any device</li>
         </ul>
         <a class="btn btn-ghost btn-lg" href="calculator.html" data-link="calculator">Open the calculator</a>
+      </div>
+      <div class="plan glass">
+        <span class="flag">Pay once</span>
+        <h3>Single Use</h3>
+        <div class="price">$15<small>/ one time</small></div>
+        <p class="desc">All the Pro features for one client estimate. Pay once, no subscription.</p>
+        <ul>
+          <li><svg class="ic"><use href="#i-check"/></svg>Every Pro feature included</li>
+          <li><svg class="ic"><use href="#i-check"/></svg>Valid for one-time use only</li>
+          <li><svg class="ic"><use href="#i-check"/></svg>Your logo, name and contact details on the PDF</li>
+          <li><svg class="ic"><use href="#i-check"/></svg>Save and download your client estimate</li>
+          <li><svg class="ic"><use href="#i-check"/></svg>A client-ready look, not a spreadsheet</li>
+        </ul>
+        <a class="btn btn-ghost btn-lg" href="calculator.html" data-link="upgradeOnce">Get one-time use for $15</a>
+      </div>
+      <div class="plan glass">
+        <h3>6 Months</h3>
+        <div class="price">$30<small>/ 6 months</small></div>
+        <p class="desc">All the Pro features for half a year. That is just $5 a month.</p>
+        <ul>
+          <li><svg class="ic"><use href="#i-check"/></svg>Every Pro feature included</li>
+          <li><svg class="ic"><use href="#i-check"/></svg>Save client cases for 6 months</li>
+          <li><svg class="ic"><use href="#i-check"/></svg>Your logo, name and contact details on the PDF</li>
+          <li><svg class="ic"><use href="#i-check"/></svg>Reopen and update saved cases anytime</li>
+          <li><svg class="ic"><use href="#i-check"/></svg>A client-ready look, not a spreadsheet</li>
+        </ul>
+        <a class="btn btn-ghost btn-lg" href="calculator.html" data-link="upgrade6m">Get 6 months for $30</a>
       </div>
       <div class="plan pro glass">
         <span class="flag">Best for agents</span>
@@ -779,7 +807,7 @@ footer{margin-top:92px;padding:34px 0 46px;border-top:1px solid var(--mf-line)}
 <script>
 (function(){
   /* One place to point the page at your own files/addresses (set on <body data-...>). */
-  var b=document.body, cfg={calculator:b.dataset.calculator,upgrade:b.dataset.upgrade,login:b.dataset.login,contact:b.dataset.contact};
+  var b=document.body, cfg={calculator:b.dataset.calculator,upgrade:b.dataset.upgrade,upgradeOnce:b.dataset.upgradeOnce||b.dataset.upgrade,upgrade6m:b.dataset.upgrade6m||b.dataset.upgrade,login:b.dataset.login,contact:b.dataset.contact};
   Array.prototype.forEach.call(document.querySelectorAll("[data-link]"),function(a){var u=cfg[a.dataset.link]; if(u) a.setAttribute("href",u);});
   var yr=document.getElementById("yr"); if(yr) yr.textContent=new Date().getFullYear();
 
